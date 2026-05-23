@@ -235,6 +235,7 @@ function App() {
   const recurrings = useLiveQuery(() => db.recurrings.toArray(), []) ?? []
 
   const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'REPORTS' | 'DEBTS' | 'SETTINGS'>('DASHBOARD')
+  const [activeTool, setActiveTool] = useState<'NONE' | 'BUDGET' | 'RECURRING' | 'GOAL'>('NONE')
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system')
   const [lang, setLang] = useState<'vi' | 'en'>('vi')
   const [exchangeRate, setExchangeRate] = useState(() => Number(localStorage.getItem('kat_exchange_rate')) || 25000)
@@ -1006,319 +1007,364 @@ function App() {
 
   return (
     <main className="app-shell">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">{lang === 'vi' ? 'Xin chào!' : 'Welcome!'}</p>
-          <h1>{lang === 'vi' ? 'Tổng quan tài chính' : 'Financial Overview'}</h1>
-        </div>
-        <button 
-          className="icon-button" 
-          type="button" 
-          onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
-          style={{ fontWeight: 'bold' }}
-        >
-          {lang === 'vi' ? 'VI' : 'EN'}
-        </button>
-      </header>
+      {activeTool !== 'NONE' ? (
+        <header className="topbar">
+          <button 
+            type="button" 
+            onClick={() => setActiveTool('NONE')} 
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: 'var(--accent)', fontWeight: 600, fontSize: '16px', cursor: 'pointer', padding: 0 }}
+          >
+            &larr; {lang === 'vi' ? 'Quay lại' : 'Back'}
+          </button>
+          <h1>
+            {activeTool === 'BUDGET' && (lang === 'vi' ? 'Ngân sách tháng' : 'Monthly Budgets')}
+            {activeTool === 'RECURRING' && (lang === 'vi' ? 'Giao dịch định kỳ' : 'Recurring Transactions')}
+            {activeTool === 'GOAL' && (lang === 'vi' ? 'Mục tiêu tiết kiệm' : 'Saving Goals')}
+          </h1>
+          <button 
+            className="icon-button" 
+            type="button" 
+            onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
+            style={{ fontWeight: 'bold' }}
+          >
+            {lang === 'vi' ? 'VI' : 'EN'}
+          </button>
+        </header>
+      ) : (
+        <header className="topbar">
+          <div>
+            {activeTab === 'DASHBOARD' && <p className="eyebrow">{lang === 'vi' ? 'Xin chào!' : 'Welcome!'}</p>}
+            {activeTab !== 'DASHBOARD' && <p className="eyebrow">KAT Budget</p>}
+            <h1>
+              {activeTab === 'DASHBOARD' && (lang === 'vi' ? 'Tổng quan tài chính' : 'Financial Overview')}
+              {activeTab === 'DEBTS' && (lang === 'vi' ? 'Vay / Nợ' : 'Debts & Loans')}
+              {activeTab === 'REPORTS' && (lang === 'vi' ? 'Báo cáo & Phân tích' : 'Financial Reports')}
+              {activeTab === 'SETTINGS' && (lang === 'vi' ? 'Cài đặt & Giao diện' : 'Settings & Theme')}
+            </h1>
+          </div>
+          <button 
+            className="icon-button" 
+            type="button" 
+            onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
+            style={{ fontWeight: 'bold' }}
+          >
+            {lang === 'vi' ? 'VI' : 'EN'}
+          </button>
+        </header>
+      )}
 
       {statusMessage && <p className="status-banner">{statusMessage}</p>}
 
-      {activeTab === 'DASHBOARD' && (
-        <>
-          <section className="balance-panel" aria-label="Tai san rong">
-            <div>
-              <p className="panel-label">{lang === 'vi' ? 'Tài sản ròng' : 'Net Worth'}</p>
-              <strong>{formatCurrency(netWorth)}</strong>
-            </div>
-            <div className="cashflow">
-              <span className="income-pill"><ArrowUpRight size={16} /> {formatCurrency(monthIncome)}</span>
-              <span className="expense-pill"><ArrowDownRight size={16} /> {formatCurrency(monthExpense)}</span>
-            </div>
-          </section>
-
-          <section style={{ marginTop: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h2 style={{ fontSize: '18px', margin: 0 }}>{lang === 'vi' ? 'Tài khoản' : 'Accounts'}</h2>
-              <button type="button" onClick={() => openSourceModal()} style={{ color: 'var(--accent)', background: 'none', border: 'none', fontWeight: 600 }}>
-                {lang === 'vi' ? 'Thêm' : 'Add'}
+      {activeTool === 'BUDGET' && (
+        <section className="content-grid">
+          <article className="section-block">
+            <div className="budget-toolbar">
+              <label>
+                <span>{lang === 'vi' ? 'Tháng' : 'Month'}</span>
+                <input
+                  type="month"
+                  value={budgetMonthFilter}
+                  onChange={(event) => setBudgetMonthFilter(event.target.value)}
+                />
+              </label>
+              <button type="button" className="mini-action" onClick={() => openBudgetModal()}>
+                <Plus size={14} /> {lang === 'vi' ? 'Thêm ngân sách' : 'Add Budget'}
               </button>
             </div>
-            <div className="account-slider">
-              {sources.map((source) => (
-                <div className="account-card" key={source.id} onClick={() => openSourceModal(source)}>
-                  <strong>{source.name}</strong>
-                  <span>{formatCurrency(balancesBySource[source.name] ?? 0)}</span>
-                </div>
-              ))}
-              {sources.length === 0 && <p className="empty-note">Chưa có tài khoản.</p>}
-            </div>
-          </section>
 
-          <section style={{ marginTop: '24px' }}>
-            <h2 style={{ fontSize: '18px', marginBottom: '12px' }}>{lang === 'vi' ? 'Giao dịch gần đây' : 'Recent Transactions'}</h2>
+            <div className="budget-summary">
+              <span>{lang === 'vi' ? 'Đã chi' : 'Spent'}: {formatCurrency(totalBudgetSpent)}</span>
+              <span>{lang === 'vi' ? 'Hạn mức' : 'Limit'}: {formatCurrency(totalBudgetLimit)}</span>
+              <span>{totalBudgetPercent}%</span>
+            </div>
+
+            {overBudgetRows.length > 0 && (
+              <p className="budget-alert">
+                {lang === 'vi' ? `Có ${overBudgetRows.length} danh mục vượt ngân sách, tổng vượt ` : `There are ${overBudgetRows.length} categories over budget, total over `}
+                {formatCurrency(overBudgetTotal)}.
+              </p>
+            )}
+
             <div className="stack">
-              {transactions.slice(0, 10).map((transaction) => (
-                <div className="transaction-row" key={transaction.id} onClick={() => openTxModal(transaction)}>
-                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <div style={{ width: '4px', height: '32px', borderRadius: '4px', background: transaction.type === 'INCOME' ? 'var(--positive)' : 'var(--negative)' }} />
-                    <div>
-                      <strong style={{ display: 'block', fontSize: '15px' }}>{transaction.category}</strong>
-                      <span style={{ fontSize: '12px', color: 'var(--muted)' }}>
-                        {transaction.sourceName} • {format(transaction.timestamp, 'dd/MM/yyyy HH:mm')}
+              {budgetRows.map((row) => (
+                <div className="budget-row" key={row.budget.id}>
+                  <div>
+                    <strong>
+                      {row.category?.emoji ? `${row.category.emoji} ` : ''}
+                      {row.category?.name ?? 'Danh muc da xoa'}
+                    </strong>
+                    <span>
+                      {formatCurrency(row.spent, row.budget.currencyCode)} / {formatCurrency(row.budget.limitAmountMinor, row.budget.currencyCode)}
+                    </span>
+                    <div className="budget-progress">
+                      <div className="budget-progress-bar">
+                        <div className={`budget-progress-fill${row.isOver ? ' over' : ''}`} style={{ width: `${row.percent}%` }} />
+                      </div>
+                      <span className={row.isOver ? 'expense' : ''}>
+                        {row.isOver ? (lang === 'vi' ? `Vượt ${formatCurrency(Math.abs(row.remaining), row.budget.currencyCode)}` : `Over ${formatCurrency(Math.abs(row.remaining), row.budget.currencyCode)}`) : (lang === 'vi' ? `Còn lại ${formatCurrency(row.remaining, row.budget.currencyCode)}` : `Remaining ${formatCurrency(row.remaining, row.budget.currencyCode)}`)}
                       </span>
                     </div>
                   </div>
-                  <b className={transaction.type === 'INCOME' ? 'income' : 'expense'}>
-                    {transaction.type === 'INCOME' ? '+' : '-'}{formatCurrency(transaction.amount, transaction.currency)}
-                  </b>
-                </div>
-              ))}
-              {transactions.length === 0 && <p className="empty-note">Không có giao dịch nào.</p>}
-            </div>
-          </section>
-        </>
-      )}
-
-      <section className="content-grid">
-        {activeTab === 'REPORTS' && (
-        <article className="section-block">
-          <div className="section-title">
-            <h2>Danh muc</h2>
-            <Tags size={20} />
-          </div>
-
-          <div className="category-filter-bar">
-            <label>
-              <span>Nhom</span>
-              <select
-                value={categoryTypeFilter}
-                onChange={(event) => setCategoryTypeFilter(event.target.value as CategoryTypeFilter)}
-              >
-                <option value="ALL">Tat ca</option>
-                <option value="INCOME">Thu nhap</option>
-                <option value="EXPENSE">Chi tieu</option>
-              </select>
-            </label>
-          </div>
-
-          <div className="stack">
-            {filteredCategories.map((category) => (
-              <div className="category-row" key={category.id}>
-                <div>
-                  <strong>{category.emoji ? `${category.emoji} ${category.name}` : category.name}</strong>
-                  <span>{category.type === 'INCOME' ? 'Thu nhap' : 'Chi tieu'}</span>
-                </div>
-                <div className="row-actions">
-                  <button type="button" className="mini-icon" onClick={() => openCategoryModal(category)} aria-label="Sua danh muc">
-                    <Pencil size={14} />
-                  </button>
-                  <button type="button" className="mini-icon danger" onClick={() => handleDeleteCategory(category)} aria-label="Xoa danh muc">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-            {filteredCategories.length === 0 && <p className="empty-note">Chua co danh muc phu hop.</p>}
-          </div>
-        </article>
-        )}
-
-        {activeTab === 'DEBTS' && (
-        <article className="section-block">
-          <div className="section-title">
-            <h2>Ngan sach thang</h2>
-            <PiggyBank size={20} />
-          </div>
-
-          <div className="budget-toolbar">
-            <label>
-              <span>Thang</span>
-              <input
-                type="month"
-                value={budgetMonthFilter}
-                onChange={(event) => setBudgetMonthFilter(event.target.value)}
-              />
-            </label>
-            <button type="button" className="mini-action" onClick={() => openBudgetModal()}>
-              <Plus size={14} /> Them ngan sach
-            </button>
-          </div>
-
-          <div className="budget-summary">
-            <span>Da chi: {formatCurrency(totalBudgetSpent)}</span>
-            <span>Han muc: {formatCurrency(totalBudgetLimit)}</span>
-            <span>{totalBudgetPercent}%</span>
-          </div>
-
-          {overBudgetRows.length > 0 && (
-            <p className="budget-alert">
-              Co {overBudgetRows.length} danh muc vuot ngan sach, tong vuot {formatCurrency(overBudgetTotal)}.
-            </p>
-          )}
-
-          <div className="stack">
-            {budgetRows.map((row) => (
-              <div className="budget-row" key={row.budget.id}>
-                <div>
-                  <strong>
-                    {row.category?.emoji ? `${row.category.emoji} ` : ''}
-                    {row.category?.name ?? 'Danh muc da xoa'}
-                  </strong>
-                  <span>
-                    {formatCurrency(row.spent, row.budget.currencyCode)} / {formatCurrency(row.budget.limitAmountMinor, row.budget.currencyCode)}
-                  </span>
-                  <div className="budget-progress">
-                    <div className="budget-progress-bar">
-                      <div className={`budget-progress-fill${row.isOver ? ' over' : ''}`} style={{ width: `${row.percent}%` }} />
-                    </div>
-                    <span className={row.isOver ? 'expense' : ''}>
-                      {row.isOver ? `Vuot ${formatCurrency(Math.abs(row.remaining), row.budget.currencyCode)}` : `Con lai ${formatCurrency(row.remaining, row.budget.currencyCode)}`}
-                    </span>
-                  </div>
-                </div>
-                <div className="row-actions">
-                  <button type="button" className="mini-icon" onClick={() => openBudgetModal(row.budget)} aria-label="Sua ngan sach">
-                    <Pencil size={14} />
-                  </button>
-                  <button type="button" className="mini-icon danger" onClick={() => handleDeleteBudget(row.budget.id)} aria-label="Xoa ngan sach">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-            {budgetRows.length === 0 && <p className="empty-note">Chua co ngan sach cho thang nay.</p>}
-          </div>
-        </article>
-        )}
-
-        {activeTab === 'REPORTS' && (
-        <article className="section-block">
-          <div className="section-title">
-            <h2>Bao cao</h2>
-            <BarChart3 size={20} />
-          </div>
-
-          <div className="report-toolbar">
-            <label>
-              <span>Thang</span>
-              <input
-                type="month"
-                value={reportMonthFilter}
-                onChange={(event) => setReportMonthFilter(event.target.value)}
-              />
-            </label>
-          </div>
-
-          <div className="report-summary">
-            <span>Thu: {formatCurrency(reportIncomeTotal)}</span>
-            <span>Chi: {formatCurrency(reportExpenseTotal)}</span>
-            <span className={reportIncomeTotal - reportExpenseTotal < 0 ? 'expense' : 'income'}>
-              Net: {formatCurrency(reportIncomeTotal - reportExpenseTotal)}
-            </span>
-          </div>
-
-          <div style={{ marginTop: 24 }}>
-            <h3 style={{ fontSize: 16, margin: '0 0 12px', textAlign: 'center', color: 'var(--muted)' }}>Cơ cấu chi tiêu</h3>
-            {reportCategoryRows.length > 0 ? (
-              <EChart options={categoryPieOptions} style={{ height: '240px' }} />
-            ) : (
-              <p className="empty-note">Thang nay chua co chi tieu de thong ke.</p>
-            )}
-          </div>
-
-          <div style={{ marginTop: 24 }}>
-            <h3 style={{ fontSize: 16, margin: '0 0 12px', textAlign: 'center', color: 'var(--muted)' }}>Dong tien 6 thang gan nhat</h3>
-            <EChart options={cashflowBarOptions} style={{ height: '260px' }} />
-          </div>
-        </article>
-        )}
-
-        {activeTab === 'DEBTS' && (
-        <article className="section-block">
-          <div className="section-title">
-            <h2>{lang === 'vi' ? 'Mục tiêu tiết kiệm' : 'Saving Goals'}</h2>
-            <Target size={20} onClick={() => openGoalModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
-          </div>
-          <div className="stack">
-            {savingGoals.map((goal) => {
-              const progress = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100))
-              return (
-                <div className="transaction-row" key={goal.id} onClick={() => openGoalModal(goal)} style={{ display: 'block', cursor: 'pointer' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <strong>{goal.name}</strong>
-                    <span style={{ fontSize: '14px', color: 'var(--accent)' }}>{progress}%</span>
-                  </div>
-                  <progress max="100" value={progress} style={{ width: '100%', marginBottom: '4px' }} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--muted)' }}>
-                    <span>{formatCurrency(goal.currentAmount, goal.currency, exchangeRate)}</span>
-                    <span>{formatCurrency(goal.targetAmount, goal.currency, exchangeRate)}</span>
-                  </div>
-                </div>
-              )
-            })}
-            {savingGoals.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có mục tiêu nào.' : 'No saving goals.'}</p>}
-          </div>
-
-          <div className="section-title" style={{ marginTop: 24 }}>
-            <h2>{lang === 'vi' ? 'Giao dịch định kỳ' : 'Recurring'}</h2>
-            <Repeat size={20} onClick={() => openRecurringModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
-          </div>
-          <div className="stack">
-            {recurrings.map((rec) => (
-              <div className="transaction-row" key={rec.id} onClick={() => openRecurringModal(rec)}>
-                <div>
-                  <strong>{rec.category}</strong>
-                  <span>{lang === 'vi' ? 'Ngày' : 'Day'} {rec.dayOfMonth} hàng tháng</span>
-                  <span className="note-line">{rec.sourceName} {rec.note ? `• ${rec.note}` : ''}</span>
-                </div>
-                <div className="row-right">
-                  <b className={rec.type === 'INCOME' ? 'income' : 'expense'}>
-                    {rec.type === 'INCOME' ? '+' : '-'}{formatCurrency(rec.amount, rec.currency, exchangeRate)}
-                  </b>
-                </div>
-              </div>
-            ))}
-            {recurrings.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có gd định kỳ.' : 'No recurring transactions.'}</p>}
-          </div>
-
-          <div className="section-title" style={{ marginTop: 24 }}>
-            <h2>{lang === 'vi' ? 'Vay / Nợ' : 'Debts / Loans'}</h2>
-            <Users size={20} onClick={() => openDebtModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
-          </div>
-          <div className="stack">
-            {debts.map((debt) => (
-              <div className={`transaction-row ${debt.isPaid ? 'paid-debt' : ''}`} key={debt.id} style={{ opacity: debt.isPaid ? 0.6 : 1 }}>
-                <div>
-                  <strong>{debt.personName}</strong>
-                  <span>
-                    {debt.type === 'DEBT' ? 'Vay' : 'Cho vay'} • {format(debt.timestamp, 'dd/MM')}
-                    {debt.dueDate ? ` • Han: ${format(debt.dueDate, 'dd/MM/yyyy')}` : ''}
-                  </span>
-                  {debt.note && <span className="note-line">{debt.note}</span>}
-                </div>
-                <div className="row-right">
-                  <b className={debt.type === 'DEBT' ? 'income' : 'expense'}>
-                    {debt.type === 'DEBT' ? '+' : '-'}{formatCurrency(debt.amount, debt.currency, exchangeRate)}
-                  </b>
                   <div className="row-actions">
-                    <button type="button" className={`mini-icon ${debt.isPaid ? 'success' : ''}`} onClick={(e) => { e.stopPropagation(); handleTogglePaidDebt(debt) }} aria-label="Danh dau da tra">
-                      <CheckCircle size={14} color={debt.isPaid ? '#16A34A' : 'currentColor'} />
-                    </button>
-                    <button type="button" className="mini-icon" onClick={(e) => { e.stopPropagation(); openDebtModal(debt) }} aria-label="Sua ghi chu vay">
+                    <button type="button" className="mini-icon" onClick={() => openBudgetModal(row.budget)} aria-label="Sua ngan sach">
                       <Pencil size={14} />
                     </button>
-                    <button type="button" className="mini-icon danger" onClick={(e) => { e.stopPropagation(); handleDeleteDebt(debt.id) }} aria-label="Xoa ghi chu vay">
+                    <button type="button" className="mini-icon danger" onClick={() => handleDeleteBudget(row.budget.id)} aria-label="Xoa ngan sach">
                       <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
-              </div>
-            ))}
-            {debts.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Không có ghi chú vay/nợ.' : 'No debt/loan records.'}</p>}
-          </div>
-        </article>
-        )}
-      </section>
+              ))}
+              {budgetRows.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có ngân sách cho tháng này.' : 'No budget set for this month.'}</p>}
+            </div>
+          </article>
+        </section>
+      )}
+
+      {activeTool === 'RECURRING' && (
+        <section className="content-grid">
+          <article className="section-block">
+            <div className="section-title">
+              <h2>{lang === 'vi' ? 'Giao dịch định kỳ' : 'Recurring'}</h2>
+              <Repeat size={20} onClick={() => openRecurringModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
+            </div>
+            <div className="stack">
+              {recurrings.map((rec) => (
+                <div className="transaction-row" key={rec.id} onClick={() => openRecurringModal(rec)}>
+                  <div>
+                    <strong>{rec.category}</strong>
+                    <span>{lang === 'vi' ? 'Ngày' : 'Day'} {rec.dayOfMonth} hàng tháng</span>
+                    <span className="note-line">{rec.sourceName} {rec.note ? `• ${rec.note}` : ''}</span>
+                  </div>
+                  <div className="row-right">
+                    <b className={rec.type === 'INCOME' ? 'income' : 'expense'}>
+                      {rec.type === 'INCOME' ? '+' : '-'}{formatCurrency(rec.amount, rec.currency, exchangeRate)}
+                    </b>
+                  </div>
+                </div>
+              ))}
+              {recurrings.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có gd định kỳ.' : 'No recurring transactions.'}</p>}
+            </div>
+          </article>
+        </section>
+      )}
+
+      {activeTool === 'GOAL' && (
+        <section className="content-grid">
+          <article className="section-block">
+            <div className="section-title">
+              <h2>{lang === 'vi' ? 'Mục tiêu tiết kiệm' : 'Saving Goals'}</h2>
+              <Target size={20} onClick={() => openGoalModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
+            </div>
+            <div className="stack">
+              {savingGoals.map((goal) => {
+                const progress = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100))
+                return (
+                  <div className="transaction-row" key={goal.id} onClick={() => openGoalModal(goal)} style={{ display: 'block', cursor: 'pointer' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <strong>{goal.name}</strong>
+                      <span style={{ fontSize: '14px', color: 'var(--accent)' }}>{progress}%</span>
+                    </div>
+                    <progress max="100" value={progress} style={{ width: '100%', marginBottom: '4px' }} />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--muted)' }}>
+                      <span>{formatCurrency(goal.currentAmount, goal.currency, exchangeRate)}</span>
+                      <span>{formatCurrency(goal.targetAmount, goal.currency, exchangeRate)}</span>
+                    </div>
+                  </div>
+                )
+              })}
+              {savingGoals.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có mục tiêu nào.' : 'No saving goals.'}</p>}
+            </div>
+          </article>
+        </section>
+      )}
+
+      {activeTool === 'NONE' && (
+        <>
+          {activeTab === 'DASHBOARD' && (
+            <>
+              <section className="balance-panel" aria-label="Tai san rong">
+                <div>
+                  <p className="panel-label">{lang === 'vi' ? 'Tài sản ròng' : 'Net Worth'}</p>
+                  <strong>{formatCurrency(netWorth)}</strong>
+                </div>
+                <div className="cashflow">
+                  <span className="income-pill"><ArrowUpRight size={16} /> {formatCurrency(monthIncome)}</span>
+                  <span className="expense-pill"><ArrowDownRight size={16} /> {formatCurrency(monthExpense)}</span>
+                </div>
+              </section>
+
+              <section style={{ marginTop: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <h2 style={{ fontSize: '18px', margin: 0 }}>{lang === 'vi' ? 'Tài khoản' : 'Accounts'}</h2>
+                  <button type="button" onClick={() => openSourceModal()} style={{ color: 'var(--accent)', background: 'none', border: 'none', fontWeight: 600 }}>
+                    {lang === 'vi' ? 'Thêm' : 'Add'}
+                  </button>
+                </div>
+                <div className="account-slider">
+                  {sources.map((source) => (
+                    <div className="account-card" key={source.id} onClick={() => openSourceModal(source)}>
+                      <strong>{source.name}</strong>
+                      <span>{formatCurrency(balancesBySource[source.name] ?? 0)}</span>
+                    </div>
+                  ))}
+                  {sources.length === 0 && <p className="empty-note">Chưa có tài khoản.</p>}
+                </div>
+              </section>
+
+              <section style={{ marginTop: '24px' }}>
+                <h2 style={{ fontSize: '18px', marginBottom: '12px' }}>{lang === 'vi' ? 'Giao dịch gần đây' : 'Recent Transactions'}</h2>
+                <div className="stack">
+                  {transactions.slice(0, 10).map((transaction) => (
+                    <div className="transaction-row" key={transaction.id} onClick={() => openTxModal(transaction)}>
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                        <div style={{ width: '4px', height: '32px', borderRadius: '4px', background: transaction.type === 'INCOME' ? 'var(--positive)' : 'var(--negative)' }} />
+                        <div>
+                          <strong style={{ display: 'block', fontSize: '15px' }}>{transaction.category}</strong>
+                          <span style={{ fontSize: '12px', color: 'var(--muted)' }}>
+                            {transaction.sourceName} • {format(transaction.timestamp, 'dd/MM/yyyy HH:mm')}
+                          </span>
+                        </div>
+                      </div>
+                      <b className={transaction.type === 'INCOME' ? 'income' : 'expense'}>
+                        {transaction.type === 'INCOME' ? '+' : '-'}{formatCurrency(transaction.amount, transaction.currency)}
+                      </b>
+                    </div>
+                  ))}
+                  {transactions.length === 0 && <p className="empty-note">Không có giao dịch nào.</p>}
+                </div>
+              </section>
+            </>
+          )}
+
+          <section className="content-grid">
+            {activeTab === 'REPORTS' && (
+              <article className="section-block">
+                <div className="section-title">
+                  <h2>Danh muc</h2>
+                  <Tags size={20} />
+                </div>
+
+                <div className="category-filter-bar">
+                  <label>
+                    <span>Nhom</span>
+                    <select
+                      value={categoryTypeFilter}
+                      onChange={(event) => setCategoryTypeFilter(event.target.value as CategoryTypeFilter)}
+                    >
+                      <option value="ALL">Tat ca</option>
+                      <option value="INCOME">Thu nhap</option>
+                      <option value="EXPENSE">Chi tieu</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div className="stack">
+                  {filteredCategories.map((category) => (
+                    <div className="category-row" key={category.id}>
+                      <div>
+                        <strong>{category.emoji ? `${category.emoji} ${category.name}` : category.name}</strong>
+                        <span>{category.type === 'INCOME' ? 'Thu nhap' : 'Chi tieu'}</span>
+                      </div>
+                      <div className="row-actions">
+                        <button type="button" className="mini-icon" onClick={() => openCategoryModal(category)} aria-label="Sua danh muc">
+                          <Pencil size={14} />
+                        </button>
+                        <button type="button" className="mini-icon danger" onClick={() => handleDeleteCategory(category)} aria-label="Xoa danh muc">
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {filteredCategories.length === 0 && <p className="empty-note">Chua co danh muc phu hop.</p>}
+                </div>
+              </article>
+            )}
+
+            {activeTab === 'DEBTS' && (
+              <article className="section-block">
+                <div className="section-title">
+                  <h2>{lang === 'vi' ? 'Vay / Nợ' : 'Debts / Loans'}</h2>
+                  <Users size={20} onClick={() => openDebtModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
+                </div>
+                <div className="stack">
+                  {debts.map((debt) => (
+                    <div className={`transaction-row ${debt.isPaid ? 'paid-debt' : ''}`} key={debt.id} style={{ opacity: debt.isPaid ? 0.6 : 1 }}>
+                      <div>
+                        <strong>{debt.personName}</strong>
+                        <span>
+                          {debt.type === 'DEBT' ? 'Vay' : 'Cho vay'} • {format(debt.timestamp, 'dd/MM')}
+                          {debt.dueDate ? ` • Hạn: ${format(debt.dueDate, 'dd/MM/yyyy')}` : ''}
+                        </span>
+                        {debt.note && <span className="note-line">{debt.note}</span>}
+                      </div>
+                      <div className="row-right">
+                        <b className={debt.type === 'DEBT' ? 'income' : 'expense'}>
+                          {debt.type === 'DEBT' ? '+' : '-'}{formatCurrency(debt.amount, debt.currency, exchangeRate)}
+                        </b>
+                        <div className="row-actions">
+                          <button type="button" className={`mini-icon ${debt.isPaid ? 'success' : ''}`} onClick={(e) => { e.stopPropagation(); handleTogglePaidDebt(debt) }} aria-label="Danh dau da tra">
+                            <CheckCircle size={14} color={debt.isPaid ? '#16A34A' : 'currentColor'} />
+                          </button>
+                          <button type="button" className="mini-icon" onClick={(e) => { e.stopPropagation(); openDebtModal(debt) }} aria-label="Sua ghi chu vay">
+                            <Pencil size={14} />
+                          </button>
+                          <button type="button" className="mini-icon danger" onClick={(e) => { e.stopPropagation(); handleDeleteDebt(debt.id) }} aria-label="Xoa ghi chu vay">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {debts.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Không có ghi chú vay/nợ.' : 'No debt/loan records.'}</p>}
+                </div>
+              </article>
+            )}
+
+            {activeTab === 'REPORTS' && (
+              <article className="section-block">
+                <div className="section-title">
+                  <h2>Bao cao</h2>
+                  <BarChart3 size={20} />
+                </div>
+
+                <div className="report-toolbar">
+                  <label>
+                    <span>Thang</span>
+                    <input
+                      type="month"
+                      value={reportMonthFilter}
+                      onChange={(event) => setReportMonthFilter(event.target.value)}
+                    />
+                  </label>
+                </div>
+
+                <div className="report-summary">
+                  <span>Thu: {formatCurrency(reportIncomeTotal)}</span>
+                  <span>Chi: {formatCurrency(reportExpenseTotal)}</span>
+                  <span className={reportIncomeTotal - reportExpenseTotal < 0 ? 'expense' : 'income'}>
+                    Net: {formatCurrency(reportIncomeTotal - reportExpenseTotal)}
+                  </span>
+                </div>
+
+                <div style={{ marginTop: 24 }}>
+                  <h3 style={{ fontSize: 16, margin: '0 0 12px', textAlign: 'center', color: 'var(--muted)' }}>Cơ cấu chi tiêu</h3>
+                  {reportCategoryRows.length > 0 ? (
+                    <EChart options={categoryPieOptions} style={{ height: '240px' }} />
+                  ) : (
+                    <p className="empty-note">Thang nay chua co chi tieu de thong ke.</p>
+                  )}
+                </div>
+
+                <div style={{ marginTop: 24 }}>
+                  <h3 style={{ fontSize: 16, margin: '0 0 12px', textAlign: 'center', color: 'var(--muted)' }}>Dong tien 6 thang gan nhat</h3>
+                  <EChart options={cashflowBarOptions} style={{ height: '260px' }} />
+                </div>
+              </article>
+            )}
+          </section>
+        </>
+      )}
 
       {activeTab === 'SETTINGS' && (
         <section className="section-block">
@@ -1366,6 +1412,20 @@ function App() {
                 {pin ? (lang === 'vi' ? 'Tắt PIN' : 'Disable PIN') : (lang === 'vi' ? 'Cài PIN' : 'Set PIN')}
               </button>
             </div>
+          <div className="section-title" style={{ marginTop: 24 }}>
+            <h2>{lang === 'vi' ? 'Công cụ mở rộng' : 'Tools'}</h2>
+            <Tags size={20} />
+          </div>
+          <div className="stack" style={{ marginBottom: '24px' }}>
+            <button type="button" className="action-tile" style={{ minHeight: '52px', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--surface)', cursor: 'pointer' }} onClick={() => setActiveTool('BUDGET')}>
+              <PiggyBank size={20} /> {lang === 'vi' ? 'Ngân sách tháng' : 'Monthly Budgets'}
+            </button>
+            <button type="button" className="action-tile" style={{ minHeight: '52px', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--surface)', cursor: 'pointer' }} onClick={() => setActiveTool('RECURRING')}>
+              <Repeat size={20} /> {lang === 'vi' ? 'Giao dịch định kỳ' : 'Recurring Transactions'}
+            </button>
+            <button type="button" className="action-tile" style={{ minHeight: '52px', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--surface)', cursor: 'pointer' }} onClick={() => setActiveTool('GOAL')}>
+              <Target size={20} /> {lang === 'vi' ? 'Mục tiêu tiết kiệm' : 'Saving Goals'}
+            </button>
           </div>
 
           <div className="section-title">
@@ -1409,13 +1469,13 @@ function App() {
       )}
 
       <nav className="bottom-nav" aria-label="Dieu huong chinh">
-        <button className={activeTab === 'DASHBOARD' ? 'active' : ''} onClick={() => setActiveTab('DASHBOARD')} type="button">
+        <button className={activeTab === 'DASHBOARD' && activeTool === 'NONE' ? 'active' : ''} onClick={() => { setActiveTab('DASHBOARD'); setActiveTool('NONE') }} type="button">
           <WalletCards size={20} />
           {lang === 'vi' ? 'Tổng quan' : 'Home'}
         </button>
-        <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} type="button">
-          <Target size={20} />
-          {lang === 'vi' ? 'Công cụ' : 'Tools'}
+        <button className={activeTab === 'DEBTS' && activeTool === 'NONE' ? 'active' : ''} onClick={() => { setActiveTab('DEBTS'); setActiveTool('NONE') }} type="button">
+          <Users size={20} />
+          {lang === 'vi' ? 'Vay nợ' : 'Debts'}
         </button>
         
         <div className="fab-container">
@@ -1424,11 +1484,11 @@ function App() {
           </button>
         </div>
 
-        <button className={activeTab === 'REPORTS' ? 'active' : ''} onClick={() => setActiveTab('REPORTS')} type="button">
+        <button className={activeTab === 'REPORTS' && activeTool === 'NONE' ? 'active' : ''} onClick={() => { setActiveTab('REPORTS'); setActiveTool('NONE') }} type="button">
           <BarChart3 size={20} />
           {lang === 'vi' ? 'Báo cáo' : 'Reports'}
         </button>
-        <button className={activeTab === 'SETTINGS' ? 'active' : ''} onClick={() => setActiveTab('SETTINGS')} type="button">
+        <button className={activeTab === 'SETTINGS' || activeTool !== 'NONE' ? 'active' : ''} onClick={() => { setActiveTab('SETTINGS'); setActiveTool('NONE') }} type="button">
           <Settings size={20} />
           {lang === 'vi' ? 'Cài đặt' : 'Settings'}
         </button>
