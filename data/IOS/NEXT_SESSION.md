@@ -6,55 +6,48 @@
 
 ## Current state
 
-PWA app is now functional with IndexedDB and CRUD for:
+PWA app now has working local data CRUD for:
 
 - Accounts
 - Transactions
 - Categories
-- Monthly Budgets
+- Monthly budgets
+- Basic reports
 
-And now has a basic Reports module from real grouped data.
+## New updates in this session
 
-## What is working now
+1. Backup now exports `.kat` file extension (payload is JSON structure for compatibility progress).
+2. Import now accepts `.kat` and `.json`.
+3. Budget section now has over-budget warning banner:
+   - Shows number of categories over limit
+   - Shows total over-budget amount
 
-1. Core + PWA
-   - Vite + React + TypeScript + `vite-plugin-pwa`
-2. Active DB tables
-   - `sources`, `transactions`, `categories`, `budgets`
-3. Accounts
+## Working modules now
+
+1. Accounts
    - Create/edit/delete
-   - Rename relinks old transaction `sourceName`
-   - Delete blocked if transactions exist
-4. Transactions
+   - Rename relinks transaction source names
+2. Transactions
    - Create/edit/delete
-   - Filter by text, type, account
-   - Category suggestions from `categories`
-5. Categories
-   - Preset seed first run
+   - Filters (text/type/account)
+3. Categories
+   - Preset seed
    - Create/edit/delete
    - Rename relinks transaction category names
-   - Delete blocked if linked to transactions or budgets
-6. Budgets (month + expense category)
-   - Create/edit/delete
-   - Duplicate guard for same `monthYear + categoryId`
-   - Shows spent/limit/remaining(over) + progress
-7. Reports (new this session)
-   - Month picker report
-   - Month income/expense/net summary
-   - Top expense categories (bar + percent)
-   - Last 6 months income/expense/net mini grid
-8. Backup JSON
-   - Export/import includes `sources`, `transactions`, `categories`, `budgets`
-   - Old JSON without categories still auto-seeds presets
-
-## Files updated this session
-
-- `src/App.tsx`
-  - added report data aggregation and UI section
-- `src/App.css`
-  - added report styles
-- `NEXT_SESSION.md`
-  - refreshed handoff
+   - Delete blocked if used by transactions or budgets
+4. Budgets
+   - Create/edit/delete by month + expense category
+   - Duplicate guard per month/category
+   - Progress + remaining/over
+   - Over-budget warning summary
+5. Reports (basic)
+   - Month income/expense/net
+   - Top expense categories
+   - Last 6 months summary grid
+6. Backup
+   - Export `.kat`
+   - Import `.kat` / `.json`
+   - Includes `sources`, `transactions`, `categories`, `budgets`
 
 ## Run
 
@@ -64,44 +57,35 @@ npm install
 npm run dev -- --host 0.0.0.0
 ```
 
-Fallback when `npm` command is not recognized:
+Fallback if npm command is not recognized:
 
 ```powershell
 cd "D:\02_PROJECTS\4_KAT BUDGET\data\IOS"
 powershell -ExecutionPolicy Bypass -File .\RUN_DEV.ps1
 ```
 
-Note: this machine often auto-switches from `5173` to `5174`.
+## Verify quick
 
-## Quick verify
-
-- Add/edit/delete account, category, budget, transaction
-- Create expense transactions and confirm:
-  - budget spent/remaining updates
-  - report month summary + category bars update
-- Export backup -> refresh -> import -> data restored
+- Create budget with small limit, add expense tx, confirm over-budget banner appears.
+- Export backup `.kat`, refresh app, import file back.
+- Import old `.json` backup still works.
 
 ## Still pending
 
 1. Debt module
 2. Goal module
 3. Recurring module
-4. More advanced charts with ECharts (current report is CSS-based, no ECharts yet)
-5. Android `.kat` backup compatibility
-6. UI parity polish with Android app
+4. ECharts-based report charts
+5. True Android `.kat` format compatibility if Android app uses non-JSON encoding/spec
+6. Android UI parity polish
 
 ## Message for Antigrivity
 
-Hi Antigrivity, current foundation is stable and now includes basic Reports.
+Hi Antigrivity, this round focused on backup compatibility progress and budget UX.
 
-Recommended next order:
+Please continue with this order:
 
-1. Implement Debt module with same CRUD/modal patterns in `App.tsx`.
-2. Upgrade Reports to ECharts (stacked monthly cashflow + category pie/bar).
-3. Keep backup backward-compatible while adding new fields/tables.
-4. If schema changes, append migration notes here before coding.
-
-Constraint reminder:
-
-- Budgets use `categoryId`, but transactions still keep category as text name.
-- Rename flows already relink names; keep this behavior intact.
+1. Confirm real Android `.kat` format spec from native app and adapt parser/exporter if needed.
+2. Upgrade Reports to ECharts visuals using current grouped data.
+3. Then implement Debt module with existing modal/CRUD conventions.
+4. Keep backup backward-compatible; note any schema migration in this file before coding.

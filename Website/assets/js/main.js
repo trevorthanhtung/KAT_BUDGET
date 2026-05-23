@@ -41,16 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
             heroDesc: "Ghi thu chi, lập ngân sách và xem báo cáo dòng tiền trong một trải nghiệm gọn, rõ và dễ theo dõi.",
             btnDownload: "Tải Ứng Dụng",
             btnDownloadAndroid: "Tải ngay",
-            btnDownloadIos: "Sắp ra mắt",
+            btnWebApp: "Web App (Sắp ra mắt)",
             btnInstallGuide: "Hướng dẫn cài đặt",
             btnSubtext: "Kiểm tra APK trên VirusTotal",
             btnVersion: "Phiên bản v3.0.0",
             downloadVersionLabel: "Phiên bản",
             downloadSizeLabel: "Dung lượng",
             downloadPlatformLabel: "Nền tảng",
-            downloadPlatformValue: "Android 11+ · iOS 16+",
+            downloadPlatformValue: "Android 11+ · Web App (Đa nền tảng)",
             downloadUpdatedLabel: "Cập nhật",
-            iosComingSoonText: "Sắp ra mắt.",
+            webAppComingSoonText: "Web App đa nền tảng đang được hoàn thiện. Bạn chờ chút nhé!",
             devBy: "Phát triển bởi",
             devSupport: "Hỗ Trợ Nhanh",
             guaranteeTitle: "Dữ liệu lưu cục bộ trên thiết bị",
@@ -150,16 +150,16 @@ document.addEventListener("DOMContentLoaded", () => {
             heroDesc: "Track money, plan budgets, and review cash flow in a clean, focused experience.",
             btnDownload: "Download App",
             btnDownloadAndroid: "Download now",
-            btnDownloadIos: "Coming soon",
+            btnWebApp: "Web App (Coming soon)",
             btnInstallGuide: "Install guide",
             btnSubtext: "Check APK on VirusTotal",
             btnVersion: "Version 3.0.0",
             downloadVersionLabel: "Version",
             downloadSizeLabel: "Size",
             downloadPlatformLabel: "Platform",
-            downloadPlatformValue: "Android 11+ · iOS 16+",
+            downloadPlatformValue: "Android 11+ · Web App",
             downloadUpdatedLabel: "Updated",
-            iosComingSoonText: "Coming soon.",
+            webAppComingSoonText: "Cross-platform Web App is currently in development. Please stay tuned!",
             devBy: "Developed by",
             devSupport: "Quick Support",
             guaranteeTitle: "Data stays locally on your device",
@@ -289,11 +289,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const iosComingSoonBtn = document.getElementById('iosComingSoon');
+    const webAppBtn = document.getElementById('webAppBtn');
     const siteToast = document.getElementById('siteToast');
     let toastTimer;
-    if (iosComingSoonBtn && siteToast) {
-        iosComingSoonBtn.addEventListener('click', () => {
+    if (webAppBtn && siteToast) {
+        webAppBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             siteToast.classList.add('show');
             window.clearTimeout(toastTimer);
             toastTimer = window.setTimeout(() => {

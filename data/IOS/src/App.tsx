@@ -263,6 +263,8 @@ function App() {
   const totalBudgetSpent = budgetRows.reduce((sum, row) => sum + row.spent, 0)
   const totalBudgetPercent =
     totalBudgetLimit <= 0 ? 0 : Math.min(100, Math.round((totalBudgetSpent / totalBudgetLimit) * 100))
+  const overBudgetRows = budgetRows.filter((row) => row.isOver)
+  const overBudgetTotal = overBudgetRows.reduce((sum, row) => sum + Math.abs(row.remaining), 0)
 
   let reportIncomeTotal = 0
   let reportExpenseTotal = 0
@@ -630,10 +632,10 @@ function App() {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `KatBudget_Backup_${format(new Date(), 'yyyyMMdd_HHmmss')}.json`
+    link.download = `KatBudget_Backup_${format(new Date(), 'yyyyMMdd_HHmmss')}.kat`
     link.click()
     URL.revokeObjectURL(url)
-    setStatusMessage('Da xuat backup JSON.')
+    setStatusMessage('Da xuat backup .kat.')
   }
 
   const handlePickImportFile = () => {
@@ -676,7 +678,7 @@ function App() {
       })
       setStatusMessage('Da phuc hoi backup.')
     } catch {
-      setStatusMessage('File backup khong hop le.')
+      setStatusMessage('File backup khong hop le (.json/.kat).')
     } finally {
       event.target.value = ''
     }
@@ -721,7 +723,7 @@ function App() {
           <PiggyBank size={20} /> Ngan sach
         </button>
         <button type="button" className="action-tile" onClick={handleExportBackup}>
-          <Download size={20} /> Sao luu
+          <Download size={20} /> Sao luu .kat
         </button>
         <button type="button" className="action-tile" onClick={handlePickImportFile}>
           <FileUp size={20} /> Phuc hoi
@@ -730,7 +732,7 @@ function App() {
           ref={fileInputRef}
           type="file"
           className="visually-hidden"
-          accept="application/json"
+          accept=".json,.kat,application/json,text/plain"
           onChange={handleImportBackup}
         />
       </section>
@@ -831,6 +833,12 @@ function App() {
             <span>Han muc: {formatCurrency(totalBudgetLimit)}</span>
             <span>{totalBudgetPercent}%</span>
           </div>
+
+          {overBudgetRows.length > 0 && (
+            <p className="budget-alert">
+              Co {overBudgetRows.length} danh muc vuot ngan sach, tong vuot {formatCurrency(overBudgetTotal)}.
+            </p>
+          )}
 
           <div className="stack">
             {budgetRows.map((row) => (

@@ -418,6 +418,17 @@
   color: var(--muted);
 }
 
+.budget-alert {
+  margin: 0 0 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(180, 35, 24, 0.26);
+  border-radius: 8px;
+  background: rgba(180, 35, 24, 0.08);
+  color: var(--negative);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .budget-progress {
   margin-top: 6px;
   display: grid;
