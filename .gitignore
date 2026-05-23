@@ -7,3 +7,18 @@ data/KAT Budget/.gradle/
 data/KAT Budget/build/
 data/KAT Budget/app/build/
 data/KAT Budget/local.properties
+
+# Custom secure ignores added by agent
+*.jks
+*.keystore
+*.pem
+*.key
+*.p12
+*.cer
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+dev-dist/
+.DS_Store

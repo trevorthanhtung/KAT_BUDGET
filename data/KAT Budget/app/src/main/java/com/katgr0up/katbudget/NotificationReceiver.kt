@@ -25,7 +25,7 @@ class NotificationReceiver : BroadcastReceiver() {
         if (!context.canPostNotifications()) return
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_menu_today)
+            .setSmallIcon(R.drawable.vector)
             .setContentTitle(context.getString(R.string.notif_daily_title))
             .setContentText(context.getString(R.string.notif_daily_content))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
