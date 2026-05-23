@@ -1,7 +1,9 @@
 kat_key
+katbudget_key
+data/katbudget_key
 PDF/
-KATWallet/.idea/
-KATWallet/.gradle/
-KATWallet/build/
-KATWallet/app/build/
-KATWallet/local.properties
+data/KAT Budget/.idea/
+data/KAT Budget/.gradle/
+data/KAT Budget/build/
+data/KAT Budget/app/build/
+data/KAT Budget/local.properties
