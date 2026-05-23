@@ -1,22 +1,31 @@
-:root {
-  --text: #17201f;
-  --muted: #6b7a76;
-  --bg: #f7f3ea;
-  --surface: #fffaf0;
-  --subtle: #f0eadf;
-  --border: #ded5c4;
-  --accent: #0f766e;
-  --accent-soft: #d7f2ed;
-  --positive: #15803d;
-  --negative: #b42318;
-  --shadow: rgba(24, 39, 34, 0.08) 0 12px 28px;
-  --shadow-strong: rgba(24, 39, 34, 0.18) 0 18px 46px;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-  --sans: Avenir Next, Aptos, Segoe UI, sans-serif;
-  --heading: Georgia, Cambria, serif;
+:root {
+  --text: #111827;
+  --muted: #6B7280;
+  --bg: #F6F8FA;
+  --surface: rgba(255, 255, 255, 0.7);
+  --subtle: #EAFBF2;
+  --border: rgba(255, 255, 255, 0.15);
+  
+  --accent: #16A34A;
+  --accent-soft: rgba(22, 163, 74, 0.12);
+  --accent-light: #4ADE80;
+  --accent-lime: #A3E635;
+  
+  --positive: #22C55E;
+  --negative: #EF4444;
+  --warning: #F59E0B;
+  --info: #8B5CF6;
+  
+  --shadow: 0 8px 12px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255,255,255,0.4);
+  --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255,255,255,0.6);
+
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --heading: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
 
   font: 16px/145% var(--sans);
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -24,23 +33,22 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #e8f0ed;
-    --muted: #a6b5b0;
-    --bg: #121816;
-    --surface: #1b2421;
-    --subtle: #24302c;
-    --border: #34413d;
-    --accent: #5eead4;
-    --accent-soft: rgba(94, 234, 212, 0.12);
-    --positive: #86efac;
-    --negative: #fca5a5;
-    --shadow: rgba(0, 0, 0, 0.22) 0 12px 28px;
-    --shadow-strong: rgba(0, 0, 0, 0.34) 0 18px 46px;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --bg: #0D1117;
+    --surface: rgba(22, 27, 34, 0.7);
+    --subtle: #0F2A22;
+    --border: rgba(255, 255, 255, 0.08);
+    
+    --accent: #4ADE80;
+    --accent-soft: rgba(74, 222, 128, 0.12);
+    
+    --shadow: 0 8px 12px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255,255,255,0.05);
+    --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
   }
 }
 
@@ -55,10 +63,11 @@
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    linear-gradient(115deg, rgba(15, 118, 110, 0.12), transparent 34%),
-    repeating-linear-gradient(90deg, rgba(15, 118, 110, 0.04) 0 1px, transparent 1px 72px),
-    var(--bg);
+  background: var(--bg);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(74, 222, 128, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+  background-attachment: fixed;
 }
 
 button {

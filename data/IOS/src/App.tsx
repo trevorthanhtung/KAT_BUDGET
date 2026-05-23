@@ -21,7 +21,28 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { format } from 'date-fns'
 import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from 'react'
 import { db, type Budget, type Category, type MoneySource, type Transaction, type Debt } from './data/db'
+import * as echarts from 'echarts'
 import './App.css'
+
+function EChart({ options, style }: { options: echarts.EChartsCoreOption, style?: React.CSSProperties }) {
+  const chartRef = useRef<HTMLDivElement>(null)
+  
+  useEffect(() => {
+    if (!chartRef.current) return
+    const chart = echarts.init(chartRef.current)
+    chart.setOption(options)
+    
+    const handleResize = () => chart.resize()
+    window.addEventListener('resize', handleResize)
+    
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      chart.dispose()
+    }
+  }, [options])
+
+  return <div ref={chartRef} style={{ width: '100%', height: '300px', ...style }} />
+}
 
 type SourceForm = {
   name: string
@@ -345,10 +366,23 @@ function App() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8)
     .map(([categoryName, amount]) => ({
-      categoryName,
-      amount,
-      percent: reportExpenseTotal <= 0 ? 0 : Math.round((amount / reportExpenseTotal) * 100),
+      name: categoryName,
+      value: amount,
     }))
+
+  const categoryPieOptions: echarts.EChartsCoreOption = {
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    series: [
+      {
+        type: 'pie',
+        radius: ['40%', '70%'],
+        itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+        label: { show: false },
+        data: reportCategoryRows,
+        color: ['#16A34A', '#4ADE80', '#A3E635', '#22C55E', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0']
+      }
+    ]
+  }
 
   const monthlyCashflowRows = getRecentMonthKeys(6).map((monthYear) => {
     let income = 0
@@ -365,6 +399,18 @@ function App() {
       net: income - expense,
     }
   })
+
+  const cashflowBarOptions: echarts.EChartsCoreOption = {
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { data: ['Thu', 'Chi'], bottom: 0 },
+    grid: { left: '3%', right: '4%', bottom: '15%', top: '5%', containLabel: true },
+    xAxis: { type: 'category', data: monthlyCashflowRows.map(r => r.monthYear.substring(5)) },
+    yAxis: { type: 'value', splitLine: { lineStyle: { type: 'dashed' } } },
+    series: [
+      { name: 'Thu', type: 'bar', data: monthlyCashflowRows.map(r => r.income), itemStyle: { color: '#22C55E', borderRadius: [4, 4, 0, 0] } },
+      { name: 'Chi', type: 'bar', data: monthlyCashflowRows.map(r => r.expense), itemStyle: { color: '#EF4444', borderRadius: [4, 4, 0, 0] } }
+    ]
+  }
 
   useEffect(() => {
     if (budgetForm.categoryId) return
@@ -1042,32 +1088,18 @@ function App() {
             </span>
           </div>
 
-          <div className="stack">
-            {reportCategoryRows.map((row) => (
-              <div className="report-category-row" key={row.categoryName}>
-                <div>
-                  <strong>{row.categoryName}</strong>
-                  <span>{formatCurrency(row.amount)} • {row.percent}%</span>
-                  <div className="report-bar-track">
-                    <div className="report-bar-fill" style={{ width: `${row.percent}%` }} />
-                  </div>
-                </div>
-              </div>
-            ))}
-            {reportCategoryRows.length === 0 && <p className="empty-note">Thang nay chua co chi tieu de thong ke.</p>}
+          <div style={{ marginTop: 24 }}>
+            <h3 style={{ fontSize: 16, margin: '0 0 12px', textAlign: 'center', color: 'var(--muted)' }}>Cơ cấu chi tiêu</h3>
+            {reportCategoryRows.length > 0 ? (
+              <EChart options={categoryPieOptions} style={{ height: '240px' }} />
+            ) : (
+              <p className="empty-note">Thang nay chua co chi tieu de thong ke.</p>
+            )}
           </div>
 
-          <div className="report-monthly-grid">
-            {monthlyCashflowRows.map((row) => (
-              <div className="report-month-cell" key={row.monthYear}>
-                <strong>{row.monthYear}</strong>
-                <span className="income">+{formatCurrency(row.income)}</span>
-                <span className="expense">-{formatCurrency(row.expense)}</span>
-                <span className={row.net < 0 ? 'expense' : 'income'}>
-                  {row.net < 0 ? '-' : '+'}{formatCurrency(Math.abs(row.net))}
-                </span>
-              </div>
-            ))}
+          <div style={{ marginTop: 24 }}>
+            <h3 style={{ fontSize: 16, margin: '0 0 12px', textAlign: 'center', color: 'var(--muted)' }}>Dong tien 6 thang gan nhat</h3>
+            <EChart options={cashflowBarOptions} style={{ height: '260px' }} />
           </div>
         </article>
 
