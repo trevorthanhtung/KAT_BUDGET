@@ -995,13 +995,7 @@ progress::-webkit-progress-value {
 
 
 
-  70% {
-    box-shadow: 0 0 0 14px rgba(22, 163, 74, 0), 0 6px 16px rgba(22, 163, 74, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0), 0 6px 16px rgba(22, 163, 74, 0.2);
-  }
-}
+  
 
 .modal-overlay {
   background: rgba(11, 15, 14, 0.35);
@@ -1219,13 +1213,7 @@ progress::-webkit-progress-value {
   0% {
     box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.3), 0 4px 16px rgba(0, 0, 0, 0.1);
   }
-  70% {
-    box-shadow: 0 0 0 16px rgba(76, 175, 80, 0), 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0), 0 4px 16px rgba(0, 0, 0, 0.1);
-  }
-}
+  
 
 .bottom-nav .fab-button {
   position: relative !important;
