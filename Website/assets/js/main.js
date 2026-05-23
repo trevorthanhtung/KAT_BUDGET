@@ -1,5 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add('js-enabled');
+
+    // === 0. MICRO-INTERACTION UTILITIES ===
+    const haptic = (ms = 30) => { try { navigator.vibrate && navigator.vibrate(ms); } catch(e) {} };
+    let _audioCtx;
+    const microClick = () => {
+        try {
+            if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = _audioCtx.createOscillator();
+            const g = _audioCtx.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(1800, _audioCtx.currentTime);
+            g.gain.setValueAtTime(0.03, _audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.06);
+            o.connect(g).connect(_audioCtx.destination);
+            o.start();
+            o.stop(_audioCtx.currentTime + 0.06);
+        } catch(e) {}
+    };
     
     // === 1. XỬ LÝ THEME ===
     const themeBtn = document.getElementById('theme-btn');
@@ -23,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
             isDarkMode = !isDarkMode;
             applyTheme(isDarkMode);
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            haptic();
+            microClick();
         });
     }
 
@@ -43,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnDownloadAndroid: "Tải ngay",
             btnWebApp: "Web App",
             btnInstallGuide: "Hướng dẫn cài đặt",
+            btnShare: "Chia sẻ",
             webAppModalTitle: "Lưu ý & Hướng dẫn (iOS)",
             webAppModalDesc: "Web App đa nền tảng đang trong quá trình phát triển nên có thể chưa hoàn thiện 100%.",
             webAppModalGuideTitle: "Cài đặt lên màn hình chính iOS:",
@@ -164,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnDownloadAndroid: "Download now",
             btnWebApp: "Web App",
             btnInstallGuide: "Install guide",
+            btnShare: "Share",
             webAppModalTitle: "Notice & iOS Guide",
             webAppModalDesc: "The cross-platform Web App is still in development and may not be 100% stable.",
             webAppModalGuideTitle: "Install to iOS Home Screen:",
@@ -310,6 +332,8 @@ document.addEventListener("DOMContentLoaded", () => {
             currentLang = currentLang === 'vi' ? 'en' : 'vi';
             applyLanguage(currentLang);
             localStorage.setItem('lang', currentLang);
+            haptic();
+            microClick();
         });
     }
 
@@ -464,6 +488,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 top: 0,
                 behavior: 'smooth'
             });
+        });
+    }
+
+    // === 9. NÚT CHIA SẺ ===
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            haptic(50);
+            const shareData = {
+                title: 'KAT Budget',
+                text: currentLang === 'vi'
+                    ? 'Quản lý chi tiêu gọn gàng với KAT Budget — miễn phí, đa nền tảng!'
+                    : 'Manage your finances with KAT Budget — free, cross-platform!',
+                url: 'https://katbudget.vercel.app'
+            };
+            if (navigator.share) {
+                try { await navigator.share(shareData); } catch(e) {}
+            } else {
+                try {
+                    await navigator.clipboard.writeText(shareData.url);
+                    const orig = shareBtn.querySelector('span');
+                    if (orig) {
+                        const prevText = orig.textContent;
+                        orig.textContent = currentLang === 'vi' ? 'Đã sao chép!' : 'Copied!';
+                        setTimeout(() => { orig.textContent = prevText; }, 2000);
+                    }
+                } catch(e) {}
+            }
         });
     }
 });

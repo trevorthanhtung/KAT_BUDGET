@@ -265,7 +265,13 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
 .section-title { text-align: center; font-size: 2.5rem; margin: 100px 0 40px; }
 .bento-grid { max-width: 1000px; margin: 0 auto; padding: 0 5%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 .bento-large { grid-column: span 2; display: flex; flex-direction: column; justify-content: center; }
-.card-icon { width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: var(--accent-primary); border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; font-size: 1.4rem; margin-bottom: 24px; border: 1px solid rgba(16, 185, 129, 0.2); }
+.card-icon { width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: var(--accent-primary); border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; font-size: 1.4rem; margin-bottom: 24px; border: 1px solid rgba(16, 185, 129, 0.2); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.bento-card:hover .card-icon { animation: icon-bounce 0.5s ease; }
+@keyframes icon-bounce { 0% { transform: scale(1); } 30% { transform: scale(1.2) rotate(-5deg); } 60% { transform: scale(0.95) rotate(3deg); } 100% { transform: scale(1) rotate(0); } }
+.cta-button:not(.cta-button-outline):not(.cta-button-secondary) { animation: cta-glow 3s ease-in-out infinite; }
+@keyframes cta-glow { 0%, 100% { box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3); } 50% { box-shadow: 0 4px 30px rgba(16, 185, 129, 0.55); } }
+.theme-toggle, .lang-toggle { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.theme-toggle:active, .lang-toggle:active { transform: scale(0.85); }
 .bento-card h3 { font-size: 1.3rem; margin-bottom: 12px; }
 
 .exchange-section {

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://katbudget.vercel.app/sitemap.xml

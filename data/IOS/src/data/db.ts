@@ -51,12 +51,34 @@ export type Debt = {
   paidAmount: number
 }
 
+export type SavingGoal = {
+  id: number
+  name: string
+  targetAmount: number
+  currentAmount: number
+  currency: string
+}
+
+export type RecurringTransaction = {
+  id: number
+  amount: number
+  type: 'INCOME' | 'EXPENSE'
+  category: string
+  note: string
+  sourceName: string
+  currency: string
+  dayOfMonth: number
+  lastExecutedMonth: string
+}
+
 export const db = new Dexie('kat_budget_pwa') as Dexie & {
   sources: EntityTable<MoneySource, 'id'>
   transactions: EntityTable<Transaction, 'id'>
   budgets: EntityTable<Budget, 'id'>
   categories: EntityTable<Category, 'id'>
   debts: EntityTable<Debt, 'id'>
+  saving_goals: EntityTable<SavingGoal, 'id'>
+  recurrings: EntityTable<RecurringTransaction, 'id'>
 }
 
 db.version(1).stores({
@@ -68,4 +90,9 @@ db.version(1).stores({
 
 db.version(2).stores({
   debts: '++id, personName, type, timestamp, isPaid, dueDate',
+})
+
+db.version(3).stores({
+  saving_goals: '++id, name, currency',
+  recurrings: '++id, type, category, sourceName, dayOfMonth, lastExecutedMonth',
 })

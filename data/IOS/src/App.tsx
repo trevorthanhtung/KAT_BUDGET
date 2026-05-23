@@ -16,11 +16,17 @@ import {
   WalletCards,
   Users,
   CheckCircle,
+  FileText,
+  Lock,
+  Globe,
+  Target,
+  Repeat,
+  X,
 } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { format } from 'date-fns'
 import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from 'react'
-import { db, type Budget, type Category, type MoneySource, type Transaction, type Debt } from './data/db'
+import { db, type Budget, type Category, type MoneySource, type Transaction, type Debt, type SavingGoal, type RecurringTransaction } from './data/db'
 import * as echarts from 'echarts'
 import './App.css'
 
@@ -49,6 +55,23 @@ type SourceForm = {
   type: MoneySource['type']
   includeInTotal: boolean
   initialBalance: string
+}
+
+type GoalForm = {
+  name: string
+  targetAmount: string
+  currentAmount: string
+  currency: string
+}
+
+type RecurringForm = {
+  amount: string
+  type: 'INCOME' | 'EXPENSE'
+  category: string
+  note: string
+  sourceName: string
+  currency: string
+  dayOfMonth: string
 }
 
 type TxForm = {
@@ -208,10 +231,26 @@ function App() {
   const categories = useLiveQuery(() => db.categories.orderBy('name').toArray(), []) ?? []
   const budgets = useLiveQuery(() => db.budgets.orderBy('monthYear').reverse().toArray(), []) ?? []
   const debts = useLiveQuery(() => db.debts.orderBy('timestamp').reverse().toArray(), []) ?? []
+  const savingGoals = useLiveQuery(() => db.saving_goals.orderBy('name').toArray(), []) ?? []
+  const recurrings = useLiveQuery(() => db.recurrings.toArray(), []) ?? []
 
   const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'REPORTS' | 'DEBTS' | 'SETTINGS'>('DASHBOARD')
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system')
   const [lang, setLang] = useState<'vi' | 'en'>('vi')
+  const [exchangeRate, setExchangeRate] = useState(() => Number(localStorage.getItem('kat_exchange_rate')) || 25000)
+  
+  const [pin, setPin] = useState(() => localStorage.getItem('kat_pin') || '')
+  const [isUnlocked, setIsUnlocked] = useState(() => !localStorage.getItem('kat_pin'))
+  const [pinInput, setPinInput] = useState('')
+  const [showPwaBanner, setShowPwaBanner] = useState(false)
+
+  useEffect(() => {
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+      if (!sessionStorage.getItem('kat_pwa_dismissed')) {
+        setShowPwaBanner(true)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const root = document.documentElement
@@ -285,13 +324,17 @@ function App() {
   let monthExpense = 0
   const monthKey = format(new Date(), 'yyyy-MM')
 
-  for (const tx of transactions) {
+  transactions.forEach((tx) => {
     const delta = transactionDelta(tx)
-    balancesBySource[tx.sourceName] = (balancesBySource[tx.sourceName] ?? 0) + delta
-    if (format(tx.timestamp, 'yyyy-MM') !== monthKey) continue
+    let convertedDelta = delta
+    if (tx.currency && tx.currency !== 'VND') {
+      convertedDelta = delta * exchangeRate
+    }
+    balancesBySource[tx.sourceName] = (balancesBySource[tx.sourceName] ?? 0) + convertedDelta
+    if (format(tx.timestamp, 'yyyy-MM') !== monthKey) return
     if (delta > 0) monthIncome += delta
     if (delta < 0) monthExpense += Math.abs(delta)
-  }
+  })
 
   let netWorth = 0
   for (const source of sources) {
@@ -755,32 +798,38 @@ function App() {
     setStatusMessage('Da xoa giao dich.')
   }
 
-  const handleSaveDebt = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSaveDebt = async (event: FormEvent) => {
     event.preventDefault()
-    const amount = parseAmount(debtForm.amount)
-    const personName = debtForm.personName.trim()
-    if (amount <= 0 || !personName) return
+    if (!debtForm.personName || !debtForm.amount) return
 
-    const dueDateTimestamp = debtForm.dueDate ? new Date(debtForm.dueDate).getTime() : null
+    const parsedAmount = Number(debtForm.amount)
+    if (isNaN(parsedAmount) || parsedAmount <= 0) return
 
-    if (editingDebtId == null) {
-      await db.debts.add({
-        personName,
-        amount,
-        currency: debtForm.currency.trim().toUpperCase() || 'VND',
+    let parsedDueDate: number | null = null
+    if (debtForm.dueDate) {
+      const parts = debtForm.dueDate.split('-')
+      if (parts.length === 3) {
+        parsedDueDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])).getTime()
+      }
+    }
+
+    if (editingDebtId != null) {
+      await db.debts.update(editingDebtId, {
+        personName: debtForm.personName,
+        amount: parsedAmount,
         type: debtForm.type,
-        note: debtForm.note.trim(),
+        note: debtForm.note,
+        dueDate: parsedDueDate
+      })
+    } else {
+      await db.debts.add({
+        personName: debtForm.personName,
+        amount: parsedAmount,
+        currency: 'VND',
+        type: debtForm.type,
+        note: debtForm.note,
         timestamp: Date.now(),
         isPaid: false,
-        dueDate: dueDateTimestamp,
-        paidAmount: 0,
-      })
-      setStatusMessage('Da them ghi chu vay/no.')
-    } else {
-      const existing = debts.find((d) => d.id === editingDebtId)
-      if (!existing) return
-      await db.debts.put({
-        ...existing,
         personName,
         amount,
         currency: debtForm.currency.trim().toUpperCase() || 'VND',
@@ -882,6 +931,56 @@ function App() {
     } finally {
       event.target.value = ''
     }
+  }
+
+  const handleExportCsv = () => {
+    if (transactions.length === 0) {
+      alert(lang === 'vi' ? 'Không có giao dịch nào để xuất!' : 'No transactions to export!')
+      return
+    }
+    const header = '\uFEFF"ID","Date","Amount","Currency","Type","Category","Source","Note"\n'
+    const rows = transactions.map(tx => {
+      const dateStr = format(tx.timestamp, 'yyyy-MM-dd HH:mm:ss')
+      return `"${tx.id}","${dateStr}","${tx.amount}","${tx.currency}","${tx.type}","${tx.category}","${tx.sourceName}","${tx.note.replace(/"/g, '""')}"`
+    }).join('\n')
+    
+    const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `kat_transactions_${format(new Date(), 'yyyyMMdd_HHmm')}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    setStatusMessage(lang === 'vi' ? 'Đã tải xuống file CSV.' : 'CSV file downloaded.')
+  }
+
+  if (!isUnlocked) {
+    return (
+      <main className="app-shell" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)' }}>
+        <Lock size={48} color="var(--accent)" style={{ marginBottom: 24 }} />
+        <h2 style={{ marginBottom: 24 }}>{lang === 'vi' ? 'Nhập mã PIN' : 'Enter PIN'}</h2>
+        <div style={{ display: 'flex', gap: 12, marginBottom: 32 }}>
+          {[0, 1, 2, 3].map(i => (
+            <div key={i} style={{ width: 16, height: 16, borderRadius: 8, background: i < pinInput.length ? 'var(--text)' : 'var(--border)' }} />
+          ))}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, maxWidth: 280, width: '100%' }}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+            <button key={num} className="numpad-key" onClick={() => setPinInput(p => p.length < 4 ? p + num : p)}>{num}</button>
+          ))}
+          <div />
+          <button className="numpad-key" onClick={() => setPinInput(p => p.length < 4 ? p + '0' : p)}>0</button>
+          <button className="numpad-key" style={{ fontSize: 16 }} onClick={() => setPinInput(p => p.slice(0, -1))}>Xóa</button>
+        </div>
+        <button className="primary-button" style={{ marginTop: 32, width: '280px' }} onClick={() => {
+          if (pinInput === pin) setIsUnlocked(true)
+          else { alert(lang === 'vi' ? 'Mã PIN sai!' : 'Incorrect PIN!'); setPinInput('') }
+        }}>
+          {lang === 'vi' ? 'Mở khóa' : 'Unlock'}
+        </button>
+      </main>
+    )
   }
 
   return (
@@ -1116,8 +1215,54 @@ function App() {
         {activeTab === 'DEBTS' && (
         <article className="section-block">
           <div className="section-title">
-            <h2>Vay / No</h2>
-            <Users size={20} />
+            <h2>{lang === 'vi' ? 'Mục tiêu tiết kiệm' : 'Saving Goals'}</h2>
+            <Target size={20} onClick={() => openGoalModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
+          </div>
+          <div className="stack">
+            {savingGoals.map((goal) => {
+              const progress = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100))
+              return (
+                <div className="transaction-row" key={goal.id} onClick={() => openGoalModal(goal)} style={{ display: 'block', cursor: 'pointer' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <strong>{goal.name}</strong>
+                    <span style={{ fontSize: '14px', color: 'var(--accent)' }}>{progress}%</span>
+                  </div>
+                  <progress max="100" value={progress} style={{ width: '100%', marginBottom: '4px' }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--muted)' }}>
+                    <span>{formatCurrency(goal.currentAmount, goal.currency, exchangeRate)}</span>
+                    <span>{formatCurrency(goal.targetAmount, goal.currency, exchangeRate)}</span>
+                  </div>
+                </div>
+              )
+            })}
+            {savingGoals.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có mục tiêu nào.' : 'No saving goals.'}</p>}
+          </div>
+
+          <div className="section-title" style={{ marginTop: 24 }}>
+            <h2>{lang === 'vi' ? 'Giao dịch định kỳ' : 'Recurring'}</h2>
+            <Repeat size={20} onClick={() => openRecurringModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
+          </div>
+          <div className="stack">
+            {recurrings.map((rec) => (
+              <div className="transaction-row" key={rec.id} onClick={() => openRecurringModal(rec)}>
+                <div>
+                  <strong>{rec.category}</strong>
+                  <span>{lang === 'vi' ? 'Ngày' : 'Day'} {rec.dayOfMonth} hàng tháng</span>
+                  <span className="note-line">{rec.sourceName} {rec.note ? `• ${rec.note}` : ''}</span>
+                </div>
+                <div className="row-right">
+                  <b className={rec.type === 'INCOME' ? 'income' : 'expense'}>
+                    {rec.type === 'INCOME' ? '+' : '-'}{formatCurrency(rec.amount, rec.currency, exchangeRate)}
+                  </b>
+                </div>
+              </div>
+            ))}
+            {recurrings.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Chưa có gd định kỳ.' : 'No recurring transactions.'}</p>}
+          </div>
+
+          <div className="section-title" style={{ marginTop: 24 }}>
+            <h2>{lang === 'vi' ? 'Vay / Nợ' : 'Debts / Loans'}</h2>
+            <Users size={20} onClick={() => openDebtModal()} style={{ cursor: 'pointer', color: 'var(--accent)' }} />
           </div>
           <div className="stack">
             {debts.map((debt) => (
@@ -1132,23 +1277,23 @@ function App() {
                 </div>
                 <div className="row-right">
                   <b className={debt.type === 'DEBT' ? 'income' : 'expense'}>
-                    {debt.type === 'DEBT' ? '+' : '-'}{formatCurrency(debt.amount, debt.currency)}
+                    {debt.type === 'DEBT' ? '+' : '-'}{formatCurrency(debt.amount, debt.currency, exchangeRate)}
                   </b>
                   <div className="row-actions">
-                    <button type="button" className={`mini-icon ${debt.isPaid ? 'success' : ''}`} onClick={() => handleTogglePaidDebt(debt)} aria-label="Danh dau da tra">
+                    <button type="button" className={`mini-icon ${debt.isPaid ? 'success' : ''}`} onClick={(e) => { e.stopPropagation(); handleTogglePaidDebt(debt) }} aria-label="Danh dau da tra">
                       <CheckCircle size={14} color={debt.isPaid ? '#16A34A' : 'currentColor'} />
                     </button>
-                    <button type="button" className="mini-icon" onClick={() => openDebtModal(debt)} aria-label="Sua ghi chu vay">
+                    <button type="button" className="mini-icon" onClick={(e) => { e.stopPropagation(); openDebtModal(debt) }} aria-label="Sua ghi chu vay">
                       <Pencil size={14} />
                     </button>
-                    <button type="button" className="mini-icon danger" onClick={() => handleDeleteDebt(debt.id)} aria-label="Xoa ghi chu vay">
+                    <button type="button" className="mini-icon danger" onClick={(e) => { e.stopPropagation(); handleDeleteDebt(debt.id) }} aria-label="Xoa ghi chu vay">
                       <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
               </div>
             ))}
-            {debts.length === 0 && <p className="empty-note">Khong co ghi chu vay/no nao.</p>}
+            {debts.length === 0 && <p className="empty-note">{lang === 'vi' ? 'Không có ghi chú vay/nợ.' : 'No debt/loan records.'}</p>}
           </div>
         </article>
         )}
@@ -1169,10 +1314,41 @@ function App() {
                 <option value="dark">{lang === 'vi' ? 'Tối' : 'Dark'}</option>
               </select>
             </label>
+            
+            <label style={{ marginTop: 16 }}>
+              {lang === 'vi' ? 'Tỷ giá USD (VND)' : 'USD Exchange Rate (VND)'}
+              <input type="number" value={exchangeRate} onChange={(e) => {
+                const val = Number(e.target.value)
+                setExchangeRate(val)
+                localStorage.setItem('kat_exchange_rate', val.toString())
+              }} style={{ minHeight: '44px', width: '100%', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', padding: '0 12px', marginTop: '8px' }} />
+            </label>
+
+            <div style={{ marginTop: 16, display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
+              <span>{lang === 'vi' ? 'Khóa ứng dụng (PIN)' : 'App Lock (PIN)'}</span>
+              <button className="primary-button" style={{ padding: '8px 16px', borderRadius: 16, width: 'auto' }} onClick={() => {
+                if (pin) {
+                  localStorage.removeItem('kat_pin')
+                  setPin('')
+                  alert(lang === 'vi' ? 'Đã tắt mã PIN' : 'PIN removed')
+                } else {
+                  const newPin = prompt(lang === 'vi' ? 'Nhập mã PIN 4 số mới:' : 'Enter new 4-digit PIN:')
+                  if (newPin && /^\d{4}$/.test(newPin)) {
+                    localStorage.setItem('kat_pin', newPin)
+                    setPin(newPin)
+                    alert(lang === 'vi' ? 'Đã cài mã PIN' : 'PIN set successfully')
+                  } else if (newPin) {
+                    alert(lang === 'vi' ? 'Mã PIN phải gồm 4 chữ số!' : 'PIN must be 4 digits!')
+                  }
+                }
+              }}>
+                {pin ? (lang === 'vi' ? 'Tắt PIN' : 'Disable PIN') : (lang === 'vi' ? 'Cài PIN' : 'Set PIN')}
+              </button>
+            </div>
           </div>
 
           <div className="section-title">
-            <h2>{lang === 'vi' ? 'Cài đặt & Sao lưu' : 'Settings & Backup'}</h2>
+            <h2>{lang === 'vi' ? 'Dữ liệu & Cảnh báo' : 'Data & Alerts'}</h2>
             <Settings size={20} />
           </div>
           <div className="stack">
@@ -1181,6 +1357,9 @@ function App() {
             </button>
             <button className="action-tile" style={{ minHeight: '52px', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--surface)' }} onClick={handlePickImportFile}>
               <FileUp size={20} /> Phuc hoi du lieu (.kat)
+            </button>
+            <button className="action-tile" style={{ minHeight: '52px', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--surface)' }} onClick={handleExportCsv}>
+              <FileText size={20} /> {lang === 'vi' ? 'Xuất báo cáo Excel (.csv)' : 'Export CSV Report'}
             </button>
             <input
               ref={fileInputRef}
@@ -1214,8 +1393,8 @@ function App() {
           {lang === 'vi' ? 'Tổng quan' : 'Home'}
         </button>
         <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} type="button">
-          <Users size={20} />
-          {lang === 'vi' ? 'Vay nợ' : 'Debts'}
+          <Target size={20} />
+          {lang === 'vi' ? 'Công cụ' : 'Tools'}
         </button>
         
         <div className="fab-container">
@@ -1233,6 +1412,18 @@ function App() {
           {lang === 'vi' ? 'Cài đặt' : 'Settings'}
         </button>
       </nav>
+
+      {showPwaBanner && (
+        <div style={{ position: 'fixed', bottom: 84, left: 16, right: 16, background: 'var(--accent)', color: 'white', padding: '12px 16px', borderRadius: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 50, boxShadow: 'var(--shadow)' }}>
+          <div style={{ fontSize: 13, lineHeight: 1.4 }}>
+            <strong>{lang === 'vi' ? 'Cài đặt KAT Budget' : 'Install KAT Budget'}</strong><br/>
+            {lang === 'vi' ? 'Bấm Chia sẻ -> Thêm vào MH chính để dùng như App.' : 'Tap Share -> Add to Home Screen to use as App.'}
+          </div>
+          <button onClick={() => { setShowPwaBanner(false); sessionStorage.setItem('kat_pwa_dismissed', '1') }} style={{ background: 'none', border: 'none', color: 'white' }}>
+            <X size={20} />
+          </button>
+        </div>
+      )}
 
       {isSourceModalOpen && (
         <div className="modal-overlay" role="dialog" aria-modal="true">
@@ -1559,6 +1750,81 @@ function App() {
             <button className="primary-button" type="submit">
               {editingDebtId == null ? 'Luu ghi chu' : 'Cap nhat ghi chu'}
             </button>
+          </form>
+        </div>
+      )}
+      {isGoalModalOpen && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <form className="modal-card" onSubmit={handleSaveGoal}>
+            <div className="modal-head">
+              <h3>{editingGoalId == null ? (lang === 'vi' ? 'Thêm Mục tiêu' : 'Add Goal') : (lang === 'vi' ? 'Sửa Mục tiêu' : 'Edit Goal')}</h3>
+              <button type="button" onClick={() => setGoalModalOpen(false)}>Đóng</button>
+            </div>
+            <label>Tên mục tiêu
+              <input required value={goalForm.name} onChange={e => setGoalForm(p => ({ ...p, name: e.target.value }))} />
+            </label>
+            <label>Mục tiêu số tiền
+              <input required inputMode="decimal" value={goalForm.targetAmount} onChange={e => setGoalForm(p => ({ ...p, targetAmount: e.target.value }))} />
+            </label>
+            <label>Đã tích lũy
+              <input required inputMode="decimal" value={goalForm.currentAmount} onChange={e => setGoalForm(p => ({ ...p, currentAmount: e.target.value }))} />
+            </label>
+            <label>Tiền tệ
+              <select value={goalForm.currency} onChange={e => setGoalForm(p => ({ ...p, currency: e.target.value }))}>
+                <option value="VND">VND</option>
+                <option value="USD">USD</option>
+              </select>
+            </label>
+            <button className="primary-button" type="submit">Lưu</button>
+            {editingGoalId != null && (
+              <button className="danger" type="button" onClick={() => handleDeleteGoal(editingGoalId)} style={{ marginTop: 8 }}>Xóa</button>
+            )}
+          </form>
+        </div>
+      )}
+
+      {isRecurringModalOpen && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <form className="modal-card" onSubmit={handleSaveRecurring}>
+            <div className="modal-head">
+              <h3>{editingRecurringId == null ? (lang === 'vi' ? 'Thêm Định kỳ' : 'Add Recurring') : (lang === 'vi' ? 'Sửa Định kỳ' : 'Edit Recurring')}</h3>
+              <button type="button" onClick={() => setRecurringModalOpen(false)}>Đóng</button>
+            </div>
+            <label>Loại
+              <select value={recurringForm.type} onChange={e => setRecurringForm(p => ({ ...p, type: e.target.value as any }))}>
+                <option value="EXPENSE">Chi tiêu</option>
+                <option value="INCOME">Thu nhập</option>
+              </select>
+            </label>
+            <label>Số tiền
+              <input required inputMode="decimal" value={recurringForm.amount} onChange={e => setRecurringForm(p => ({ ...p, amount: e.target.value }))} />
+            </label>
+            <label>Ngày trong tháng (1-31)
+              <input required type="number" min="1" max="31" value={recurringForm.dayOfMonth} onChange={e => setRecurringForm(p => ({ ...p, dayOfMonth: e.target.value }))} />
+            </label>
+            <label>Danh mục
+              <select required value={recurringForm.category} onChange={e => setRecurringForm(p => ({ ...p, category: e.target.value }))}>
+                {categories.filter(c => c.type === recurringForm.type).map(c => <option key={c.id} value={c.name}>{c.emoji} {c.name}</option>)}
+              </select>
+            </label>
+            <label>Nguồn tiền
+              <select required value={recurringForm.sourceName} onChange={e => setRecurringForm(p => ({ ...p, sourceName: e.target.value }))}>
+                {sources.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+              </select>
+            </label>
+            <label>Tiền tệ
+              <select value={recurringForm.currency} onChange={e => setRecurringForm(p => ({ ...p, currency: e.target.value }))}>
+                <option value="VND">VND</option>
+                <option value="USD">USD</option>
+              </select>
+            </label>
+            <label>Ghi chú
+              <input value={recurringForm.note} onChange={e => setRecurringForm(p => ({ ...p, note: e.target.value }))} />
+            </label>
+            <button className="primary-button" type="submit">Lưu</button>
+            {editingRecurringId != null && (
+              <button className="danger" type="button" onClick={() => handleDeleteRecurring(editingRecurringId)} style={{ marginTop: 8 }}>Xóa</button>
+            )}
           </form>
         </div>
       )}
