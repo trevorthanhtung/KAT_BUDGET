@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KAT Budget</string>
+
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_close">Close</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_select">Select</string>
+    <string name="btn_create">Create</string>
+    <string name="btn_add">Add</string>
+    <string name="btn_apply">Apply</string>
+    <string name="btn_update_now">Update Now</string>
+    <string name="btn_later">Later</string>
+    <string name="btn_export">Export Report</string>
+    <string name="nav_overview">Overview</string>
+    <string name="nav_debts">Debts</string>
+    <string name="nav_reports">Reports</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="fallback_all">All</string>
+    <string name="fallback_unknown">Unknown</string>
+    <string name="fallback_other">Other</string>
+    <string name="fallback_other_income">Other Income</string>
+    <string name="fallback_transfer">Transfer</string>
+    <string name="fallback_version_new">1.0.0</string>
+    <string name="fallback_opening_balance">Opening Balance</string>
+    <string name="category_food">Food</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_bills">Bills</string>
+    <string name="category_shopping">Shopping</string>
+    <string name="category_health">Health</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_education">Education</string>
+    <string name="category_salary">Salary</string>
+    <string name="category_business">Business</string>
+    <string name="category_investment">Investment</string>
+    <string name="category_gifts">Gifts</string>
+
+    <string name="dialog_image_preview_title">Receipt image</string>
+    <string name="error_unable_to_load_image">Unable to load image.</string>
+    <string name="dialog_no_transactions">No transactions found.</string>
+    <string name="dialog_no_note">No note</string>
+
+    <string name="budget_dialog_title">Set Budget</string>
+    <string name="budget_label_limit">Limit Amount</string>
+    <string name="budget_tool_title">Monthly Budget</string>
+    <string name="budget_total_title">Total Budget</string>
+    <string name="budget_prefix_spent">Spent:</string>
+    <string name="budget_list_title">Budget List</string>
+    <string name="budget_empty_state">No budgets set yet.</string>
+    <string name="budget_over">Over budget</string>
+    <string name="budget_warning_80" formatted="false">80% of budget used</string>
+
+    <string name="budget_warning_title">Budget Warning</string>
+    <string name="budget_warning_content" formatted="false">You have spent %s%% of your %s budget.</string>
+    <string name="budget_warning_channel_name">Spending Alerts</string>
+    <string name="budget_warning_channel_description">Notifications for when you are near your budget limit.</string>
+
+    <string name="budget_report_title">Budget vs Actual</string>
+    <string name="budget_report_total_spent">Total Spent</string>
+
+    <string name="debt_dialog_title_add">Add Debt Record</string>
+    <string name="debt_dialog_title_edit">Edit Debt Record</string>
+    <string name="debt_chip_lent">Lent</string>
+    <string name="debt_chip_borrowed">Borrowed</string>
+    <string name="debt_label_name">Name</string>
+    <string name="debt_label_amount">Amount</string>
+    <string name="debt_label_note">Note</string>
+    <string name="debt_label_due_date">Due date:</string>
+    <string name="debt_hint_select_due_date">Select due date (optional)</string>
+    <string name="debt_btn_clear_due_date">Clear due date</string>
+
+    <string name="debt_pay_title_pay">Repay Debt</string>
+    <string name="debt_pay_title_collect">Collect Loan</string>
+    <string name="debt_pay_label_remaining">Remaining:</string>
+    <string name="debt_pay_label_account">Select Account</string>
+    <string name="debt_pay_label_amount_add">Payment amount</string>
+
+    <string name="debt_tab_title">Loans &amp; Debts</string>
+    <string name="debt_no_debts">No debts in this tab yet</string>
+    <string name="debt_tab_all">All</string>
+    <string name="debt_swipe_pay">Pay</string>
+    <string name="debt_row_borrow">Borrow</string>
+    <string name="debt_row_lend">Lend</string>
+    <string name="debt_prefix_paid">Paid:</string>
+    <string name="debt_prefix_recv">Recv:</string>
+    <string name="debt_status_completed">Completed</string>
+
+    <string name="goal_dialog_title_add">New Goal</string>
+    <string name="goal_dialog_title_edit">Edit Goal</string>
+    <string name="goal_label_name">Goal Name</string>
+    <string name="goal_label_target">Target Amount</string>
+    <string name="goal_deposit_title">Add Savings to %1$s</string>
+    <string name="goal_deposit_account">Account</string>
+    <string name="goal_deposit_currency">Currency</string>
+    <string name="goal_deposit_current_balance">Current balance:</string>
+    <string name="goal_deposit_amount">Amount</string>
+
+    <string name="goal_tool_title">Saving Goals</string>
+    <string name="goal_total_saved">Total Saved</string>
+    <string name="goal_list_title">Goal List</string>
+    <string name="goal_empty_state">No goals set.</string>
+
+    <string name="recurring_dialog_title_add">Set Recurring Transaction</string>
+    <string name="recurring_dialog_title_edit">Edit Recurring</string>
+    <string name="recurring_chip_expense">Expense</string>
+    <string name="recurring_chip_income">Income</string>
+    <string name="recurring_label_account">Account</string>
+    <string name="recurring_label_category">Category</string>
+    <string name="recurring_label_day_hint">Run day of month: 1–31</string>
+    <string name="recurring_label_amount">Amount</string>
+    <string name="recurring_label_note">Note</string>
+
+    <string name="recurring_tool_title">Recurring</string>
+    <string name="recurring_summary_income">Total Income</string>
+    <string name="recurring_summary_expense">Total Expense</string>
+    <string name="recurring_schedule_title">Schedules</string>
+    <string name="recurring_empty_state">No recurring transactions yet.</string>
+
+    <string name="pin_title_setup">Set PIN</string>
+    <string name="pin_hint_setup">Enter 4 digits</string>
+    <string name="pin_title_lock">Enter PIN</string>
+    <string name="pin_desc_lock">Please enter your PIN to unlock</string>
+    <string name="pin_accessibility_delete">Delete</string>
+    <string name="pin_biometric_title">Unlock KAT Budget</string>
+    <string name="pin_biometric_subtitle">Use fingerprint or face unlock</string>
+    <string name="pin_biometric_retry">Unlock with biometrics</string>
+    <string name="dialog_biometric_prompt_title">Enable Biometrics?</string>
+    <string name="dialog_biometric_prompt_msg">Would you like to use fingerprint or face unlock to access the app faster?</string>
+
+    <string name="donate_title">Support Development</string>
+    <string name="donate_description">Your contribution helps keep KAT Budget maintained and continuously improved.</string>
+    <string name="donate_qr_label">Donation QR code</string>
+    <string name="donate_bank_name">MB Bank</string>
+    <string name="donate_account_name">TRAN THANH TUNG</string>
+    <string name="toast_account_copied">Account number copied.</string>
+
+    <string name="csv_fallback_date_range">Select Date Range</string>
+    <string name="csv_title_range">Select Export Range</string>
+    <string name="csv_title_options">CSV Report Options</string>
+    <string name="csv_label_time">Time Range</string>
+    <string name="csv_label_account">Account</string>
+    <string name="csv_label_type">Transaction Type</string>
+    <string name="csv_chip_expense">Expense</string>
+    <string name="csv_chip_income">Income</string>
+    <string name="file_backup_name">KatBudget_Backup.kat</string>
+    <string name="file_report_name">KatBudget_Report.csv</string>
+
+    <string name="settings_rates_title">Exchange Rates</string>
+    <string name="settings_rates_description">Reference rates converted to VND.</string>
+    <string name="settings_rates_updating">Updating…</string>
+    <string name="settings_update_checking">Checking for updates…</string>
+    <string name="settings_update_available_title">Update Available</string>
+    <string name="settings_update_btn_action">Update</string>
+    <string name="settings_notice_title_unable">Unable to Check</string>
+    <string name="settings_notice_title_latest">Latest Version</string>
+    <string name="settings_notice_msg_error">Unable to connect to the update server. Please try again later.</string>
+    <string name="settings_notice_msg_latest">You are using the latest version.</string>
+    <string name="settings_update_release_notes_fallback">Bug fixes and improvements.</string>
+    <string name="update_download_title">Downloading KAT Budget update</string>
+    <string name="update_download_description">The installation file will be ready after download completes.</string>
+
+    <string name="source_title_create">Create Account</string>
+    <string name="source_title_edit">Edit Account</string>
+    <string name="source_label_type">Account Type</string>
+    <string name="source_type_bank">Bank</string>
+    <string name="source_type_wallet">E-Wallet</string>
+    <string name="source_type_cash">Cash</string>
+    <string name="source_type_savings">Savings</string>
+    <string name="source_label_name">Account Name</string>
+    <string name="source_label_initial_balance">Initial Balance</string>
+    <string name="source_initial_balance_locked">Initial balance cannot be changed.</string>
+    <string name="source_savings_rate">Interest Rate</string>
+    <string name="source_savings_rate_suffix">%%/year</string>
+    <string name="source_savings_term">Term</string>
+    <string name="source_savings_month_suffix">months</string>
+    <string name="source_net_worth_title">Include in Net Worth</string>
+    <string name="source_net_worth_desc">Turn this off for accounts tracked separately.</string>
+
+    <string name="tx_title_add">Add Transaction</string>
+    <string name="tx_title_edit">Edit Transaction</string>
+    <string name="tx_chip_expense">Expense</string>
+    <string name="tx_chip_income">Income</string>
+    <string name="tx_chip_transfer">Transfer</string>
+    <string name="tx_label_source">Source Account</string>
+    <string name="tx_label_destination">Destination Account</string>
+    <string name="tx_label_category">Category</string>
+    <string name="tx_label_note">Note</string>
+    <string name="tx_label_date">Transaction date:</string>
+    <string name="tx_receipt_attach">Attach Receipt</string>
+    <string name="tx_receipt_change">Replace Receipt</string>
+    <string name="tx_receipt_remove">Remove</string>
+    <string name="tx_cat_mgmt_create_title">Create New Category</string>
+    <string name="tx_cat_mgmt_create_name">Category Name</string>
+    <string name="tx_cat_mgmt_delete_title">Delete Category</string>
+    <string name="tx_cat_mgmt_delete_msg">Are you sure you want to delete \'%1$s\'?\nRecorded transactions won\'t be affected.</string>
+
+    <string name="onboarding_finish">Get Started</string>
+    <string name="onboarding_next">Continue</string>
+    <string name="onboarding_page1_title">Financial Overview</string>
+    <string name="onboarding_page1_desc">Track balances, transactions, and accounts in a clear interface.</string>
+    <string name="onboarding_page2_title">Budget Control</string>
+    <string name="onboarding_page2_desc">Set monthly limits and monitor spending by category.</string>
+    <string name="onboarding_page3_title">Saving Goals</string>
+    <string name="onboarding_page3_desc">Plan your savings and track progress toward each financial goal.</string>
+
+    <string name="splash_slogan">Personal Finance Management</string>
+    <string name="splash_credits">Developed by thanhtungg.</string>
+    <string name="splash_accessibility_logo">KAT Budget logo</string>
+    <string name="accessibility_app_logo">App logo</string>
+    <string name="accessibility_back">Back</string>
+    <string name="accessibility_backspace">Backspace</string>
+    <string name="accessibility_submit">Submit</string>
+    <string name="widget_add_transaction">Add transaction</string>
+    <string name="widget_quick_add">+ Quick Add</string>
+    <string name="widget_balance_title">Total balance</string>
+    <string name="widget_month_income">Income this month</string>
+    <string name="widget_month_expense">Expense this month</string>
+    <string name="widget_empty_amount">0 VND</string>
+    <string name="dialog_create_account_required_title">No account yet</string>
+    <string name="dialog_create_account_required_msg">Create at least one account before adding transactions.</string>
+    <string name="dialog_create_account_required_action">Create Account</string>
+
+    <string name="tab_header_accounts">Accounts</string>
+    <string name="tab_header_recent_tx">Recent Transactions</string>
+    <string name="tab_header_tx">Transactions</string>
+    <string name="dashboard_view_more_transactions">View more</string>
+    <string name="dashboard_show_less_transactions">Show less</string>
+    <string name="tab_search_placeholder">Search by category, note, or amount</string>
+    <string name="tab_empty_transactions">No matching transactions found.</string>
+    <string name="tab_report_center_expense">Total Expenses</string>
+    <string name="tab_report_center_income">Total Income</string>
+    <string name="tab_report_chip_expense">Expense</string>
+    <string name="tab_report_chip_income">Income</string>
+    <string name="tab_report_no_data">No data available.</string>
+    <string name="report_date_range">Date range</string>
+
+    <string name="greeting_en">Hello!</string>
+    <string name="greeting_vi">Xin chào!</string>
+
+    <string name="chart_compare_expense_title">Expense Comparison</string>
+    <string name="chart_compare_income_title">Income Comparison</string>
+    <string name="chart_label_previous_period">Previous Period</string>
+    <string name="chart_label_current_period">Current Period</string>
+    <string name="chart_daily_expense_trend">Daily Expense Trend</string>
+    <string name="chart_daily_income_trend">Daily Income Trend</string>
+    <string name="chart_touch_to_inspect">Touch or drag to inspect</string>
+    <string name="barchart_no_comparison">No comparison data</string>
+    <string name="card_net_worth">Net Worth</string>
+    <string name="card_net_cash_flow">Net Cash Flow</string>
+    <string name="card_remaining_balance">Remaining Balance</string>
+    <string name="format_quadrillion">Q</string>
+    <string name="format_trillion">T</string>
+    <string name="format_billion">B</string>
+
+    <string name="settings_section_currency">Default Currency</string>
+    <string name="settings_section_tools">Financial Tools</string>
+    <string name="settings_item_budget_title">Monthly Budget</string>
+    <string name="settings_item_budget_sub">Track category spending limits</string>
+    <string name="settings_item_recurring_title">Recurring Transactions</string>
+    <string name="settings_item_recurring_sub">Automatically record recurring income and expenses</string>
+    <string name="settings_item_goals_title">Saving Goals</string>
+    <string name="settings_item_goals_sub">Track progress toward each goal</string>
+    <string name="settings_item_rates_title">Exchange Rates</string>
+    <string name="settings_item_rates_sub">View active exchange rates</string>
+    <string name="settings_item_csv_title">Export CSV Report</string>
+    <string name="settings_item_csv_sub">Create a CSV transaction report</string>
+
+    <string name="settings_section_security">System &amp; Security</string>
+    <string name="settings_item_lock_title">App Lock</string>
+    <string name="settings_item_lock_sub">Protect the app with a PIN</string>
+    <string name="settings_item_biometric_title">Biometric Lock</string>
+    <string name="settings_item_biometric_sub">Use fingerprint or face unlock</string>
+    <string name="settings_item_biometric_sub_need_pin">Set a PIN before enabling biometrics</string>
+    <string name="settings_item_biometric_sub_unavailable">Biometrics are unavailable or not enrolled on this device</string>
+    <string name="settings_item_theme_title">Dark Theme</string>
+    <string name="settings_item_theme_sub">Switch the app display mode</string>
+
+    <string name="settings_section_sync">Sync &amp; Backup</string>
+    <string name="settings_folder_hint_select">Select a backup folder</string>
+    <string name="settings_folder_hint_selected">Backup folder selected</string>
+    <string name="settings_item_auto_backup">Auto Backup</string>
+    <string name="settings_item_manual_backup_title">Manual Backup</string>
+    <string name="settings_item_manual_backup_sub">Export current data to a backup file</string>
+    <string name="settings_item_restore_title">Restore Data</string>
+    <string name="settings_item_restore_sub">Import data from a backup file</string>
+
+    <string name="settings_section_info">Info &amp; Support</string>
+    <string name="settings_item_support_title">Support</string>
+    <string name="settings_item_support_sub">Contact support or report an issue</string>
+    <string name="settings_item_about_title">About</string>
+    <string name="settings_item_about_sub">Version and developer information</string>
+    <string name="settings_item_update_title">App Update</string>
+    <string name="settings_item_update_sub_loading">Checking for a new version…</string>
+    <string name="settings_item_update_sub_ready">Check for the latest version</string>
+    <string name="settings_item_donate_title">Support Development</string>
+    <string name="settings_item_donate_sub">Support ongoing development and improvements</string>
+
+    <string name="support_dialog_title">Support</string>
+    <string name="support_dialog_message">Contact us for support or bug reports:</string>
+    <string name="support_dialog_open_mail">Open Mail</string>
+    <string name="support_email_subject">KAT Budget – Feedback &amp; Support</string>
+
+    <string name="about_dialog_title">About App</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_slogan">&quot;Your financial autonomy journey.&quot;</string>
+    <string name="about_developer">developed by &quot;thanhtungg.&quot;</string>
+
+    <string name="toast_config_backup_success">Auto backup has been set up.</string>
+    <string name="toast_backup_export_success">Backup exported.</string>
+    <string name="toast_backup_export_error">Could not create backup.</string>
+    <string name="toast_backup_processing">Creating backup…</string>
+    <string name="toast_restore_success">Data restored.</string>
+    <string name="toast_restore_error">Could not restore data.</string>
+    <string name="toast_csv_export_success">Transaction report exported.</string>
+    <string name="toast_csv_export_error">Could not export CSV report.</string>
+    <string name="toast_file_picker_error">Could not open file picker.</string>
+    <string name="toast_back_press_exit">Press back again to exit.</string>
+    <string name="toast_goal_fill_all_info">Please fill all info.</string>
+    <string name="toast_recurring_invalid_info">Please review the entered information.</string>
+    <string name="toast_tx_invalid_amount">Please enter valid amount.</string>
+    <string name="toast_tx_select_destination">Please select destination account.</string>
+    <string name="toast_tx_amount_too_large">Amount is too large!</string>
+    <string name="toast_create_account_first">Create an account before adding transactions.</string>
+
+    <string name="screen_title_overview">Financial Overview</string>
+    <string name="screen_title_debt">Loan &amp; Debt Tracking</string>
+    <string name="screen_title_report">Financial Reports</string>
+    <string name="screen_title_settings">Settings</string>
+
+    <string name="dialog_delete_source_title">Delete account?</string>
+    <string name="dialog_delete_source_msg">Account %1$s will be deleted.</string>
+    <string name="dialog_delete_tx_title">Delete transaction?</string>
+    <string name="dialog_delete_tx_msg">Deleted transactions cannot be restored.</string>
+    <string name="dialog_delete_budget_title">Delete budget?</string>
+    <string name="dialog_delete_budget_msg">Budget for %1$s will be deleted.</string>
+    <string name="dialog_delete_goal_title">Delete goal?</string>
+    <string name="dialog_delete_goal_msg">Goal %1$s will be deleted.</string>
+    <string name="dialog_delete_recurring_title">Delete recurring transaction?</string>
+    <string name="dialog_delete_recurring_msg">Recurring transaction %1$s will be deleted.</string>
+
+    <string name="dialog_delete_debt_title">Delete debt record?</string>
+    <string name="dialog_delete_debt_msg">Debt record for %1$s will be deleted.</string>
+
+
+    <string name="vm_debt_note_paid">Partial debt payment to %1$s</string>
+    <string name="vm_debt_note_collected">Partial loan collection from %1$s</string>
+    <string name="vm_debt_cat_default">Loans &amp; Debts</string>
+    <string name="vm_goal_note_deposit">Savings contribution for goal: %1$s</string>
+    <string name="vm_goal_cat_default">Savings</string>
+    <string name="vm_budget_transfer_to">Transfer to: %1$s</string>
+    <string name="vm_budget_transfer_from">Transfer from: %1$s</string>
+    <string name="vm_budget_recurring_auto_suffix">(Auto recorded)</string>
+
+    <string-array name="default_expense_categories">
+        <item>Food</item>
+        <item>Transport</item>
+        <item>Bills</item>
+        <item>Shopping</item>
+        <item>Health</item>
+        <item>Entertainment</item>
+        <item>Education</item>
+    </string-array>
+    <string-array name="default_income_categories">
+        <item>Salary</item>
+        <item>Business</item>
+        <item>Investment</item>
+        <item>Gifts</item>
+    </string-array>
+
+    <string name="notif_daily_title">Transaction Update Reminder</string>
+    <string name="notif_daily_content">Update today\'s transactions to keep your budget tracking accurate.</string>
+    <string name="notif_channel_name">Transaction Update Reminder</string>
+    <string name="notif_channel_description">Daily reminders to update your transactions.</string>
+</resources>

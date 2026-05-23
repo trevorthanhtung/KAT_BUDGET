@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Preferences -->
+    <include
+        domain="sharedpref"
+        path="." />
+
+    <!-- Room database -->
+    <include
+        domain="database"
+        path="." />
+
+    <!-- App files, if any -->
+    <include
+        domain="file"
+        path="." />
+
+    <!-- Cache should not be backed up -->
+    <exclude
+        domain="file"
+        path="cache/" />
+</full-backup-content>

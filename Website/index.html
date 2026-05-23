@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title id="page-title">KAT Budget - Quản lý tiền cá nhân | KAT GR0UP</title>
+    
+    <link rel="icon" type="image/webp" href="assets/img/logo.webp">
+    <link rel="apple-touch-icon" href="assets/img/logo.webp">
+    
+    <meta id="meta-desc" name="description" content="KAT Budget giúp ghi thu chi, lập ngân sách và xem báo cáo dòng tiền. Dữ liệu tài chính được lưu cục bộ trên thiết bị.">
+    <meta id="meta-og-title" property="og:title" content="KAT Budget - Quản lý tiền cá nhân">
+    <meta id="meta-og-desc" property="og:description" content="Quản lý tiền cá nhân gọn gàng. Dữ liệu tài chính được lưu cục bộ trên thiết bị.">
+    <meta property="og:image" content="assets/img/og-kat-wallet.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="assets/img/og-kat-wallet.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="mesh-blob blob-1"></div>
+        <div class="mesh-blob blob-2"></div>
+    </div>
+
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="assets/img/logo.webp" alt="KAT Budget Logo" width="85" height="85" class="loader-logo" decoding="async">
+            <div class="loader-text">KAT<span> Budget</span></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="assets/img/logo.webp" alt="KAT Budget Logo" width="40" height="40" class="logo-img" decoding="async">
+            <div class="brand-text">KAT<span> Budget</span></div>
+        </div>
+        
+        <div class="nav-controls">
+            <button class="lang-toggle" id="lang-btn">EN</button>
+            <button class="theme-toggle" id="theme-btn" aria-label="Đổi giao diện"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content reveal">
+                <div class="badge" data-i18n="heroBadge">Gọn gàng hơn cho dòng tiền của bạn</div>
+                
+                <h1>
+                    <span data-i18n="heroTitle1">Thấu hiểu dòng tiền.</span><br>
+                    <span class="highlight" data-i18n="heroTitle2">Quản lý thông minh.</span>
+                </h1>
+                
+                <p data-i18n="heroDesc">Ghi thu chi, lập ngân sách và xem báo cáo dòng tiền trong một trải nghiệm gọn, rõ và dễ theo dõi.</p>
+                
+                <div class="cta-area">
+                    <div class="cta-buttons">
+                        <a href="https://drive.google.com/file/d/1UPQsZOFOZnI7u_oeD_sVLwqRZwqGg4aB/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="cta-button">
+                            <i class="fa-brands fa-android"></i>
+                            <span data-i18n="btnDownloadAndroid">Tải ngay</span>
+                        </a>
+                        <button type="button" class="cta-button cta-button-muted" id="iosComingSoon">
+                            <i class="fa-brands fa-apple"></i>
+                            <span data-i18n="btnDownloadIos">Sắp ra mắt</span>
+                        </button>
+                        <a href="install.html" class="cta-button cta-button-outline cta-button-guide">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span data-i18n="btnInstallGuide">Hướng dẫn cài đặt</span>
+                        </a>
+                    </div>
+                    <span class="cta-subtext">
+                        <i class="fa-solid fa-shield-check"></i> 
+                        <a href="https://www.virustotal.com/gui/file-analysis/MGE3NzU0MjI4MTEzNGM4MWEzMDlkZTQ2NzEwYzQ2Y2E6MTc3OTI4NzIwNQ==" target="_blank" rel="noopener noreferrer" data-i18n="btnSubtext">Kiểm tra APK trên VirusTotal</a>
+                    </span>
+                    <div class="download-meta" aria-label="Thông tin bản tải xuống">
+                        <span><strong data-i18n="downloadVersionLabel">Phiên bản</strong> 3.0.0</span>
+                        <span><strong data-i18n="downloadSizeLabel">Dung lượng</strong> 48,6 MB</span>
+                        <span><strong data-i18n="downloadPlatformLabel">Nền tảng</strong> <span data-i18n="downloadPlatformValue">Android 11+ · iOS 16+</span></span>
+                        <span><strong data-i18n="downloadUpdatedLabel">Cập nhật</strong> 20/05/2026</span>
+                    </div>
+                </div>
+
+                <div class="dev-signature">
+                    <div class="dev-info">
+                        <h4 data-i18n="devBy">Phát triển bởi</h4>
+                        <a href="https://www.youtube.com/@kat.thanhtungg/videos" target="_blank" rel="noopener noreferrer" class="dev-name link-author">thanhtungg.</a>
+                    </div>
+                    <div class="dev-contacts">
+                        <a href="mailto:trevorthanhtung@gmail.com" class="contact-pill"><i class="fa-solid fa-envelope"></i> Email</a>
+                        <a href="https://www.facebook.com/profile.php?id=61552237558522" target="_blank" rel="noopener noreferrer" class="contact-pill"><i class="fa-brands fa-facebook"></i> <span data-i18n="devSupport">Hỗ Trợ Nhanh</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-mockups reveal delay-1">
+                <div class="mockup-carousel">
+                    <div class="mockup-track" id="mockupTrack">
+                        <div class="mockup-slide">
+                            <div class="mockup-img-wrapper">
+                                <img src="assets/img/hero-overview.webp" alt="Màn hình tổng quan tài chính KAT Budget" class="mockup-img" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+                        <div class="mockup-slide">
+                            <div class="mockup-img-wrapper">
+                                <img src="assets/img/hero-report.webp" alt="Màn hình báo cáo tài chính KAT Budget" class="mockup-img" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-indicators" id="mockupIndicators">
+                        <span class="indicator active" data-index="0" aria-label="Slide 1"></span>
+                        <span class="indicator" data-index="1" aria-label="Slide 2"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="offline-guarantee reveal">
+            <div class="guarantee-box bento-card">
+                <div class="guarantee-icon"><i class="fa-solid fa-user-shield"></i></div>
+                <div class="guarantee-text">
+                    <h3 data-i18n="guaranteeTitle">Dữ liệu lưu cục bộ trên thiết bị</h3>
+                    <p data-i18n="guaranteeDesc">KAT Budget không yêu cầu tài khoản và không vận hành máy chủ đồng bộ dữ liệu. Số dư, giao dịch, ngân sách và khoản vay được lưu trong bộ nhớ ứng dụng trên thiết bị; dữ liệu chỉ rời thiết bị khi bạn chủ động xuất, sao lưu hoặc chia sẻ file.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="release-section reveal" aria-labelledby="releaseTitle">
+            <div class="release-copy">
+                <span class="preview-kicker" data-i18n="releaseKicker">Phiên bản 3.0.0</span>
+                <h2 id="releaseTitle" data-i18n="releaseTitle">Cập nhật mới có gì?</h2>
+                <p data-i18n="releaseDesc">Bản cập nhật này tập trung cải thiện UI/UX và bổ sung widget xem nhanh.</p>
+            </div>
+            <div class="release-card bento-card">
+                <ul class="release-list">
+                    <li><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="releaseItem1">Cải thiện UI/UX để giao diện gọn và dễ thao tác hơn.</span></li>
+                    <li><i class="fa-solid fa-table-cells-large"></i><span data-i18n="releaseItem2">Thêm widget xem nhanh thông tin ngay từ màn hình chính.</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="archive-section reveal" aria-labelledby="archiveTitle">
+            <div class="archive-copy">
+                <span class="preview-kicker" data-i18n="archiveKicker">Lưu trữ APK</span>
+                <h2 id="archiveTitle" data-i18n="archiveTitle">Các phiên bản cũ</h2>
+                <p data-i18n="archiveDesc">Bạn nên dùng bản mới nhất để nhận đầy đủ bản sửa lỗi và cải thiện giao diện. Các phiên bản cũ được lưu lại để đối chiếu hoặc cài lại khi thật sự cần.</p>
+            </div>
+            <a class="archive-link bento-card" href="https://drive.google.com/drive/folders/125-XEkOKKs9Q7ObFvhc5K3CLBkmdOrHe?usp=sharing" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-google-drive"></i>
+                <span data-i18n="archiveButton">Mở thư mục phiên bản cũ</span>
+            </a>
+        </section>
+
+        <h2 class="section-title reveal" data-i18n="featHeader">Tính Năng Cốt Lõi</h2>
+        
+        <section class="features bento-grid">
+            <div class="bento-card bento-large reveal delay-1">
+                <div class="card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                <h3 data-i18n="feat2Title">Báo cáo trực quan</h3>
+                <p data-i18n="feat2Desc">Xem dòng tiền theo kỳ, loại tiền và danh mục bằng biểu đồ dễ đọc, đủ để nhận ra khoản nào đang ảnh hưởng nhiều nhất.</p>
+            </div>
+            <div class="bento-card reveal delay-2">
+                <div class="card-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+                <h3 data-i18n="feat1Title">Ghi chép nhanh chóng</h3>
+                <p data-i18n="feat1Desc">Ghi thu, chi hoặc chuyển tiền giữa các tài khoản với số tiền, ghi chú, ngày giao dịch và loại tiền rõ ràng.</p>
+            </div>
+            <div class="bento-card reveal delay-3">
+                <div class="card-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3 data-i18n="feat3Title">Lập ngân sách</h3>
+                <p data-i18n="feat3Desc">Theo dõi hạn mức theo danh mục và mục tiêu tiết kiệm để điều chỉnh chi tiêu trước khi vượt kế hoạch.</p>
+            </div>
+            <div class="bento-card reveal delay-1">
+                <div class="card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                <h3 data-i18n="feat4Title">Khoản vay rõ ràng</h3>
+                <p data-i18n="feat4Desc">Tách riêng khoản cho vay và đi vay, kèm số tiền, người liên quan, hạn thanh toán và trạng thái đã thu hoặc đã trả.</p>
+            </div>
+            <div class="bento-card reveal delay-2">
+                <div class="card-icon"><i class="fa-solid fa-file-export"></i></div>
+                <h3 data-i18n="feat5Title">Sao lưu và xuất dữ liệu</h3>
+                <p data-i18n="feat5Desc">Tạo file sao lưu .kat để khôi phục khi đổi máy hoặc cài lại ứng dụng. Khi cần đối chiếu, bạn có thể xuất báo cáo CSV theo thời gian, tài khoản hoặc loại giao dịch.</p>
+            </div>
+        </section>
+
+        <section class="exchange-section reveal" aria-labelledby="exchangeTitle">
+            <div class="exchange-copy">
+                <span class="preview-kicker" data-i18n="ratesKicker">Tỷ giá tự động</span>
+                <h2 id="exchangeTitle" data-i18n="ratesTitle">Tỷ giá ngoại tệ tự cập nhật</h2>
+                <p data-i18n="ratesDesc">Khi có mạng, KAT Budget lấy tỷ giá tham khảo từ Vietcombank để quy đổi về VND. Dữ liệu tài chính vẫn lưu trên thiết bị của bạn.</p>
+            </div>
+            <div class="exchange-card bento-card">
+                <div class="exchange-base">
+                    <span data-i18n="ratesBaseLabel">Mốc quy đổi</span>
+                    <strong>VND = 1,00</strong>
+                </div>
+                <div class="rate-grid" aria-label="Tỷ giá ngoại tệ tham chiếu">
+                    <span><strong>USD</strong>26.353,64 VND</span>
+                    <span><strong>EUR</strong>30.707,64 VND</span>
+                    <span><strong>JPY</strong>165,813 VND</span>
+                    <span><strong>KRW</strong>17,647 VND</span>
+                    <span><strong>CNY</strong>3.874,73 VND</span>
+                </div>
+                <p class="exchange-note"><span data-i18n="ratesNoteBefore">Nguồn dữ liệu:</span> <a class="inline-link" href="https://portal.vietcombank.com.vn/Usercontrols/TVPortal.TyGia/pXML.aspx" target="_blank" rel="noopener noreferrer">Vietcombank</a>. <span data-i18n="ratesNoteAfter">Tỷ giá chỉ dùng để tham khảo trong app, không phải giá giao dịch thời gian thực.</span></p>
+            </div>
+        </section>
+
+        <h2 class="section-title reveal" data-i18n="previewHeader">Luồng Thao Tác Trong App</h2>
+        <section class="app-preview reveal">
+            <div class="preview-copy">
+                <span class="preview-kicker" data-i18n="previewKicker">Thao tác thường dùng</span>
+                <h3 data-i18n="previewTitle">Theo dõi bằng biểu đồ, xuất dữ liệu khi cần</h3>
+                <p data-i18n="previewDesc">KAT Budget trình bày dòng tiền bằng biểu đồ dễ đọc và hỗ trợ xuất CSV để bạn tự lưu trữ hoặc đối chiếu dữ liệu khi cần.</p>
+                <div class="preview-points">
+                    <span data-i18n="previewPoint1">Biểu đồ dòng tiền</span>
+                    <span data-i18n="previewPoint2">Xuất file CSV</span>
+                    <span data-i18n="previewPoint3">Tự lưu trữ dữ liệu</span>
+                </div>
+            </div>
+            <div class="preview-phones" aria-label="Ảnh xem trước giao diện KAT Budget">
+                <div class="preview-phone primary iphone-frame">
+                    <span class="phone-dynamic-island" aria-hidden="true"></span>
+                    <img src="assets/img/preview-transaction.webp" alt="Bảng thêm giao dịch KAT Budget" loading="lazy" decoding="async">
+                </div>
+                <div class="preview-phone secondary android-frame">
+                    <span class="phone-camera-dot" aria-hidden="true"></span>
+                    <img src="assets/img/preview-export-csv.webp" alt="Bảng xuất file CSV KAT Budget" loading="lazy" decoding="async">
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title reveal" data-i18n="faqHeader">Câu Hỏi Thường Gặp</h2>
+        <section class="faq-section">
+            <div class="faq-grid">
+                <div class="faq-item bento-card reveal delay-1">
+                    <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="faq1Q">Có thể kiểm tra file APK trước khi cài không?</span></h4>
+                    <p><span data-i18n="faq1A">Có. File APK tải từ website có liên kết</span> <a class="inline-link" href="https://www.virustotal.com/gui/file-analysis/MGE3NzU0MjI4MTEzNGM4MWEzMDlkZTQ2NzEwYzQ2Y2E6MTc3OTI4NzIwNQ==" target="_blank" rel="noopener noreferrer">VirusTotal</a> <span data-i18n="faq1B">để bạn tự đối chiếu kết quả quét trước khi cài đặt. Dữ liệu tài chính được lưu cục bộ; app không yêu cầu tài khoản và không vận hành máy chủ đồng bộ dữ liệu.</span></p>
+                </div>
+                <div class="faq-item bento-card reveal delay-2">
+                    <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="faq2Q">Cài đặt APK trên Android như thế nào?</span></h4>
+                    <p data-i18n="faq2A">Bấm nút Tải ứng dụng, mở file APK sau khi tải xong và làm theo hướng dẫn trên màn hình. Nếu Android hỏi quyền cài ứng dụng từ nguồn hiện tại, hãy cho phép đối với trình duyệt hoặc Google Drive đang dùng rồi tiếp tục cài đặt.</p>
+                </div>
+                <div class="faq-item bento-card reveal delay-3">
+                    <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="faq3Q">Cập nhật app có làm mất dữ liệu không?</span></h4>
+                    <p data-i18n="faq3A">Không, nếu bạn cài bản mới đè lên cùng ứng dụng KAT Budget. Dữ liệu đang lưu cục bộ sẽ được giữ nguyên. Không gỡ ứng dụng trước khi cập nhật nếu bạn chưa sao lưu dữ liệu.</p>
+                </div>
+                <div class="faq-item bento-card reveal delay-1">
+                    <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="faq4Q">Đổi máy hoặc sao lưu dữ liệu như thế nào?</span></h4>
+                    <p data-i18n="faq4A">Trong app, vào Cài đặt > Sao lưu dữ liệu để xuất file .kat và tự lưu file đó ở nơi an toàn. Khi đổi máy hoặc cài lại ứng dụng, cài KAT Budget rồi chọn Cài đặt > Khôi phục dữ liệu để nhập lại file .kat. App không tự tải file sao lưu lên máy chủ.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="donation reveal">
+            <div class="donation-card bento-card">
+                <div class="donation-copy">
+                    <span class="donation-kicker" data-i18n="donateKicker">KAT Budget</span>
+                    <h3 data-i18n="donateTitle">Ủng hộ tác giả</h3>
+                    <p data-i18n="donateText">Nếu KAT Budget hữu ích với bạn, phần ủng hộ này giúp tác giả duy trì kiểm thử, lưu trữ và các bản cập nhật sau này.</p>
+                </div>
+                <div class="donation-action">
+                    <button class="donate-btn" id="openDonateModal">
+                        <i class="fa-regular fa-heart"></i> <span data-i18n="donateBtn">Thông tin đóng góp</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="donateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+        <div class="modal-content bento-card">
+            <button class="close-btn" id="closeDonateModal" aria-label="Đóng modal">&times;</button>
+            <h3 id="donateTitle" data-i18n="modalTitle">Ủng hộ tác giả</h3>
+            <p class="modal-subtitle" data-i18n="modalDesc">Cảm ơn bạn đã quan tâm và đồng hành cùng KAT Budget.</p>
+            <img src="assets/img/donates.webp" alt="Mã QR ủng hộ tác giả" width="300" height="300" loading="lazy" decoding="async" class="modal-qr-img">
+        </div>
+    </div>
+
+    <div class="site-toast" id="siteToast" role="status" aria-live="polite">
+        <i class="fa-brands fa-apple"></i>
+        <span data-i18n="iosComingSoonText">Sắp ra mắt.</span>
+    </div>
+
+    <footer class="site-footer">
+        <p><span data-i18n="footerText1">&copy; 2026 KAT GR0UP. Phát triển bởi</span> <strong>thanhtungg.</strong></p>
+        <div class="footer-socials" aria-label="Liên kết mạng xã hội của KAT Budget">
+            <div class="footer-social-links">
+                <a href="https://www.instagram.com/_.thanhtungg._/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i><span>Instagram</span></a>
+                <a href="https://www.youtube.com/@kat.thanhtungg" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i><span>YouTube</span></a>
+                <a href="https://www.facebook.com/tthanhtung2306/?locale=vi_VN" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook"></i><span>Facebook</span></a>
+                <a href="https://www.tiktok.com/@kat.thanhtungg" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></a>
+            </div>
+        </div>
+        <p class="footer-thanks" data-i18n="footerThanks">Tác giả chân thành cảm ơn Codex (OpenAI) và Google Gemini đã hỗ trợ trong quá trình lên ý tưởng, rà soát nội dung và hoàn thiện website KAT Budget.</p>
+        <p class="footer-links">
+            <a href="privacy.html" data-i18n="privacyLink">Chính sách quyền riêng tư</a>
+        </p>
+    </footer>
+
+    <button id="backToTop" class="back-to-top" aria-label="Cuộn lên đầu trang">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
+

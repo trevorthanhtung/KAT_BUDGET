@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KAT Budget</string>
+
+    <string name="btn_save">Lưu</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="btn_close">Đóng</string>
+    <string name="btn_delete">Xóa</string>
+    <string name="btn_confirm">Xác nhận</string>
+    <string name="btn_done">Xong</string>
+    <string name="btn_select">Chọn</string>
+    <string name="btn_create">Tạo mới</string>
+    <string name="btn_add">Thêm</string>
+    <string name="btn_apply">Áp dụng</string>
+    <string name="btn_update_now">Cập nhật ngay</string>
+    <string name="btn_later">Để sau</string>
+    <string name="btn_export">Xuất báo cáo</string>
+
+    <string name="fallback_all">Tất cả</string>
+    <string name="fallback_unknown">Không rõ</string>
+    <string name="fallback_other">Khác</string>
+    <string name="fallback_other_income">Thu nhập khác</string>
+    <string name="fallback_transfer">Chuyển tiền</string>
+    <string name="fallback_version_new">1.0.0</string>
+    <string name="fallback_opening_balance">Số dư ban đầu</string>
+    <string name="category_food">Thực phẩm</string>
+    <string name="category_transport">Di chuyển</string>
+    <string name="category_bills">Hóa đơn</string>
+    <string name="category_shopping">Mua sắm</string>
+    <string name="category_health">Sức khỏe</string>
+    <string name="category_entertainment">Giải trí</string>
+    <string name="category_education">Giáo dục</string>
+    <string name="category_salary">Lương</string>
+    <string name="category_business">Kinh doanh</string>
+    <string name="category_investment">Đầu tư</string>
+    <string name="category_gifts">Được tặng</string>
+
+    <string name="dialog_image_preview_title">Ảnh hóa đơn</string>
+    <string name="error_unable_to_load_image">Không thể tải ảnh.</string>
+    <string name="dialog_no_transactions">Không tìm thấy giao dịch nào.</string>
+    <string name="dialog_no_note">Không có ghi chú</string>
+
+    <string name="budget_dialog_title">Thiết lập ngân sách</string>
+    <string name="budget_label_limit">Hạn mức</string>
+    <string name="budget_tool_title">Ngân sách hằng tháng</string>
+    <string name="budget_total_title">Tổng ngân sách</string>
+    <string name="budget_prefix_spent">Đã chi:</string>
+    <string name="budget_list_title">Danh sách ngân sách</string>
+    <string name="budget_empty_state">Chưa thiết lập ngân sách nào.</string>
+    <string name="budget_over">Vượt ngân sách</string>
+    <string name="budget_warning_80" formatted="false">Đã sử dụng 80% ngân sách</string>
+
+    <string name="budget_warning_title">Cảnh báo ngân sách</string>
+    <string name="budget_warning_content" formatted="false">Bạn đã chi tiêu %s%% ngân sách của %s.</string>
+    <string name="budget_warning_channel_name">Cảnh báo chi tiêu</string>
+    <string name="budget_warning_channel_description">Thông báo khi chi tiêu sắp vượt ngân sách.</string>
+
+    <string name="budget_report_title">Đối chiếu ngân sách</string>
+    <string name="budget_report_total_spent">Đã chi</string>
+
+    <string name="debt_dialog_title_add">Thêm khoản vay</string>
+    <string name="debt_dialog_title_edit">Chỉnh sửa khoản vay</string>
+    <string name="debt_chip_lent">Cho vay</string>
+    <string name="debt_chip_borrowed">Đi vay</string>
+    <string name="debt_label_name">Tên người liên quan</string>
+    <string name="debt_label_amount">Số tiền</string>
+    <string name="debt_label_note">Ghi chú</string>
+    <string name="debt_label_due_date">Hạn thanh toán:</string>
+    <string name="debt_hint_select_due_date">Chọn hạn thanh toán (không bắt buộc)</string>
+    <string name="debt_btn_clear_due_date">Bỏ hạn thanh toán</string>
+
+    <string name="debt_pay_title_pay">Thanh toán khoản vay</string>
+    <string name="debt_pay_title_collect">Thu khoản cho vay</string>
+    <string name="debt_pay_label_remaining">Còn lại cần thanh toán:</string>
+    <string name="debt_pay_label_account">Tài khoản trích tiền</string>
+    <string name="debt_pay_label_amount_add">Số tiền thanh toán</string>
+
+    <string name="debt_tab_title">Khoản vay và cho vay</string>
+    <string name="debt_no_debts">Chưa có khoản nợ nào trong mục này</string>
+    <string name="debt_tab_all">Tất cả</string>
+    <string name="debt_swipe_pay">Thanh toán</string>
+    <string name="debt_row_borrow">Đi vay</string>
+    <string name="debt_row_lend">Cho vay</string>
+    <string name="debt_prefix_paid">Đã trả:</string>
+    <string name="debt_prefix_recv">Đã thu:</string>
+    <string name="debt_status_completed">Đã hoàn thành</string>
+
+    <string name="goal_dialog_title_add">Mục tiêu mới</string>
+    <string name="goal_dialog_title_edit">Sửa mục tiêu</string>
+    <string name="goal_label_name">Tên mục tiêu</string>
+    <string name="goal_label_target">Số tiền mục tiêu</string>
+    <string name="goal_deposit_title">Tích lũy cho %1$s</string>
+    <string name="goal_deposit_account">Tài khoản</string>
+    <string name="goal_deposit_currency">Ngoại tệ</string>
+    <string name="goal_deposit_current_balance">Số dư hiện tại:</string>
+    <string name="goal_deposit_amount">Số tiền</string>
+
+    <string name="goal_tool_title">Mục tiêu tiết kiệm</string>
+    <string name="goal_total_saved">Tổng tích lũy</string>
+    <string name="goal_list_title">Danh sách mục tiêu</string>
+    <string name="goal_empty_state">Chưa có mục tiêu nào.</string>
+
+    <string name="recurring_dialog_title_add">Thiết lập giao dịch định kỳ</string>
+    <string name="recurring_dialog_title_edit">Sửa giao dịch định kỳ</string>
+    <string name="recurring_chip_expense">Chi định kỳ</string>
+    <string name="recurring_chip_income">Thu định kỳ</string>
+    <string name="recurring_label_account">Tài khoản</string>
+    <string name="recurring_label_category">Danh mục</string>
+    <string name="recurring_label_day_hint">Ngày chạy hằng tháng: 1–31</string>
+    <string name="recurring_label_amount">Số tiền</string>
+    <string name="recurring_label_note">Ghi chú</string>
+
+    <string name="recurring_tool_title">Giao dịch định kỳ</string>
+    <string name="recurring_summary_income">Tổng thu</string>
+    <string name="recurring_summary_expense">Tổng chi</string>
+    <string name="recurring_schedule_title">Lịch giao dịch</string>
+    <string name="recurring_empty_state">Chưa có giao dịch định kỳ nào.</string>
+
+    <string name="pin_title_setup">Thiết lập mã PIN</string>
+    <string name="pin_hint_setup">Nhập 4 chữ số</string>
+    <string name="pin_title_lock">Nhập mã PIN</string>
+    <string name="pin_desc_lock">Vui lòng nhập mã PIN để mở khóa</string>
+    <string name="pin_accessibility_delete">Xóa</string>
+    <string name="pin_biometric_title">Mở khóa KAT Budget</string>
+    <string name="pin_biometric_subtitle">Dùng vân tay hoặc khuôn mặt để mở khóa</string>
+    <string name="pin_biometric_retry">Mở bằng sinh trắc học</string>
+    <string name="dialog_biometric_prompt_title">Bật sinh trắc học?</string>
+    <string name="dialog_biometric_prompt_msg">Bạn có muốn sử dụng vân tay hoặc khuôn mặt để mở khóa ứng dụng nhanh hơn không?</string>
+
+    <string name="donate_title">Ủng hộ phát triển</string>
+    <string name="donate_description">Đóng góp của bạn giúp KAT Budget được duy trì và cải thiện liên tục.</string>
+    <string name="donate_qr_label">Mã QR đóng góp</string>
+    <string name="donate_bank_name">MB Bank</string>
+    <string name="donate_account_name">TRAN THANH TUNG</string>
+    <string name="toast_account_copied">Đã sao chép số tài khoản.</string>
+
+    <string name="csv_fallback_date_range">Chọn khoảng thời gian</string>
+    <string name="csv_title_range">Chọn khoảng thời gian xuất</string>
+    <string name="csv_title_options">Tùy chọn xuất báo cáo CSV</string>
+    <string name="csv_label_time">Thời gian</string>
+    <string name="csv_label_account">Tài khoản</string>
+    <string name="csv_label_type">Loại giao dịch</string>
+    <string name="csv_chip_expense">Chi tiêu</string>
+    <string name="csv_chip_income">Thu nhập</string>
+    <string name="file_backup_name">KatBudget_Backup.kat</string>
+    <string name="file_report_name">BaoCao_KatBudget.csv</string>
+
+    <string name="settings_rates_title">Tỷ giá ngoại tệ</string>
+    <string name="settings_rates_description">Tỷ giá tham chiếu quy đổi sang VND.</string>
+    <string name="settings_rates_updating">Đang cập nhật…</string>
+    <string name="settings_update_checking">Đang kiểm tra cập nhật…</string>
+    <string name="settings_update_available_title">Có bản cập nhật mới</string>
+    <string name="settings_update_btn_action">Cập nhật</string>
+    <string name="settings_notice_title_unable">Không thể kiểm tra</string>
+    <string name="settings_notice_title_latest">Phiên bản mới nhất</string>
+    <string name="settings_notice_msg_error">Không thể kết nối đến máy chủ cập nhật. Vui lòng thử lại sau.</string>
+    <string name="settings_notice_msg_latest">Bạn đang sử dụng phiên bản mới nhất.</string>
+    <string name="settings_update_release_notes_fallback">Đã có tính năng mới và sửa lỗi.</string>
+    <string name="update_download_title">Đang tải bản cập nhật KAT Budget</string>
+    <string name="update_download_description">Tệp cài đặt sẽ sẵn sàng sau khi tải xong.</string>
+
+    <string name="source_title_create">Tạo tài khoản</string>
+    <string name="source_title_edit">Chỉnh sửa tài khoản</string>
+    <string name="source_label_type">Loại tài khoản</string>
+    <string name="source_type_bank">Ngân hàng</string>
+    <string name="source_type_wallet">Ví điện tử</string>
+    <string name="source_type_cash">Tiền mặt</string>
+    <string name="source_type_savings">Tiết kiệm</string>
+    <string name="source_label_name">Tên tài khoản</string>
+    <string name="source_label_initial_balance">Số dư ban đầu</string>
+    <string name="source_initial_balance_locked">Không thể thay đổi số dư ban đầu.</string>
+    <string name="source_savings_rate">Lãi suất</string>
+    <string name="source_savings_rate_suffix">%%/năm</string>
+    <string name="source_savings_term">Kỳ hạn</string>
+    <string name="source_savings_month_suffix">tháng</string>
+    <string name="source_net_worth_title">Tính vào tài sản ròng</string>
+    <string name="source_net_worth_desc">Tắt tùy chọn này nếu tài khoản chỉ dùng để theo dõi riêng.</string>
+
+    <string name="tx_title_add">Thêm giao dịch</string>
+    <string name="tx_title_edit">Chỉnh sửa giao dịch</string>
+    <string name="tx_chip_expense">Chi tiêu</string>
+    <string name="tx_chip_income">Thu nhập</string>
+    <string name="tx_chip_transfer">Chuyển tiền</string>
+    <string name="tx_label_source">Tài khoản nguồn</string>
+    <string name="tx_label_destination">Tài khoản nhận</string>
+    <string name="tx_label_category">Danh mục</string>
+    <string name="tx_label_note">Ghi chú</string>
+    <string name="tx_label_date">Ngày giao dịch:</string>
+    <string name="tx_receipt_attach">Đính kèm hóa đơn</string>
+    <string name="tx_receipt_change">Thay hóa đơn</string>
+    <string name="tx_receipt_remove">Gỡ</string>
+    <string name="tx_cat_mgmt_create_title">Tạo danh mục mới</string>
+    <string name="tx_cat_mgmt_create_name">Tên danh mục</string>
+    <string name="tx_cat_mgmt_delete_title">Xóa danh mục</string>
+    <string name="tx_cat_mgmt_delete_msg">Bạn có chắc muốn xóa danh mục \'%1$s\'?\nCác giao dịch đã ghi nhận sẽ không bị ảnh hưởng.</string>
+
+    <string name="onboarding_finish">Bắt đầu</string>
+    <string name="onboarding_next">Tiếp tục</string>
+    <string name="onboarding_page1_title">Tổng quan tài chính</string>
+    <string name="onboarding_page1_desc">Theo dõi số dư, giao dịch và tài khoản trong một giao diện rõ ràng.</string>
+    <string name="onboarding_page2_title">Kiểm soát ngân sách</string>
+    <string name="onboarding_page2_desc">Thiết lập hạn mức hàng tháng và theo dõi chi tiêu theo danh mục.</string>
+    <string name="onboarding_page3_title">Mục tiêu tiết kiệm</string>
+    <string name="onboarding_page3_desc">Lập kế hoạch tiết kiệm và theo dõi tiến độ cho từng mục tiêu tài chính.</string>
+
+    <string name="splash_slogan">Quản lý tài chính cá nhân</string>
+    <string name="splash_credits">Phát triển bởi thanhtungg.</string>
+    <string name="splash_accessibility_logo">KAT Budget logo</string>
+    <string name="accessibility_app_logo">Logo ứng dụng</string>
+    <string name="accessibility_back">Quay lại</string>
+    <string name="accessibility_backspace">Xóa ký tự</string>
+    <string name="accessibility_submit">Xác nhận</string>
+    <string name="widget_add_transaction">Thêm giao dịch</string>
+    <string name="widget_quick_add">+ Cộng nhanh</string>
+    <string name="widget_balance_title">Tổng số dư</string>
+    <string name="widget_month_income">Thu tháng này</string>
+    <string name="widget_month_expense">Chi tháng này</string>
+    <string name="widget_empty_amount">0 VND</string>
+    <string name="dialog_create_account_required_title">Chưa có tài khoản</string>
+    <string name="dialog_create_account_required_msg">Bạn cần tạo ít nhất một tài khoản trước khi thêm giao dịch.</string>
+    <string name="dialog_create_account_required_action">Tạo tài khoản</string>
+
+    <string name="tab_header_accounts">Tài khoản</string>
+    <string name="tab_header_recent_tx">Giao dịch gần đây</string>
+    <string name="tab_header_tx">Giao dịch</string>
+    <string name="dashboard_view_more_transactions">Xem thêm</string>
+    <string name="dashboard_show_less_transactions">Thu gọn</string>
+    <string name="tab_search_placeholder">Tìm kiếm danh mục, ghi chú hoặc số tiền</string>
+    <string name="tab_empty_transactions">Không tìm thấy giao dịch phù hợp.</string>
+    <string name="tab_report_center_expense">Tổng chi tiêu</string>
+    <string name="tab_report_center_income">Tổng thu nhập</string>
+    <string name="tab_report_chip_expense">Chi tiêu</string>
+    <string name="tab_report_chip_income">Thu nhập</string>
+    <string name="tab_report_no_data">Chưa có dữ liệu.</string>
+    <string name="report_date_range">Khoảng thời gian</string>
+
+    <string name="greeting_en">Hello!</string>
+    <string name="greeting_vi">Xin chào!</string>
+
+    <string name="chart_compare_expense_title">So sánh chi tiêu</string>
+    <string name="chart_compare_income_title">So sánh thu nhập</string>
+    <string name="chart_label_previous_period">Kỳ trước</string>
+    <string name="chart_label_current_period">Kỳ này</string>
+    <string name="chart_daily_expense_trend">Xu hướng chi tiêu hàng ngày</string>
+    <string name="chart_daily_income_trend">Xu hướng thu nhập hàng ngày</string>
+    <string name="chart_touch_to_inspect">Chạm hoặc kéo để xem chi tiết</string>
+    <string name="barchart_no_comparison">Chưa có dữ liệu so sánh</string>
+    <string name="card_net_worth">Tài sản ròng</string>
+    <string name="card_net_cash_flow">Dòng tiền ròng</string>
+    <string name="card_remaining_balance">Số dư còn lại</string>
+    <string name="format_quadrillion">Q</string>
+    <string name="format_trillion">Nghìn Tỷ</string>
+    <string name="format_billion">Tỷ</string>
+
+    <string name="settings_section_currency">Đơn vị tiền tệ mặc định</string>
+    <string name="settings_section_tools">Công cụ tài chính</string>
+    <string name="settings_item_budget_title">Ngân sách hằng tháng</string>
+    <string name="settings_item_budget_sub">Theo dõi hạn mức chi theo danh mục</string>
+    <string name="settings_item_recurring_title">Giao dịch định kỳ</string>
+    <string name="settings_item_recurring_sub">Tự động ghi nhận các khoản thu chi định kỳ</string>
+    <string name="settings_item_goals_title">Mục tiêu tiết kiệm</string>
+    <string name="settings_item_goals_sub">Theo dõi tiến độ tích lũy cho từng mục tiêu</string>
+    <string name="settings_item_rates_title">Tỷ giá quy đổi</string>
+    <string name="settings_item_rates_sub">Xem tỷ giá ngoại tệ đang áp dụng</string>
+    <string name="settings_item_csv_title">Xuất báo cáo CSV</string>
+    <string name="settings_item_csv_sub">Tạo báo cáo giao dịch dạng CSV</string>
+
+    <string name="settings_section_security">Hệ thống &amp; Bảo mật</string>
+    <string name="settings_item_lock_title">Khóa ứng dụng</string>
+    <string name="settings_item_lock_sub">Bảo vệ ứng dụng bằng mã PIN</string>
+    <string name="settings_item_biometric_title">Khóa sinh trắc học</string>
+    <string name="settings_item_biometric_sub">Dùng vân tay hoặc khuôn mặt để mở khóa</string>
+    <string name="settings_item_biometric_sub_need_pin">Cài mã PIN trước để bật sinh trắc học</string>
+    <string name="settings_item_biometric_sub_unavailable">Thiết bị chưa hỗ trợ hoặc chưa đăng ký sinh trắc học</string>
+    <string name="settings_item_theme_title">Giao diện tối</string>
+    <string name="settings_item_theme_sub">Chuyển đổi chế độ hiển thị của ứng dụng</string>
+
+    <string name="settings_section_sync">Đồng bộ &amp; Sao lưu</string>
+    <string name="settings_folder_hint_select">Chọn thư mục lưu file sao lưu</string>
+    <string name="settings_folder_hint_selected">Đã chọn thư mục sao lưu</string>
+    <string name="settings_item_auto_backup">Tự động sao lưu</string>
+    <string name="settings_item_manual_backup_title">Sao lưu thủ công</string>
+    <string name="settings_item_manual_backup_sub">Xuất dữ liệu hiện tại thành file sao lưu</string>
+    <string name="settings_item_restore_title">Khôi phục dữ liệu</string>
+    <string name="settings_item_restore_sub">Nhập dữ liệu từ file sao lưu</string>
+
+    <string name="settings_section_info">Thông tin &amp; Hỗ trợ</string>
+    <string name="settings_item_support_title">Hỗ trợ</string>
+    <string name="settings_item_support_sub">Liên hệ khi cần hỗ trợ hoặc báo lỗi</string>
+    <string name="settings_item_about_title">Giới thiệu</string>
+    <string name="settings_item_about_sub">Thông tin phiên bản và nhà phát triển</string>
+    <string name="settings_item_update_title">Cập nhật ứng dụng</string>
+    <string name="settings_item_update_sub_loading">Đang kiểm tra phiên bản mới…</string>
+    <string name="settings_item_update_sub_ready">Kiểm tra phiên bản mới nhất</string>
+    <string name="settings_item_donate_title">Ủng hộ nhà phát triển</string>
+    <string name="settings_item_donate_sub">Hỗ trợ quá trình duy trì và cải thiện ứng dụng</string>
+
+    <string name="support_dialog_title">Hỗ trợ</string>
+    <string name="support_dialog_message">Liên hệ khi cần hỗ trợ hoặc báo lỗi:</string>
+    <string name="support_dialog_open_mail">Mở Mail</string>
+    <string name="support_email_subject">KAT Budget – Hỗ trợ và góp ý</string>
+
+    <string name="about_dialog_title">Giới thiệu ứng dụng</string>
+    <string name="about_version">Phiên bản %1$s</string>
+    <string name="about_slogan">&quot;Hành trình tự chủ tài chính của bạn.&quot;</string>
+    <string name="about_developer">thực hiện bởi &quot;thanhtungg.&quot;</string>
+
+    <string name="toast_config_backup_success">Đã thiết lập tự động sao lưu.</string>
+    <string name="toast_backup_export_success">Đã xuất bản sao lưu.</string>
+    <string name="toast_backup_export_error">Không thể tạo bản sao lưu.</string>
+    <string name="toast_backup_processing">Đang tạo bản sao lưu…</string>
+    <string name="toast_restore_success">Đã khôi phục dữ liệu.</string>
+    <string name="toast_restore_error">Không thể khôi phục dữ liệu.</string>
+    <string name="toast_csv_export_success">Đã xuất báo cáo giao dịch.</string>
+    <string name="toast_csv_export_error">Không thể xuất báo cáo CSV.</string>
+    <string name="toast_file_picker_error">Không thể mở trình chọn tệp.</string>
+    <string name="toast_back_press_exit">Nhấn lần nữa để thoát.</string>
+    <string name="toast_goal_fill_all_info">Vui lòng nhập đủ thông tin.</string>
+    <string name="toast_recurring_invalid_info">Vui lòng kiểm tra lại thông tin đã nhập.</string>
+    <string name="toast_tx_invalid_amount">Vui lòng nhập số tiền hợp lệ.</string>
+    <string name="toast_tx_select_destination">Vui lòng chọn tài khoản nhận.</string>
+    <string name="toast_tx_amount_too_large">Số tiền quá lớn!</string>
+    <string name="toast_create_account_first">Bạn chưa tạo tài khoản nào. Vui lòng tạo tài khoản trước.</string>
+
+    <string name="screen_title_overview">Tổng quan tài chính</string>
+    <string name="screen_title_debt">Theo dõi vay nợ</string>
+    <string name="screen_title_report">Báo cáo tài chính</string>
+    <string name="screen_title_settings">Cài đặt</string>
+    <string name="nav_overview">Tổng quan</string>
+    <string name="nav_debts">Vay nợ</string>
+    <string name="nav_reports">Báo cáo</string>
+    <string name="nav_settings">Cài đặt</string>
+
+    <string name="dialog_delete_source_title">Xóa tài khoản?</string>
+    <string name="dialog_delete_source_msg">Tài khoản %1$s sẽ được xóa.</string>
+    <string name="dialog_delete_tx_title">Xóa giao dịch?</string>
+    <string name="dialog_delete_tx_msg">Giao dịch sau khi xóa sẽ không thể khôi phục.</string>
+    <string name="dialog_delete_budget_title">Xóa ngân sách?</string>
+    <string name="dialog_delete_budget_msg">Ngân sách cho %1$s sẽ được xóa.</string>
+    <string name="dialog_delete_goal_title">Xóa mục tiêu?</string>
+    <string name="dialog_delete_goal_msg">Mục tiêu %1$s sẽ được xóa.</string>
+    <string name="dialog_delete_recurring_title">Xóa giao dịch định kỳ?</string>
+    <string name="dialog_delete_recurring_msg">Lịch giao dịch %1$s sẽ được xóa.</string>
+
+    <string name="dialog_delete_debt_title">Xóa khoản vay/nợ?</string>
+    <string name="dialog_delete_debt_msg">Khoản vay/nợ với %1$s sẽ được xóa.</string>
+
+
+    <string name="vm_debt_note_paid">Thanh toán một phần khoản vay cho %1$s</string>
+    <string name="vm_debt_note_collected">Thu một phần khoản cho vay từ %1$s</string>
+    <string name="vm_debt_cat_default">Vay nợ</string>
+    <string name="vm_goal_note_deposit">Tích lũy cho mục tiêu: %1$s</string>
+    <string name="vm_goal_cat_default">Tiết kiệm</string>
+    <string name="vm_budget_transfer_to">Chuyển đến: %1$s</string>
+    <string name="vm_budget_transfer_from">Chuyển từ: %1$s</string>
+    <string name="vm_budget_recurring_auto_suffix">(Tự động ghi nhận)</string>
+
+    <string-array name="default_expense_categories">
+        <item>Thực phẩm</item>
+        <item>Di chuyển</item>
+        <item>Hóa đơn</item>
+        <item>Mua sắm</item>
+        <item>Sức khỏe</item>
+        <item>Giải trí</item>
+        <item>Giáo dục</item>
+    </string-array>
+    <string-array name="default_income_categories">
+        <item>Lương</item>
+        <item>Kinh doanh</item>
+        <item>Đầu tư</item>
+        <item>Được tặng</item>
+    </string-array>
+
+    <string name="notif_daily_title">Nhắc nhở cập nhật giao dịch</string>
+    <string name="notif_daily_content">Cập nhật giao dịch hôm nay để theo dõi ngân sách chính xác hơn.</string>
+    <string name="notif_channel_name">Nhắc nhở cập nhật giao dịch</string>
+    <string name="notif_channel_description">Thông báo nhắc cập nhật giao dịch hằng ngày.</string>
+</resources>
