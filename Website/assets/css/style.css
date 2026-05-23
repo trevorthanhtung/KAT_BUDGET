@@ -181,7 +181,7 @@ header { padding-left: max(5%, env(safe-area-inset-left)); padding-right: max(5%
 .cta-button-outline i,
 .cta-button-secondary i { color: var(--accent-primary); }
 .cta-button-outline { padding-left: 24px; padding-right: 24px; }
-.cta-button-guide { grid-column: 1 / -1; justify-self: stretch; width: 100%; }
+.cta-button-guide { justify-self: stretch; width: 100%; }
 .cta-button::after, .donate-btn::after { content: ''; position: absolute; inset: -30% auto -30% -45%; width: 34%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.58), transparent); transform: skewX(-18deg) translateX(-160%); transition: transform 0.75s ease; }
 .cta-button:hover::after, .donate-btn:hover::after { transform: skewX(-18deg) translateX(560%); }
 .cta-button > *, .donate-btn > * { position: relative; z-index: 1; }
@@ -560,7 +560,7 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
     .hero h1 { font-size: 2.55rem; }
     .cta-area { width: 100%; align-items: center; }
     .cta-buttons { grid-template-columns: repeat(2, 1fr); justify-content: center; width: 100%; max-width: 320px; }
-    .cta-button-guide { grid-column: auto; }
+
     .cta-button { width: 100%; max-width: 320px; }
     .cta-subtext { flex-wrap: wrap; justify-content: center; }
     .download-meta { grid-template-columns: 1fr; width: 100%; max-width: 320px; justify-items: start; text-align: left; }
