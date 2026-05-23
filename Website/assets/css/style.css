@@ -17,7 +17,7 @@
     
     --accent-primary: #10B981;
     --accent-primary-rgb: 16, 185, 129;
-    --accent-btn-bg: #0F172A;
+    --accent-btn-bg: var(--accent-primary);
     --accent-btn-text: #FFFFFF;
     --accent-icon: #D97706;
     
@@ -47,8 +47,8 @@
     --text-body: #94A3B8;
     --text-muted: #64748B;
     
-    --accent-btn-bg: #E2E8F0;
-    --accent-btn-text: #0F172A;
+    --accent-btn-bg: #10B981;
+    --accent-btn-text: #FFFFFF;
     --accent-icon: #FBBF24;
 }
 
@@ -170,8 +170,9 @@ header { padding-left: max(5%, env(safe-area-inset-left)); padding-right: max(5%
 .hero h1 .highlight { color: var(--accent-primary); }
 .hero p { font-size: 1.15rem; color: var(--text-body); margin-bottom: 32px; font-weight: 400; }
 
-.cta-area { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; width: fit-content; }
-.cta-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); align-items: center; gap: 10px; width: fit-content; max-width: 100%; }
+.cta-area { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; width: 100%; max-width: 480px; }
+.cta-buttons { display: grid; grid-template-columns: repeat(2, 1fr); align-items: center; gap: 10px; width: 100%; }
+.cta-buttons .cta-button { width: 100%; }
 .cta-button { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: var(--accent-btn-bg); color: var(--accent-btn-text) !important; padding: 18px 36px; border-radius: 999px; font-size: 1.1rem; font-weight: 600; border: none; cursor: pointer; width: fit-content; min-height: 54px; transition: var(--transition-spring); }
 .cta-button-muted,
 .cta-button-outline { color: var(--text-title) !important; background: rgba(var(--bg-base-rgb), 0.5); border: 1px solid var(--card-border); }
@@ -559,9 +560,9 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
     .exit-button { min-width: auto; padding: 10px 14px; }
     .hero h1 { font-size: 2.55rem; }
     .cta-area { width: 100%; align-items: center; }
-    .cta-buttons { grid-template-columns: repeat(2, 1fr); justify-content: center; width: 100%; max-width: 360px; gap: 8px; }
+    .cta-buttons { grid-template-columns: repeat(2, 1fr); justify-content: center; width: 100%; max-width: 320px; }
 
-    .cta-button { width: 100%; max-width: 360px; padding: 14px 16px; font-size: 0.92rem; min-height: 48px; gap: 8px; }
+    .cta-button { width: 100%; max-width: 320px; }
     .cta-subtext { flex-wrap: wrap; justify-content: center; }
     .download-meta { grid-template-columns: 1fr; width: 100%; max-width: 320px; justify-items: start; text-align: left; }
     .dev-contacts { flex-direction: column; width: 100%; max-width: 320px; }
