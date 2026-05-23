@@ -609,14 +609,15 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
 /* iMac */
 .mockup-imac {
     position: relative;
-    width: 560px;
+    width: 580px;
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 1;
-    transform: rotateY(12deg) rotateX(4deg) translateZ(-40px);
+    transform: rotateY(15deg) rotateX(4deg) translateZ(-40px);
     transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.6s;
     filter: drop-shadow(-20px 30px 40px rgba(0,0,0,0.4));
+    margin-right: -80px;
 }
 .mockup-imac:hover {
     transform: rotateY(5deg) rotateX(0deg) translateZ(0px);
@@ -667,10 +668,9 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
 
 /* Laptop */
 .mockup-laptop {
-    position: absolute;
-    width: 460px;
-    bottom: 0px;
-    right: 5%;
+    position: relative;
+    width: 480px;
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -782,9 +782,9 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
 }
 
 @media (max-width: 900px) {
-    .cp-mockups { perspective: none; padding: 20px 0; }
-    .mockup-imac { width: 100%; max-width: 480px; transform: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); margin-bottom: 40px; }
+    .cp-mockups { perspective: none; padding: 20px 0; flex-direction: column; }
+    .mockup-imac { width: 100%; max-width: 480px; transform: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); margin-bottom: 40px; margin-right: 0; }
     .mockup-imac:hover { transform: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
-    .mockup-laptop { position: relative; width: 90%; max-width: 420px; bottom: auto; right: auto; transform: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
+    .mockup-laptop { position: relative; width: 90%; max-width: 420px; margin-top: 0; transform: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
     .mockup-laptop:hover { transform: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
 }
