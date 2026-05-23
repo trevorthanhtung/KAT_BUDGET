@@ -588,3 +588,182 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
     .install-content { grid-template-columns: 1fr; }
     .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; }
 }
+
+/* Cross Platform Section */
+.cross-platform-section {
+    padding: 80px 5%;
+    text-align: center;
+    overflow: hidden;
+}
+.cp-mockups {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* iMac */
+.mockup-imac {
+    position: relative;
+    width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+.imac-screen {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 12px solid #111;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.imac-chin {
+    width: 100%;
+    height: 48px;
+    background: #e0e0e0;
+    border-radius: 0 0 16px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    font-size: 1.2rem;
+    box-shadow: inset 0 -2px 10px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
+}
+.imac-stand {
+    width: 100px;
+    height: 60px;
+    background: linear-gradient(to bottom, #d0d0d0, #b0b0b0);
+    position: relative;
+    z-index: 1;
+    clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+    margin-top: -10px;
+}
+.imac-base {
+    width: 160px;
+    height: 8px;
+    background: #a0a0a0;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Laptop */
+.mockup-laptop {
+    position: relative;
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: -10px;
+}
+.laptop-screen {
+    width: 90%;
+    aspect-ratio: 16/10;
+    background: #111;
+    border: 8px solid #222;
+    border-radius: 12px 12px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+.laptop-base {
+    width: 100%;
+    height: 14px;
+    background: #bbb;
+    border-radius: 4px 4px 12px 12px;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 10px 20px rgba(0,0,0,0.3);
+}
+.laptop-base::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: #999;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Browser UI */
+.browser-ui {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-base);
+}
+.browser-header {
+    height: 24px;
+    background: #2d2d2d;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 8px;
+}
+.mac-style .browser-header { justify-content: flex-start; }
+.win-style .browser-header { justify-content: space-between; flex-direction: row-reverse; }
+
+.mac-dots { display: flex; gap: 4px; }
+.mac-dots i { width: 8px; height: 8px; border-radius: 50%; background: #ff5f56; display: inline-block; }
+.mac-dots i:nth-child(2) { background: #ffbd2e; }
+.mac-dots i:nth-child(3) { background: #27c93f; }
+
+.win-controls { display: flex; gap: 8px; align-items: center; }
+.win-controls i { width: 8px; height: 8px; background: #fff; opacity: 0.5; display: inline-block; }
+.win-controls i:first-child { height: 1px; margin-top: 4px; }
+.win-controls i:nth-child(2) { border: 1px solid #fff; background: transparent; }
+
+.browser-url {
+    flex: 1;
+    margin: 0 10px;
+    height: 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.browser-body {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+.browser-bg {
+    position: absolute;
+    inset: -20px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(15px);
+    opacity: 0.4;
+}
+.browser-body img {
+    position: relative;
+    z-index: 1;
+    height: 90%;
+    width: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 900px) {
+    .mockup-imac { width: 100%; max-width: 480px; }
+    .mockup-laptop { width: 90%; max-width: 420px; margin-top: 40px; }
+}
