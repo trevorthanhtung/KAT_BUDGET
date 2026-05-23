@@ -18,7 +18,7 @@ import java.net.URL
 
 object AppUpdater {
     const val DEFAULT_UPDATE_JSON_URL =
-        "https://raw.githubusercontent.com/KATGR0UP/KAT-Budget/main/data/update.json"
+        "https://raw.githubusercontent.com/trevorthanhtung/KAT_BUDGET/main/data/update.json"
 
     private const val APK_FILE_NAME = "kat_budget_update.apk"
     private const val APK_MIME_TYPE = "application/vnd.android.package-archive"
