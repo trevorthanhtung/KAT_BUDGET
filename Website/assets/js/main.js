@@ -289,19 +289,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const webAppBtn = document.getElementById('webAppBtn');
-    const siteToast = document.getElementById('siteToast');
-    let toastTimer;
-    if (webAppBtn && siteToast) {
-        webAppBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            siteToast.classList.add('show');
-            window.clearTimeout(toastTimer);
-            toastTimer = window.setTimeout(() => {
-                siteToast.classList.remove('show');
-            }, 3600);
-        });
-    }
+    // Logic cho Toast khi bấm nút (hiện không dùng vì Web App đã có link thật)
+    // const webAppBtn = document.getElementById('webAppBtn');
+    // const siteToast = document.getElementById('siteToast');
+    // let toastTimer;
+    // if (webAppBtn && siteToast) {
+    //     webAppBtn.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         siteToast.classList.add('show');
+    //         window.clearTimeout(toastTimer);
+    //         toastTimer = window.setTimeout(() => {
+    //             siteToast.classList.remove('show');
+    //         }, 3600);
+    //     });
+    // }
 
     // === 3. XỬ LÝ MODAL ===
     const modal = document.getElementById('donateModal');
