@@ -960,37 +960,6 @@ function App() {
       )}
 
       <section className="content-grid">
-        {activeTab === 'DASHBOARD' && (
-          <article className="section-block">
-          <div className="section-title">
-            <h2>Tai khoan</h2>
-            <WalletCards size={20} />
-          </div>
-          <div className="stack">
-            {sources.map((source) => (
-              <div className="account-row" key={source.id}>
-                <div>
-                  <strong>{source.name}</strong>
-                  <span>{sourceTypeLabel[source.type]}</span>
-                </div>
-                <div className="row-right">
-                  <b>{formatCurrency(balancesBySource[source.name] ?? 0)}</b>
-                  <div className="row-actions">
-                    <button type="button" className="mini-icon" onClick={() => openSourceModal(source)} aria-label="Sua tai khoan">
-                      <Pencil size={14} />
-                    </button>
-                    <button type="button" className="mini-icon danger" onClick={() => handleDeleteSource(source)} aria-label="Xoa tai khoan">
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {sources.length === 0 && <p className="empty-note">Chua co tai khoan nao.</p>}
-          </div>
-        </article>
-        )}
-
         {activeTab === 'REPORTS' && (
         <article className="section-block">
           <div className="section-title">
@@ -1144,76 +1113,6 @@ function App() {
         </article>
         )}
 
-        {activeTab === 'DASHBOARD' && (
-        <article className="section-block">
-          <div className="section-title">
-            <h2>Giao dich</h2>
-            <CircleDollarSign size={20} />
-          </div>
-
-          <div className="tx-filters">
-            <label>
-              <span><Search size={14} /> Tim kiem</span>
-              <input
-                value={txSearch}
-                onChange={(event) => setTxSearch(event.target.value)}
-                placeholder="Danh muc, ghi chu, so tien..."
-              />
-            </label>
-
-            <label>
-              <span>Loai</span>
-              <select value={txTypeFilter} onChange={(event) => setTxTypeFilter(event.target.value as TxTypeFilter)}>
-                <option value="ALL">Tat ca</option>
-                <option value="INCOME">Thu nhap</option>
-                <option value="EXPENSE">Chi tieu</option>
-              </select>
-            </label>
-
-            <label>
-              <span>Tai khoan</span>
-              <select value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)}>
-                <option value="ALL">Tat ca</option>
-                {sources.map((source) => (
-                  <option key={source.id} value={source.name}>
-                    {source.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          <div className="stack">
-            {visibleTransactions.map((transaction) => (
-              <div className="transaction-row" key={transaction.id}>
-                <div>
-                  <strong>{transaction.category}</strong>
-                  <span>
-                    {transaction.sourceName} • {format(transaction.timestamp, 'dd/MM HH:mm')}
-                  </span>
-                  {transaction.note && <span className="note-line">{transaction.note}</span>}
-                </div>
-                <div className="row-right">
-                  <b className={transaction.type === 'INCOME' ? 'income' : 'expense'}>
-                    {transaction.type === 'INCOME' ? '+' : '-'}
-                    {formatCurrency(transaction.amount, transaction.currency)}
-                  </b>
-                  <div className="row-actions">
-                    <button type="button" className="mini-icon" onClick={() => openTxModal(transaction)} aria-label="Sua giao dich">
-                      <Pencil size={14} />
-                    </button>
-                    <button type="button" className="mini-icon danger" onClick={() => handleDeleteTransaction(transaction.id)} aria-label="Xoa giao dich">
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {visibleTransactions.length === 0 && <p className="empty-note">Khong co giao dich phu hop bo loc.</p>}
-          </div>
-        </article>
-        )}
-
         {activeTab === 'DEBTS' && (
         <article className="section-block">
           <div className="section-title">
@@ -1252,9 +1151,8 @@ function App() {
             {debts.length === 0 && <p className="empty-note">Khong co ghi chu vay/no nao.</p>}
           </div>
         </article>
-          </div>
-        </section>
-      )}
+        )}
+      </section>
 
       {activeTab === 'SETTINGS' && (
         <section className="section-block">
