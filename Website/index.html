@@ -66,10 +66,10 @@
                             <i class="fa-brands fa-android"></i>
                             <span data-i18n="btnDownloadAndroid">Tải ngay</span>
                         </a>
-                        <a href="https://katbudgetpwa.vercel.app/" target="_blank" rel="noopener noreferrer" class="cta-button cta-button-secondary" id="webAppBtn">
+                        <button type="button" class="cta-button cta-button-secondary" id="webAppBtn">
                             <i class="fa-solid fa-globe"></i>
                             <span data-i18n="btnWebApp">Web App</span>
-                        </a>
+                        </button>
                         <a href="install.html" class="cta-button cta-button-outline cta-button-guide">
                             <i class="fa-solid fa-circle-info"></i>
                             <span data-i18n="btnInstallGuide">Hướng dẫn cài đặt</span>
@@ -270,6 +270,27 @@
             </div>
         </section>
     </main>
+
+    <div id="webAppModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="webAppModalTitle">
+        <div class="modal-content bento-card">
+            <button class="close-btn" id="closeWebAppModal" aria-label="Đóng modal">&times;</button>
+            <h3 id="webAppModalTitle" data-i18n="webAppModalTitle">Lưu ý & Hướng dẫn (iOS)</h3>
+            <p class="modal-subtitle" style="margin-bottom: 20px; line-height: 1.5;" data-i18n="webAppModalDesc">Web App đa nền tảng đang trong quá trình phát triển nên có thể chưa hoàn thiện 100%.</p>
+            
+            <div style="text-align: left; background: rgba(16, 185, 129, 0.08); padding: 18px; border-radius: 16px; margin-bottom: 28px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                <h4 style="margin-bottom: 14px; font-size: 1.05rem; color: var(--text-title); display: flex; align-items: center; gap: 8px;"><i class="fa-brands fa-apple" style="font-size: 1.2rem;"></i> <span data-i18n="webAppModalGuideTitle">Cài đặt lên màn hình chính iOS:</span></h4>
+                <ol style="padding-left: 24px; font-size: 0.96rem; color: var(--text-body); line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+                    <li><span data-i18n="webAppModalGuide1">Mở đường link bằng trình duyệt <strong>Safari</strong>.</span></li>
+                    <li><span data-i18n="webAppModalGuide2">Nhấn vào biểu tượng <strong>Chia sẻ (Share)</strong> ở dưới cùng.</span></li>
+                    <li><span data-i18n="webAppModalGuide3">Chọn <strong>Thêm vào MH chính (Add to Home Screen)</strong>.</span></li>
+                </ol>
+            </div>
+            
+            <a href="https://katbudgetpwa.vercel.app/" target="_blank" rel="noopener noreferrer" class="cta-button" id="continueToWebAppBtn" style="width: 100%; justify-content: center; min-height: 50px;">
+                <span data-i18n="webAppModalBtn">Mở Web App ngay</span> <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
 
     <div id="donateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
         <div class="modal-content bento-card">

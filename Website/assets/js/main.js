@@ -43,6 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
             btnDownloadAndroid: "Tải ngay",
             btnWebApp: "Web App",
             btnInstallGuide: "Hướng dẫn cài đặt",
+            webAppModalTitle: "Lưu ý & Hướng dẫn (iOS)",
+            webAppModalDesc: "Web App đa nền tảng đang trong quá trình phát triển nên có thể chưa hoàn thiện 100%.",
+            webAppModalGuideTitle: "Cài đặt lên màn hình chính iOS:",
+            webAppModalGuide1: "Mở đường link bằng trình duyệt Safari.",
+            webAppModalGuide2: "Nhấn vào biểu tượng Chia sẻ (Share) ở dưới cùng.",
+            webAppModalGuide3: "Chọn Thêm vào MH chính (Add to Home Screen).",
+            webAppModalBtn: "Mở Web App ngay",
             btnSubtext: "Kiểm tra APK trên VirusTotal",
             btnVersion: "Phiên bản v3.0.0",
             downloadVersionLabel: "Phiên bản",
@@ -152,6 +159,13 @@ document.addEventListener("DOMContentLoaded", () => {
             btnDownloadAndroid: "Download now",
             btnWebApp: "Web App",
             btnInstallGuide: "Install guide",
+            webAppModalTitle: "Notice & iOS Guide",
+            webAppModalDesc: "The cross-platform Web App is still in development and may not be 100% stable.",
+            webAppModalGuideTitle: "Install to iOS Home Screen:",
+            webAppModalGuide1: "Open the link using the Safari browser.",
+            webAppModalGuide2: "Tap the Share icon at the bottom of the screen.",
+            webAppModalGuide3: "Select Add to Home Screen.",
+            webAppModalBtn: "Open Web App Now",
             btnSubtext: "Check APK on VirusTotal",
             btnVersion: "Version 3.0.0",
             downloadVersionLabel: "Version",
@@ -289,22 +303,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Logic cho Toast khi bấm nút (hiện không dùng vì Web App đã có link thật)
-    // const webAppBtn = document.getElementById('webAppBtn');
-    // const siteToast = document.getElementById('siteToast');
-    // let toastTimer;
-    // if (webAppBtn && siteToast) {
-    //     webAppBtn.addEventListener('click', (e) => {
-    //         e.preventDefault();
-    //         siteToast.classList.add('show');
-    //         window.clearTimeout(toastTimer);
-    //         toastTimer = window.setTimeout(() => {
-    //             siteToast.classList.remove('show');
-    //         }, 3600);
-    //     });
-    // }
-
     // === 3. XỬ LÝ MODAL ===
+    const waModal = document.getElementById('webAppModal');
+    const openWaBtn = document.getElementById('webAppBtn');
+    const closeWaBtn = document.getElementById('closeWebAppModal');
+    const continueWaBtn = document.getElementById('continueToWebAppBtn');
+    
+    if (waModal && openWaBtn && closeWaBtn) {
+        const closeWaModal = () => { waModal.classList.remove('show'); document.body.style.overflow = 'auto'; };
+        openWaBtn.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            waModal.classList.add('show'); 
+            document.body.style.overflow = 'hidden'; 
+        });
+        closeWaBtn.addEventListener('click', closeWaModal);
+        if(continueWaBtn) continueWaBtn.addEventListener('click', closeWaModal);
+        window.addEventListener('click', (e) => { if (e.target === waModal) closeWaModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && waModal.classList.contains('show')) closeWaModal(); });
+    }
+
     const modal = document.getElementById('donateModal');
     const openBtn = document.getElementById('openDonateModal');
     const closeBtn = document.getElementById('closeDonateModal');

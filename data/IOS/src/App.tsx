@@ -138,13 +138,16 @@ function getRecentMonthKeys(monthCount: number): string[] {
   return result
 }
 
-function encodeBase64Utf8(value: string): string {
-  const bytes = new TextEncoder().encode(value)
-  let binary = ''
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte)
-  }
-  return btoa(binary)
+async function gzipString(value: string): Promise<Blob> {
+  const stream = new Blob([value], { type: 'application/json' }).stream()
+  const compressedStream = stream.pipeThrough(new CompressionStream('gzip'))
+  return new Response(compressedStream).blob()
+}
+
+async function ungzipBlob(blob: Blob): Promise<string> {
+  const stream = blob.stream()
+  const decompressedStream = stream.pipeThrough(new DecompressionStream('gzip'))
+  return new Response(decompressedStream).text()
 }
 
 function decodeBase64Utf8(base64Value: string): string {
@@ -154,24 +157,6 @@ function decodeBase64Utf8(base64Value: string): string {
     bytes[index] = binary.charCodeAt(index)
   }
   return new TextDecoder().decode(bytes)
-}
-
-function parseBackupPayload(rawText: string): BackupPayload {
-  const normalized = rawText.trim()
-  if (!normalized) throw new Error('Empty backup')
-
-  if (normalized.startsWith(KAT_BACKUP_PREFIX)) {
-    const encoded = normalized.slice(KAT_BACKUP_PREFIX.length).trim()
-    const decodedJson = decodeBase64Utf8(encoded)
-    return JSON.parse(decodedJson) as BackupPayload
-  }
-
-  try {
-    return JSON.parse(normalized) as BackupPayload
-  } catch {
-    const decodedJson = decodeBase64Utf8(normalized)
-    return JSON.parse(decodedJson) as BackupPayload
-  }
 }
 
 function App() {
@@ -677,15 +662,14 @@ function App() {
     }
 
     const rawJson = JSON.stringify(payload)
-    const katContent = `${KAT_BACKUP_PREFIX}${encodeBase64Utf8(rawJson)}`
-    const blob = new Blob([katContent], { type: 'text/plain' })
+    const blob = await gzipString(rawJson)
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
     link.download = `KatBudget_Backup_${format(new Date(), 'yyyyMMdd_HHmmss')}.kat`
     link.click()
     URL.revokeObjectURL(url)
-    setStatusMessage('Da xuat backup .kat (KAT1).')
+    setStatusMessage('Da xuat backup .kat (Android Native GZIP).')
   }
 
   const handlePickImportFile = () => {
@@ -697,8 +681,16 @@ function App() {
     if (!file) return
 
     try {
-      const text = await file.text()
-      const payload = parseBackupPayload(text)
+      let payloadText = ''
+      try {
+        payloadText = await ungzipBlob(file)
+      } catch {
+        payloadText = await file.text()
+        if (payloadText.startsWith(KAT_BACKUP_PREFIX)) {
+          payloadText = decodeBase64Utf8(payloadText.slice(KAT_BACKUP_PREFIX.length).trim())
+        }
+      }
+      const payload = JSON.parse(payloadText) as BackupPayload
 
       await db.transaction('rw', db.sources, db.transactions, db.categories, db.budgets, async () => {
         await db.sources.clear()
