@@ -582,7 +582,7 @@ function App() {
 
   const openDebtModal = (debt?: Debt) => {
     if (debt) {
-      setEditingDebtId(debt.id)
+      setEditingDebtId(debt.id!)
       setDebtForm({
         personName: debt.personName,
         amount: debt.amount.toString(),
@@ -596,6 +596,54 @@ function App() {
       setDebtForm(defaultDebtForm)
     }
     setDebtModalOpen(true)
+  }
+
+  const openGoalModal = (goal?: SavingGoal) => {
+    if (goal) {
+      setEditingGoalId(goal.id!)
+      setGoalForm({
+        name: goal.name,
+        targetAmount: goal.targetAmount.toString(),
+        currentAmount: goal.currentAmount.toString(),
+        currency: goal.currency,
+      })
+    } else {
+      setEditingGoalId(null)
+      setGoalForm({
+        name: '',
+        targetAmount: '',
+        currentAmount: '',
+        currency: 'VND',
+      })
+    }
+    setGoalModalOpen(true)
+  }
+
+  const openRecurringModal = (recurring?: RecurringTransaction) => {
+    if (recurring) {
+      setEditingRecurringId(recurring.id!)
+      setRecurringForm({
+        name: recurring.name,
+        amount: recurring.amount.toString(),
+        currency: recurring.currency,
+        type: recurring.type,
+        category: recurring.category,
+        frequency: recurring.frequency,
+        nextDate: recurring.nextDate ? format(recurring.nextDate, 'yyyy-MM-dd') : '',
+      })
+    } else {
+      setEditingRecurringId(null)
+      setRecurringForm({
+        name: '',
+        amount: '',
+        currency: 'VND',
+        type: 'EXPENSE',
+        category: '',
+        frequency: 'MONTHLY',
+        nextDate: '',
+      })
+    }
+    setRecurringModalOpen(true)
   }
 
   const handleSaveSource = async (event: FormEvent<HTMLFormElement>) => {
@@ -847,23 +895,110 @@ function App() {
       await db.debts.add({
         personName: debtForm.personName,
         amount: parsedAmount,
-        currency: 'VND',
+        currency: debtForm.currency || 'VND',
         type: debtForm.type,
         note: debtForm.note,
         timestamp: Date.now(),
         isPaid: false,
-        personName,
-        amount,
-        currency: debtForm.currency.trim().toUpperCase() || 'VND',
-        type: debtForm.type,
-        note: debtForm.note.trim(),
-        dueDate: dueDateTimestamp,
+        paidAmount: 0,
+        dueDate: parsedDueDate,
       })
       setStatusMessage('Da cap nhat ghi chu vay/no.')
     }
 
     setDebtModalOpen(false)
     setEditingDebtId(null)
+  }
+
+  const handleSaveGoal = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const targetAmount = parseAmount(goalForm.targetAmount)
+    const currentAmount = parseAmount(goalForm.currentAmount)
+
+    if (editingGoalId != null) {
+      await db.saving_goals.update(editingGoalId, {
+        name: goalForm.name,
+        targetAmount,
+        currentAmount,
+        currency: goalForm.currency,
+      })
+    } else {
+      await db.saving_goals.add({
+        name: goalForm.name,
+        targetAmount,
+        currentAmount,
+        currency: goalForm.currency,
+        createdTimestamp: Date.now(),
+      })
+    }
+    setGoalModalOpen(false)
+  }
+
+  const handleDeleteGoal = async (id: number) => {
+    await db.saving_goals.delete(id)
+    setGoalModalOpen(false)
+  }
+
+  const openRecurringModal = (recurring?: RecurringTransaction) => {
+    if (recurring) {
+      setEditingRecurringId(recurring.id!)
+      setRecurringForm({
+        amount: recurring.amount.toString(),
+        currency: recurring.currency,
+        type: recurring.type,
+        category: recurring.category,
+        note: recurring.note,
+        sourceName: recurring.sourceName,
+        dayOfMonth: recurring.dayOfMonth.toString(),
+      })
+    } else {
+      setEditingRecurringId(null)
+      setRecurringForm({
+        amount: '',
+        currency: 'VND',
+        type: 'EXPENSE',
+        category: expenseCategories[0]?.name ?? '',
+        note: '',
+        sourceName: sources[0]?.name ?? '',
+        dayOfMonth: '1',
+      })
+    }
+    setRecurringModalOpen(true)
+  }
+
+  const handleSaveRecurring = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const amount = parseAmount(recurringForm.amount)
+    const dayOfMonth = parseInt(recurringForm.dayOfMonth, 10) || 1
+
+    if (editingRecurringId != null) {
+      await db.recurrings.update(editingRecurringId, {
+        amount,
+        currency: recurringForm.currency,
+        type: recurringForm.type,
+        category: recurringForm.category,
+        note: recurringForm.note,
+        sourceName: recurringForm.sourceName,
+        dayOfMonth,
+      })
+    } else {
+      await db.recurrings.add({
+        amount,
+        currency: recurringForm.currency,
+        type: recurringForm.type,
+        category: recurringForm.category,
+        note: recurringForm.note,
+        sourceName: recurringForm.sourceName,
+        dayOfMonth,
+        lastExecutedMonth: '',
+      })
+    }
+    setRecurringModalOpen(false)
+  }
+
+  const handleDeleteRecurring = async (id: number) => {
+    await db.recurrings.delete(id)
+    setRecurringModalOpen(false)
   }
 
   const handleDeleteDebt = async (id: number) => {
@@ -1412,6 +1547,7 @@ function App() {
                 {pin ? (lang === 'vi' ? 'Tắt PIN' : 'Disable PIN') : (lang === 'vi' ? 'Cài PIN' : 'Set PIN')}
               </button>
             </div>
+          </div>
           <div className="section-title" style={{ marginTop: 24 }}>
             <h2>{lang === 'vi' ? 'Công cụ mở rộng' : 'Tools'}</h2>
             <Tags size={20} />
