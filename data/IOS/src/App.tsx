@@ -209,6 +209,8 @@ function App() {
   const budgets = useLiveQuery(() => db.budgets.orderBy('monthYear').reverse().toArray(), []) ?? []
   const debts = useLiveQuery(() => db.debts.orderBy('timestamp').reverse().toArray(), []) ?? []
 
+  const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'REPORTS' | 'DEBTS' | 'SETTINGS'>('DASHBOARD')
+
   const [isSourceModalOpen, setSourceModalOpen] = useState(false)
   const [isTxModalOpen, setTxModalOpen] = useState(false)
   const [isCategoryModalOpen, setCategoryModalOpen] = useState(false)
@@ -877,57 +879,49 @@ function App() {
           <p className="eyebrow">KAT Budget PWA</p>
           <h1>Tong quan tai chinh</h1>
         </div>
-        <button className="icon-button" type="button" aria-label="Cai dat">
+        <button className="icon-button" type="button" aria-label="Cai dat" onClick={() => setActiveTab('SETTINGS')}>
           <Settings size={20} />
         </button>
       </header>
 
       {statusMessage && <p className="status-banner">{statusMessage}</p>}
 
-      <section className="balance-panel" aria-label="Tai san rong">
-        <div>
-          <p className="panel-label">Tai san rong</p>
-          <strong>{formatCurrency(netWorth)}</strong>
-        </div>
-        <div className="cashflow">
-          <span><ArrowUpRight size={16} /> {formatCurrency(monthIncome)}</span>
-          <span><ArrowDownRight size={16} /> {formatCurrency(monthExpense)}</span>
-        </div>
-      </section>
+      {activeTab === 'DASHBOARD' && (
+        <>
+          <section className="balance-panel" aria-label="Tai san rong">
+            <div>
+              <p className="panel-label">Tai san rong</p>
+              <strong>{formatCurrency(netWorth)}</strong>
+            </div>
+            <div className="cashflow">
+              <span><ArrowUpRight size={16} /> {formatCurrency(monthIncome)}</span>
+              <span><ArrowDownRight size={16} /> {formatCurrency(monthExpense)}</span>
+            </div>
+          </section>
 
-      <section className="quick-actions" aria-label="Tac vu nhanh">
-        <button type="button" className="action-tile" onClick={() => openTxModal()}>
-          <Plus size={20} /> Giao dich
-        </button>
-        <button type="button" className="action-tile" onClick={() => openSourceModal()}>
-          <CreditCard size={20} /> Tai khoan
-        </button>
-        <button type="button" className="action-tile" onClick={() => openCategoryModal()}>
-          <Tags size={20} /> Danh muc
-        </button>
-        <button type="button" className="action-tile" onClick={() => openBudgetModal()}>
-          <PiggyBank size={20} /> Ngan sach
-        </button>
-        <button type="button" className="action-tile" onClick={() => openDebtModal()}>
-          <Users size={20} /> Vay / No
-        </button>
-        <button type="button" className="action-tile" onClick={handleExportBackup}>
-          <Download size={20} /> Sao luu .kat
-        </button>
-        <button type="button" className="action-tile" onClick={handlePickImportFile}>
-          <FileUp size={20} /> Phuc hoi
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="visually-hidden"
-          accept=".json,.kat,application/json,text/plain"
-          onChange={handleImportBackup}
-        />
-      </section>
+          <section className="quick-actions" aria-label="Tac vu nhanh">
+            <button type="button" className="action-tile" onClick={() => openTxModal()}>
+              <Plus size={20} /> Giao dich
+            </button>
+            <button type="button" className="action-tile" onClick={() => openSourceModal()}>
+              <CreditCard size={20} /> Tai khoan
+            </button>
+            <button type="button" className="action-tile" onClick={() => openCategoryModal()}>
+              <Tags size={20} /> Danh muc
+            </button>
+            <button type="button" className="action-tile" onClick={() => openBudgetModal()}>
+              <PiggyBank size={20} /> Ngan sach
+            </button>
+            <button type="button" className="action-tile" onClick={() => openDebtModal()}>
+              <Users size={20} /> Vay / No
+            </button>
+          </section>
+        </>
+      )}
 
       <section className="content-grid">
-        <article className="section-block">
+        {activeTab === 'DASHBOARD' && (
+          <article className="section-block">
           <div className="section-title">
             <h2>Tai khoan</h2>
             <WalletCards size={20} />
@@ -955,7 +949,9 @@ function App() {
             {sources.length === 0 && <p className="empty-note">Chua co tai khoan nao.</p>}
           </div>
         </article>
+        )}
 
+        {activeTab === 'REPORTS' && (
         <article className="section-block">
           <div className="section-title">
             <h2>Danh muc</h2>
@@ -996,7 +992,9 @@ function App() {
             {filteredCategories.length === 0 && <p className="empty-note">Chua co danh muc phu hop.</p>}
           </div>
         </article>
+        )}
 
+        {activeTab === 'DEBTS' && (
         <article className="section-block">
           <div className="section-title">
             <h2>Ngan sach thang</h2>
@@ -1062,7 +1060,9 @@ function App() {
             {budgetRows.length === 0 && <p className="empty-note">Chua co ngan sach cho thang nay.</p>}
           </div>
         </article>
+        )}
 
+        {activeTab === 'REPORTS' && (
         <article className="section-block">
           <div className="section-title">
             <h2>Bao cao</h2>
@@ -1102,7 +1102,9 @@ function App() {
             <EChart options={cashflowBarOptions} style={{ height: '260px' }} />
           </div>
         </article>
+        )}
 
+        {activeTab === 'DASHBOARD' && (
         <article className="section-block">
           <div className="section-title">
             <h2>Giao dich</h2>
@@ -1170,7 +1172,9 @@ function App() {
             {visibleTransactions.length === 0 && <p className="empty-note">Khong co giao dich phu hop bo loc.</p>}
           </div>
         </article>
+        )}
 
+        {activeTab === 'DEBTS' && (
         <article className="section-block">
           <div className="section-title">
             <h2>Vay / No</h2>
@@ -1208,26 +1212,53 @@ function App() {
             {debts.length === 0 && <p className="empty-note">Khong co ghi chu vay/no nao.</p>}
           </div>
         </article>
+        )}
       </section>
 
-      <section className="report-strip" aria-label="Bao cao nhanh">
-        <div>
-          <BarChart3 size={22} />
-          <strong>Chi / Thu trong thang</strong>
-        </div>
-        <progress
-          max="100"
-          value={budgetUsagePercent}
-          aria-label={`Da dung ${budgetUsagePercent} phan tram theo thu nhap`}
-        />
-        <span>{budgetUsagePercent}%</span>
-      </section>
+      {activeTab === 'SETTINGS' && (
+        <section className="section-block">
+          <div className="section-title">
+            <h2>Cai dat & Sao luu</h2>
+            <Settings size={20} />
+          </div>
+          <div className="stack">
+            <button className="action-tile primary-button" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={handleExportBackup}>
+              <Download size={20} /> Sao luu du lieu (.kat)
+            </button>
+            <button className="action-tile" style={{ minHeight: '52px', border: '1px solid var(--border)', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--surface)' }} onClick={handlePickImportFile}>
+              <FileUp size={20} /> Phuc hoi du lieu (.kat)
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="visually-hidden"
+              accept=".json,.kat,application/json,text/plain"
+              onChange={handleImportBackup}
+            />
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'DASHBOARD' && (
+        <section className="report-strip" aria-label="Bao cao nhanh">
+          <div>
+            <BarChart3 size={22} />
+            <strong>Chi / Thu trong thang</strong>
+          </div>
+          <progress
+            max="100"
+            value={budgetUsagePercent}
+            aria-label={`Da dung ${budgetUsagePercent} phan tram theo thu nhap`}
+          />
+          <span>{budgetUsagePercent}%</span>
+        </section>
+      )}
 
       <nav className="bottom-nav" aria-label="Dieu huong chinh">
-        <button className="active" type="button"><WalletCards size={20} /> Tong quan</button>
-        <button type="button"><BarChart3 size={20} /> Bao cao</button>
-        <button type="button"><PiggyBank size={20} /> Muc tieu</button>
-        <button type="button"><Settings size={20} /> Cai dat</button>
+        <button className={activeTab === 'DASHBOARD' ? 'active' : ''} onClick={() => setActiveTab('DASHBOARD')} type="button"><WalletCards size={20} /> Tong quan</button>
+        <button className={activeTab === 'REPORTS' ? 'active' : ''} onClick={() => setActiveTab('REPORTS')} type="button"><BarChart3 size={20} /> Bao cao</button>
+        <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} type="button"><PiggyBank size={20} /> Muc tieu</button>
+        <button className={activeTab === 'SETTINGS' ? 'active' : ''} onClick={() => setActiveTab('SETTINGS')} type="button"><Settings size={20} /> Cai dat</button>
       </nav>
 
       {isSourceModalOpen && (
