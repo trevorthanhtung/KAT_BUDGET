@@ -14,11 +14,13 @@ import {
   Tags,
   Trash2,
   WalletCards,
+  Users,
+  CheckCircle,
 } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { format } from 'date-fns'
 import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from 'react'
-import { db, type Budget, type Category, type MoneySource, type Transaction } from './data/db'
+import { db, type Budget, type Category, type MoneySource, type Transaction, type Debt } from './data/db'
 import './App.css'
 
 type SourceForm = {
@@ -53,6 +55,15 @@ type BudgetForm = {
   currencyCode: string
 }
 
+type DebtForm = {
+  personName: string
+  amount: string
+  currency: string
+  type: 'DEBT' | 'LOAN'
+  note: string
+  dueDate: string
+}
+
 type BackupPayload = {
   app?: string
   version?: number
@@ -61,6 +72,7 @@ type BackupPayload = {
   transactions?: Transaction[]
   categories?: Category[]
   budgets?: Budget[]
+  debts?: Debt[]
 }
 
 const defaultSourceForm: SourceForm = {
@@ -68,6 +80,15 @@ const defaultSourceForm: SourceForm = {
   type: 'CASH',
   includeInTotal: true,
   initialBalance: '',
+}
+
+const defaultDebtForm: DebtForm = {
+  personName: '',
+  amount: '',
+  currency: 'VND',
+  type: 'DEBT',
+  note: '',
+  dueDate: '',
 }
 
 const defaultTxForm: TxForm = {
@@ -165,19 +186,25 @@ function App() {
   const transactions = useLiveQuery(() => db.transactions.orderBy('timestamp').reverse().toArray(), []) ?? []
   const categories = useLiveQuery(() => db.categories.orderBy('name').toArray(), []) ?? []
   const budgets = useLiveQuery(() => db.budgets.orderBy('monthYear').reverse().toArray(), []) ?? []
+  const debts = useLiveQuery(() => db.debts.orderBy('timestamp').reverse().toArray(), []) ?? []
 
   const [isSourceModalOpen, setSourceModalOpen] = useState(false)
   const [isTxModalOpen, setTxModalOpen] = useState(false)
   const [isCategoryModalOpen, setCategoryModalOpen] = useState(false)
   const [isBudgetModalOpen, setBudgetModalOpen] = useState(false)
+  const [isDebtModalOpen, setDebtModalOpen] = useState(false)
+  
   const [editingSourceId, setEditingSourceId] = useState<number | null>(null)
   const [editingTxId, setEditingTxId] = useState<number | null>(null)
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null)
   const [editingBudgetId, setEditingBudgetId] = useState<number | null>(null)
+  const [editingDebtId, setEditingDebtId] = useState<number | null>(null)
+  
   const [sourceForm, setSourceForm] = useState<SourceForm>(defaultSourceForm)
   const [txForm, setTxForm] = useState<TxForm>(defaultTxForm)
   const [categoryForm, setCategoryForm] = useState<CategoryForm>(defaultCategoryForm)
   const [budgetForm, setBudgetForm] = useState<BudgetForm>(defaultBudgetForm)
+  const [debtForm, setDebtForm] = useState<DebtForm>(defaultDebtForm)
   const [sourceFilter, setSourceFilter] = useState<string>('ALL')
   const [txTypeFilter, setTxTypeFilter] = useState<TxTypeFilter>('ALL')
   const [categoryTypeFilter, setCategoryTypeFilter] = useState<CategoryTypeFilter>('ALL')
@@ -428,6 +455,24 @@ function App() {
     setBudgetModalOpen(true)
   }
 
+  const openDebtModal = (debt?: Debt) => {
+    if (debt) {
+      setEditingDebtId(debt.id)
+      setDebtForm({
+        personName: debt.personName,
+        amount: debt.amount.toString(),
+        currency: debt.currency,
+        type: debt.type,
+        note: debt.note,
+        dueDate: debt.dueDate ? format(debt.dueDate, 'yyyy-MM-dd') : '',
+      })
+    } else {
+      setEditingDebtId(null)
+      setDebtForm(defaultDebtForm)
+    }
+    setDebtModalOpen(true)
+  }
+
   const handleSaveSource = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const name = sourceForm.name.trim()
@@ -650,6 +695,59 @@ function App() {
     setStatusMessage('Da xoa giao dich.')
   }
 
+  const handleSaveDebt = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const amount = parseAmount(debtForm.amount)
+    const personName = debtForm.personName.trim()
+    if (amount <= 0 || !personName) return
+
+    const dueDateTimestamp = debtForm.dueDate ? new Date(debtForm.dueDate).getTime() : null
+
+    if (editingDebtId == null) {
+      await db.debts.add({
+        personName,
+        amount,
+        currency: debtForm.currency.trim().toUpperCase() || 'VND',
+        type: debtForm.type,
+        note: debtForm.note.trim(),
+        timestamp: Date.now(),
+        isPaid: false,
+        dueDate: dueDateTimestamp,
+        paidAmount: 0,
+      })
+      setStatusMessage('Da them ghi chu vay/no.')
+    } else {
+      const existing = debts.find((d) => d.id === editingDebtId)
+      if (!existing) return
+      await db.debts.put({
+        ...existing,
+        personName,
+        amount,
+        currency: debtForm.currency.trim().toUpperCase() || 'VND',
+        type: debtForm.type,
+        note: debtForm.note.trim(),
+        dueDate: dueDateTimestamp,
+      })
+      setStatusMessage('Da cap nhat ghi chu vay/no.')
+    }
+
+    setDebtModalOpen(false)
+    setEditingDebtId(null)
+  }
+
+  const handleDeleteDebt = async (id: number) => {
+    await db.debts.delete(id)
+    setStatusMessage('Da xoa ghi chu vay/no.')
+  }
+
+  const handleTogglePaidDebt = async (debt: Debt) => {
+    await db.debts.put({
+      ...debt,
+      isPaid: !debt.isPaid,
+      paidAmount: !debt.isPaid ? debt.amount : 0,
+    })
+  }
+
   const handleExportBackup = async () => {
     const payload: BackupPayload = {
       app: 'kat-budget-pwa',
@@ -659,6 +757,7 @@ function App() {
       transactions: await db.transactions.toArray(),
       categories: await db.categories.toArray(),
       budgets: await db.budgets.toArray(),
+      debts: await db.debts.toArray(),
     }
 
     const rawJson = JSON.stringify(payload)
@@ -692,11 +791,12 @@ function App() {
       }
       const payload = JSON.parse(payloadText) as BackupPayload
 
-      await db.transaction('rw', db.sources, db.transactions, db.categories, db.budgets, async () => {
+      await db.transaction('rw', db.sources, db.transactions, db.categories, db.budgets, db.debts, async () => {
         await db.sources.clear()
         await db.transactions.clear()
         await db.categories.clear()
         await db.budgets.clear()
+        await db.debts.clear()
 
         if (payload.sources?.length) {
           await db.sources.bulkPut(payload.sources)
@@ -711,6 +811,9 @@ function App() {
         }
         if (payload.budgets?.length) {
           await db.budgets.bulkPut(payload.budgets)
+        }
+        if (payload.debts?.length) {
+          await db.debts.bulkPut(payload.debts)
         }
       })
       setStatusMessage('Da phuc hoi backup .kat/.json.')
@@ -758,6 +861,9 @@ function App() {
         </button>
         <button type="button" className="action-tile" onClick={() => openBudgetModal()}>
           <PiggyBank size={20} /> Ngan sach
+        </button>
+        <button type="button" className="action-tile" onClick={() => openDebtModal()}>
+          <Users size={20} /> Vay / No
         </button>
         <button type="button" className="action-tile" onClick={handleExportBackup}>
           <Download size={20} /> Sao luu .kat
@@ -1030,6 +1136,44 @@ function App() {
               </div>
             ))}
             {visibleTransactions.length === 0 && <p className="empty-note">Khong co giao dich phu hop bo loc.</p>}
+          </div>
+        </article>
+
+        <article className="section-block">
+          <div className="section-title">
+            <h2>Vay / No</h2>
+            <Users size={20} />
+          </div>
+          <div className="stack">
+            {debts.map((debt) => (
+              <div className={`transaction-row ${debt.isPaid ? 'paid-debt' : ''}`} key={debt.id} style={{ opacity: debt.isPaid ? 0.6 : 1 }}>
+                <div>
+                  <strong>{debt.personName}</strong>
+                  <span>
+                    {debt.type === 'DEBT' ? 'Vay' : 'Cho vay'} • {format(debt.timestamp, 'dd/MM')}
+                    {debt.dueDate ? ` • Han: ${format(debt.dueDate, 'dd/MM/yyyy')}` : ''}
+                  </span>
+                  {debt.note && <span className="note-line">{debt.note}</span>}
+                </div>
+                <div className="row-right">
+                  <b className={debt.type === 'DEBT' ? 'income' : 'expense'}>
+                    {debt.type === 'DEBT' ? '+' : '-'}{formatCurrency(debt.amount, debt.currency)}
+                  </b>
+                  <div className="row-actions">
+                    <button type="button" className={`mini-icon ${debt.isPaid ? 'success' : ''}`} onClick={() => handleTogglePaidDebt(debt)} aria-label="Danh dau da tra">
+                      <CheckCircle size={14} color={debt.isPaid ? '#16A34A' : 'currentColor'} />
+                    </button>
+                    <button type="button" className="mini-icon" onClick={() => openDebtModal(debt)} aria-label="Sua ghi chu vay">
+                      <Pencil size={14} />
+                    </button>
+                    <button type="button" className="mini-icon danger" onClick={() => handleDeleteDebt(debt.id)} aria-label="Xoa ghi chu vay">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {debts.length === 0 && <p className="empty-note">Khong co ghi chu vay/no nao.</p>}
           </div>
         </article>
       </section>
@@ -1312,6 +1456,72 @@ function App() {
 
             <button className="primary-button" type="submit">
               {editingCategoryId == null ? 'Luu danh muc' : 'Cap nhat danh muc'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {isDebtModalOpen && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <form className="modal-card" onSubmit={handleSaveDebt}>
+            <div className="modal-head">
+              <h3>{editingDebtId == null ? 'Them ghi chu vay/no' : 'Sua ghi chu vay/no'}</h3>
+              <button type="button" onClick={() => setDebtModalOpen(false)}>
+                Dong
+              </button>
+            </div>
+
+            <label>
+              Ten nguoi vay / cho vay
+              <input
+                required
+                value={debtForm.personName}
+                onChange={(event) => setDebtForm((prev) => ({ ...prev, personName: event.target.value }))}
+                placeholder="Vi du: Tuan, Ngoc..."
+              />
+            </label>
+
+            <label>
+              Loai
+              <select
+                value={debtForm.type}
+                onChange={(event) => setDebtForm((prev) => ({ ...prev, type: event.target.value as DebtForm['type'] }))}
+              >
+                <option value="DEBT">Di vay (Minh nhan tien)</option>
+                <option value="LOAN">Cho vay (Minh dua tien)</option>
+              </select>
+            </label>
+
+            <label>
+              So tien
+              <input
+                required
+                inputMode="decimal"
+                placeholder="0"
+                value={debtForm.amount}
+                onChange={(event) => setDebtForm((prev) => ({ ...prev, amount: event.target.value }))}
+              />
+            </label>
+            
+            <label>
+              Ngay dao han (khong bat buoc)
+              <input
+                type="date"
+                value={debtForm.dueDate}
+                onChange={(event) => setDebtForm((prev) => ({ ...prev, dueDate: event.target.value }))}
+              />
+            </label>
+
+            <label>
+              Ghi chu
+              <input
+                value={debtForm.note}
+                onChange={(event) => setDebtForm((prev) => ({ ...prev, note: event.target.value }))}
+              />
+            </label>
+
+            <button className="primary-button" type="submit">
+              {editingDebtId == null ? 'Luu ghi chu' : 'Cap nhat ghi chu'}
             </button>
           </form>
         </div>
