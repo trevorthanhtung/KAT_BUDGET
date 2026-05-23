@@ -46,9 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
             webAppModalTitle: "Lưu ý & Hướng dẫn (iOS)",
             webAppModalDesc: "Web App đa nền tảng đang trong quá trình phát triển nên có thể chưa hoàn thiện 100%.",
             webAppModalGuideTitle: "Cài đặt lên màn hình chính iOS:",
-            webAppModalGuide1: "Mở đường link bằng trình duyệt Safari.",
-            webAppModalGuide2: "Nhấn vào biểu tượng Chia sẻ (Share) ở dưới cùng.",
-            webAppModalGuide3: "Chọn Thêm vào MH chính (Add to Home Screen).",
+            webAppModalGuide1: "Mở đường link bằng trình duyệt <strong>Safari</strong>.",
+            webAppModalGuide2: "Nhấn vào biểu tượng <strong>Chia sẻ</strong> ở dưới cùng.",
+            webAppModalGuide3: "Chọn <strong>Thêm vào MH chính</strong>.",
             webAppModalBtn: "Mở Web App ngay",
             btnSubtext: "Kiểm tra APK trên VirusTotal",
             btnVersion: "Phiên bản v3.0.0",
@@ -162,9 +162,9 @@ document.addEventListener("DOMContentLoaded", () => {
             webAppModalTitle: "Notice & iOS Guide",
             webAppModalDesc: "The cross-platform Web App is still in development and may not be 100% stable.",
             webAppModalGuideTitle: "Install to iOS Home Screen:",
-            webAppModalGuide1: "Open the link using the Safari browser.",
-            webAppModalGuide2: "Tap the Share icon at the bottom of the screen.",
-            webAppModalGuide3: "Select Add to Home Screen.",
+            webAppModalGuide1: "Open the link using the <strong>Safari</strong> browser.",
+            webAppModalGuide2: "Tap the <strong>Share</strong> icon at the bottom.",
+            webAppModalGuide3: "Select <strong>Add to Home Screen</strong>.",
             webAppModalBtn: "Open Web App Now",
             btnSubtext: "Check APK on VirusTotal",
             btnVersion: "Version 3.0.0",
@@ -273,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.documentElement.lang = lang;
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (dictionary[lang][key]) el.textContent = dictionary[lang][key];
+            if (dictionary[lang][key]) el.innerHTML = dictionary[lang][key];
         });
         let pageTitle = dictionary[lang].pageTitle;
         let metaDesc = dictionary[lang].metaDesc;
