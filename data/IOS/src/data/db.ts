@@ -21,6 +21,7 @@ export type Transaction = {
   sourceName: string
   currency: string
   imageUri?: string
+  destinationName?: string
 }
 
 export type Budget = {

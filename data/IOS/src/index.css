@@ -1,31 +1,72 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter_regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter_medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter_semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus_jakarta_semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus_jakarta_bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --text: #111827;
-  --muted: #6B7280;
-  --bg: #F6F8FA;
-  --surface: rgba(255, 255, 255, 0.7);
-  --subtle: #EAFBF2;
-  --border: rgba(255, 255, 255, 0.15);
+  --muted: #5B6670;
+  --bg: #F7FAF8;
+  --surface: #FFFFFF;
+  --subtle: #FAFCFB;
+  --border: #D9E2DD;
+  --nav-surface: rgba(255, 255, 255, 0.92);
   
   --accent: #16A34A;
   --accent-soft: rgba(22, 163, 74, 0.12);
   --accent-light: #4ADE80;
-  --accent-lime: #A3E635;
+  --accent-lime: #86EFAC;
   
   --positive: #22C55E;
-  --negative: #EF4444;
+  --negative: #DC2626;
   --warning: #F59E0B;
-  --info: #8B5CF6;
+  --info: #0284C7;
   
-  --shadow: 0 8px 12px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255,255,255,0.4);
-  --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255,255,255,0.6);
+  --shadow: 0 4px 14px rgba(17, 24, 39, 0.06);
+  --shadow-strong: 0 10px 28px rgba(17, 24, 39, 0.12);
+  --text-muted: var(--muted);
+  --background: var(--bg);
 
   --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  --heading: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
 
   font: 16px/145% var(--sans);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -36,22 +77,30 @@
 }
 
 [data-theme="dark"] {
-  --text: #F8FAFC;
-  --muted: #94A3B8;
-  --bg: #0D1117;
-  --surface: rgba(22, 27, 34, 0.7);
-  --subtle: #0F2A22;
-  --border: rgba(255, 255, 255, 0.08);
+  --text: #F4F7F5;
+  --muted: #A8B3AD;
+  --bg: #0B0F0E;
+  --surface: #151C19;
+  --subtle: #1B2420;
+  --border: #2B3732;
+  --nav-surface: rgba(21, 28, 25, 0.9);
   
-  --accent: #4ADE80;
+  --accent: #34D399;
   --accent-soft: rgba(74, 222, 128, 0.12);
   
-  --shadow: 0 8px 12px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255,255,255,0.05);
-  --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --shadow-strong: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 #root {
   min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  background: #E5E7EB; /* Desktop background outside mobile view */
+}
+
+[data-theme="dark"] #root {
+  background: #000;
 }
 
 * {
@@ -62,10 +111,6 @@ body {
   margin: 0;
   min-width: 320px;
   background: var(--bg);
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(74, 222, 128, 0.08), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
-  background-attachment: fixed;
 }
 
 button {

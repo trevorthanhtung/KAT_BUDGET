@@ -40,4 +40,13 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      '/api/vcb-rates': {
+        target: 'https://portal.vietcombank.com.vn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/vcb-rates/, '/Usercontrols/TVPortal.TyGia/pXML.aspx')
+      }
+    }
+  }
 })
