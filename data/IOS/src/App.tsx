@@ -210,6 +210,18 @@ function App() {
   const debts = useLiveQuery(() => db.debts.orderBy('timestamp').reverse().toArray(), []) ?? []
 
   const [activeTab, setActiveTab] = useState<'DASHBOARD' | 'REPORTS' | 'DEBTS' | 'SETTINGS'>('DASHBOARD')
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system')
+  const [lang, setLang] = useState<'vi' | 'en'>('vi')
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === 'system') {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      root.setAttribute('data-theme', isDark ? 'dark' : 'light')
+    } else {
+      root.setAttribute('data-theme', theme)
+    }
+  }, [theme])
 
   const [isSourceModalOpen, setSourceModalOpen] = useState(false)
   const [isTxModalOpen, setTxModalOpen] = useState(false)
@@ -876,11 +888,16 @@ function App() {
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <p className="eyebrow">KAT Budget PWA</p>
-          <h1>Tong quan tai chinh</h1>
+          <p className="eyebrow">{lang === 'vi' ? 'Xin chào!' : 'Welcome!'}</p>
+          <h1>{lang === 'vi' ? 'Tổng quan tài chính' : 'Financial Overview'}</h1>
         </div>
-        <button className="icon-button" type="button" aria-label="Cai dat" onClick={() => setActiveTab('SETTINGS')}>
-          <Settings size={20} />
+        <button 
+          className="icon-button" 
+          type="button" 
+          onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
+          style={{ fontWeight: 'bold' }}
+        >
+          {lang === 'vi' ? 'VI' : 'EN'}
         </button>
       </header>
 
@@ -890,31 +907,54 @@ function App() {
         <>
           <section className="balance-panel" aria-label="Tai san rong">
             <div>
-              <p className="panel-label">Tai san rong</p>
+              <p className="panel-label">{lang === 'vi' ? 'Tài sản ròng' : 'Net Worth'}</p>
               <strong>{formatCurrency(netWorth)}</strong>
             </div>
             <div className="cashflow">
-              <span><ArrowUpRight size={16} /> {formatCurrency(monthIncome)}</span>
-              <span><ArrowDownRight size={16} /> {formatCurrency(monthExpense)}</span>
+              <span className="income-pill"><ArrowUpRight size={16} /> {formatCurrency(monthIncome)}</span>
+              <span className="expense-pill"><ArrowDownRight size={16} /> {formatCurrency(monthExpense)}</span>
             </div>
           </section>
 
-          <section className="quick-actions" aria-label="Tac vu nhanh">
-            <button type="button" className="action-tile" onClick={() => openTxModal()}>
-              <Plus size={20} /> Giao dich
-            </button>
-            <button type="button" className="action-tile" onClick={() => openSourceModal()}>
-              <CreditCard size={20} /> Tai khoan
-            </button>
-            <button type="button" className="action-tile" onClick={() => openCategoryModal()}>
-              <Tags size={20} /> Danh muc
-            </button>
-            <button type="button" className="action-tile" onClick={() => openBudgetModal()}>
-              <PiggyBank size={20} /> Ngan sach
-            </button>
-            <button type="button" className="action-tile" onClick={() => openDebtModal()}>
-              <Users size={20} /> Vay / No
-            </button>
+          <section style={{ marginTop: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h2 style={{ fontSize: '18px', margin: 0 }}>{lang === 'vi' ? 'Tài khoản' : 'Accounts'}</h2>
+              <button type="button" onClick={() => openSourceModal()} style={{ color: 'var(--accent)', background: 'none', border: 'none', fontWeight: 600 }}>
+                {lang === 'vi' ? 'Thêm' : 'Add'}
+              </button>
+            </div>
+            <div className="account-slider">
+              {sources.map((source) => (
+                <div className="account-card" key={source.id} onClick={() => openSourceModal(source)}>
+                  <strong>{source.name}</strong>
+                  <span>{formatCurrency(balancesBySource[source.name] ?? 0)}</span>
+                </div>
+              ))}
+              {sources.length === 0 && <p className="empty-note">Chưa có tài khoản.</p>}
+            </div>
+          </section>
+
+          <section style={{ marginTop: '24px' }}>
+            <h2 style={{ fontSize: '18px', marginBottom: '12px' }}>{lang === 'vi' ? 'Giao dịch gần đây' : 'Recent Transactions'}</h2>
+            <div className="stack">
+              {transactions.slice(0, 10).map((transaction) => (
+                <div className="transaction-row" key={transaction.id} onClick={() => openTxModal(transaction)}>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div style={{ width: '4px', height: '32px', borderRadius: '4px', background: transaction.type === 'INCOME' ? 'var(--positive)' : 'var(--negative)' }} />
+                    <div>
+                      <strong style={{ display: 'block', fontSize: '15px' }}>{transaction.category}</strong>
+                      <span style={{ fontSize: '12px', color: 'var(--muted)' }}>
+                        {transaction.sourceName} • {format(transaction.timestamp, 'dd/MM/yyyy HH:mm')}
+                      </span>
+                    </div>
+                  </div>
+                  <b className={transaction.type === 'INCOME' ? 'income' : 'expense'}>
+                    {transaction.type === 'INCOME' ? '+' : '-'}{formatCurrency(transaction.amount, transaction.currency)}
+                  </b>
+                </div>
+              ))}
+              {transactions.length === 0 && <p className="empty-note">Không có giao dịch nào.</p>}
+            </div>
           </section>
         </>
       )}
@@ -1212,13 +1252,29 @@ function App() {
             {debts.length === 0 && <p className="empty-note">Khong co ghi chu vay/no nao.</p>}
           </div>
         </article>
-        )}
-      </section>
+          </div>
+        </section>
+      )}
 
       {activeTab === 'SETTINGS' && (
         <section className="section-block">
           <div className="section-title">
-            <h2>Cai dat & Sao luu</h2>
+            <h2>{lang === 'vi' ? 'Cài đặt & Giao diện' : 'Settings & Theme'}</h2>
+            <Settings size={20} />
+          </div>
+          <div className="stack" style={{ marginBottom: '24px' }}>
+            <label>
+              {lang === 'vi' ? 'Chủ đề (Theme)' : 'Theme'}
+              <select value={theme} onChange={(e) => setTheme(e.target.value as any)} style={{ minHeight: '44px', width: '100%', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', padding: '0 12px', marginTop: '8px' }}>
+                <option value="system">{lang === 'vi' ? 'Tự động theo hệ thống' : 'System Default'}</option>
+                <option value="light">{lang === 'vi' ? 'Sáng' : 'Light'}</option>
+                <option value="dark">{lang === 'vi' ? 'Tối' : 'Dark'}</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="section-title">
+            <h2>{lang === 'vi' ? 'Cài đặt & Sao lưu' : 'Settings & Backup'}</h2>
             <Settings size={20} />
           </div>
           <div className="stack">
@@ -1255,10 +1311,29 @@ function App() {
       )}
 
       <nav className="bottom-nav" aria-label="Dieu huong chinh">
-        <button className={activeTab === 'DASHBOARD' ? 'active' : ''} onClick={() => setActiveTab('DASHBOARD')} type="button"><WalletCards size={20} /> Tong quan</button>
-        <button className={activeTab === 'REPORTS' ? 'active' : ''} onClick={() => setActiveTab('REPORTS')} type="button"><BarChart3 size={20} /> Bao cao</button>
-        <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} type="button"><PiggyBank size={20} /> Muc tieu</button>
-        <button className={activeTab === 'SETTINGS' ? 'active' : ''} onClick={() => setActiveTab('SETTINGS')} type="button"><Settings size={20} /> Cai dat</button>
+        <button className={activeTab === 'DASHBOARD' ? 'active' : ''} onClick={() => setActiveTab('DASHBOARD')} type="button">
+          <WalletCards size={20} />
+          {lang === 'vi' ? 'Tổng quan' : 'Home'}
+        </button>
+        <button className={activeTab === 'DEBTS' ? 'active' : ''} onClick={() => setActiveTab('DEBTS')} type="button">
+          <Users size={20} />
+          {lang === 'vi' ? 'Vay nợ' : 'Debts'}
+        </button>
+        
+        <div className="fab-container">
+          <button className="fab-button" onClick={() => openTxModal()} type="button">
+            <Plus size={28} />
+          </button>
+        </div>
+
+        <button className={activeTab === 'REPORTS' ? 'active' : ''} onClick={() => setActiveTab('REPORTS')} type="button">
+          <BarChart3 size={20} />
+          {lang === 'vi' ? 'Báo cáo' : 'Reports'}
+        </button>
+        <button className={activeTab === 'SETTINGS' ? 'active' : ''} onClick={() => setActiveTab('SETTINGS')} type="button">
+          <Settings size={20} />
+          {lang === 'vi' ? 'Cài đặt' : 'Settings'}
+        </button>
       </nav>
 
       {isSourceModalOpen && (
