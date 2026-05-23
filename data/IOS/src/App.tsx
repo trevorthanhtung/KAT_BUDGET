@@ -53,6 +53,16 @@ type BudgetForm = {
   currencyCode: string
 }
 
+type BackupPayload = {
+  app?: string
+  version?: number
+  exportedAt?: string
+  sources?: MoneySource[]
+  transactions?: Transaction[]
+  categories?: Category[]
+  budgets?: Budget[]
+}
+
 const defaultSourceForm: SourceForm = {
   name: '',
   type: 'CASH',
@@ -93,6 +103,8 @@ const defaultCategoryPresets: Array<Omit<Category, 'id'>> = [
   { name: 'Suc khoe', emoji: 'HEALTH', type: 'EXPENSE' },
 ]
 
+const KAT_BACKUP_PREFIX = 'KAT1:'
+
 const sourceTypeLabel: Record<MoneySource['type'], string> = {
   BANK: 'Ngan hang',
   WALLET: 'Vi dien tu',
@@ -124,6 +136,42 @@ function getRecentMonthKeys(monthCount: number): string[] {
     result.push(format(cursor, 'yyyy-MM'))
   }
   return result
+}
+
+function encodeBase64Utf8(value: string): string {
+  const bytes = new TextEncoder().encode(value)
+  let binary = ''
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte)
+  }
+  return btoa(binary)
+}
+
+function decodeBase64Utf8(base64Value: string): string {
+  const binary = atob(base64Value)
+  const bytes = new Uint8Array(binary.length)
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index)
+  }
+  return new TextDecoder().decode(bytes)
+}
+
+function parseBackupPayload(rawText: string): BackupPayload {
+  const normalized = rawText.trim()
+  if (!normalized) throw new Error('Empty backup')
+
+  if (normalized.startsWith(KAT_BACKUP_PREFIX)) {
+    const encoded = normalized.slice(KAT_BACKUP_PREFIX.length).trim()
+    const decodedJson = decodeBase64Utf8(encoded)
+    return JSON.parse(decodedJson) as BackupPayload
+  }
+
+  try {
+    return JSON.parse(normalized) as BackupPayload
+  } catch {
+    const decodedJson = decodeBase64Utf8(normalized)
+    return JSON.parse(decodedJson) as BackupPayload
+  }
 }
 
 function App() {
@@ -618,7 +666,7 @@ function App() {
   }
 
   const handleExportBackup = async () => {
-    const payload = {
+    const payload: BackupPayload = {
       app: 'kat-budget-pwa',
       version: 1,
       exportedAt: new Date().toISOString(),
@@ -628,14 +676,16 @@ function App() {
       budgets: await db.budgets.toArray(),
     }
 
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+    const rawJson = JSON.stringify(payload)
+    const katContent = `${KAT_BACKUP_PREFIX}${encodeBase64Utf8(rawJson)}`
+    const blob = new Blob([katContent], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
     link.download = `KatBudget_Backup_${format(new Date(), 'yyyyMMdd_HHmmss')}.kat`
     link.click()
     URL.revokeObjectURL(url)
-    setStatusMessage('Da xuat backup .kat.')
+    setStatusMessage('Da xuat backup .kat (KAT1).')
   }
 
   const handlePickImportFile = () => {
@@ -648,12 +698,7 @@ function App() {
 
     try {
       const text = await file.text()
-      const payload = JSON.parse(text) as {
-        sources?: MoneySource[]
-        transactions?: Transaction[]
-        categories?: Category[]
-        budgets?: Budget[]
-      }
+      const payload = parseBackupPayload(text)
 
       await db.transaction('rw', db.sources, db.transactions, db.categories, db.budgets, async () => {
         await db.sources.clear()
@@ -676,9 +721,9 @@ function App() {
           await db.budgets.bulkPut(payload.budgets)
         }
       })
-      setStatusMessage('Da phuc hoi backup.')
+      setStatusMessage('Da phuc hoi backup .kat/.json.')
     } catch {
-      setStatusMessage('File backup khong hop le (.json/.kat).')
+      setStatusMessage('File backup khong hop le hoac sai dinh dang .kat/.json.')
     } finally {
       event.target.value = ''
     }
