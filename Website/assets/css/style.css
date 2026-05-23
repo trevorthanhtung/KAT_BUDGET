@@ -559,7 +559,7 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
     .exit-button { min-width: auto; padding: 10px 14px; }
     .hero h1 { font-size: 2.55rem; }
     .cta-area { width: 100%; align-items: center; }
-    .cta-buttons { grid-template-columns: 1fr; justify-content: center; width: 100%; max-width: 320px; }
+    .cta-buttons { grid-template-columns: repeat(2, 1fr); justify-content: center; width: 100%; max-width: 320px; }
     .cta-button-guide { grid-column: auto; }
     .cta-button { width: 100%; max-width: 320px; }
     .cta-subtext { flex-wrap: wrap; justify-content: center; }

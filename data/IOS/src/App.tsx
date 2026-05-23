@@ -267,12 +267,33 @@ function App() {
   const [isCategoryModalOpen, setCategoryModalOpen] = useState(false)
   const [isBudgetModalOpen, setBudgetModalOpen] = useState(false)
   const [isDebtModalOpen, setDebtModalOpen] = useState(false)
+  const [isGoalModalOpen, setGoalModalOpen] = useState(false)
+  const [isRecurringModalOpen, setRecurringModalOpen] = useState(false)
   
   const [editingSourceId, setEditingSourceId] = useState<number | null>(null)
   const [editingTxId, setEditingTxId] = useState<number | null>(null)
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null)
   const [editingBudgetId, setEditingBudgetId] = useState<number | null>(null)
   const [editingDebtId, setEditingDebtId] = useState<number | null>(null)
+  const [editingGoalId, setEditingGoalId] = useState<number | null>(null)
+  const [editingRecurringId, setEditingRecurringId] = useState<number | null>(null)
+
+  const [goalForm, setGoalForm] = useState<GoalForm>({
+    name: '',
+    targetAmount: '',
+    currentAmount: '0',
+    currency: 'VND'
+  })
+
+  const [recurringForm, setRecurringForm] = useState<RecurringForm>({
+    amount: '',
+    type: 'EXPENSE',
+    category: '',
+    note: '',
+    sourceName: '',
+    currency: 'VND',
+    dayOfMonth: '1'
+  })
   
   const [sourceForm, setSourceForm] = useState<SourceForm>(defaultSourceForm)
   const [txForm, setTxForm] = useState<TxForm>(defaultTxForm)
