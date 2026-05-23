@@ -35,21 +35,19 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #F8FAFC;
-    --muted: #94A3B8;
-    --bg: #0D1117;
-    --surface: rgba(22, 27, 34, 0.7);
-    --subtle: #0F2A22;
-    --border: rgba(255, 255, 255, 0.08);
-    
-    --accent: #4ADE80;
-    --accent-soft: rgba(74, 222, 128, 0.12);
-    
-    --shadow: 0 8px 12px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255,255,255,0.05);
-    --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
-  }
+[data-theme="dark"] {
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --bg: #0D1117;
+  --surface: rgba(22, 27, 34, 0.7);
+  --subtle: #0F2A22;
+  --border: rgba(255, 255, 255, 0.08);
+  
+  --accent: #4ADE80;
+  --accent-soft: rgba(74, 222, 128, 0.12);
+  
+  --shadow: 0 8px 12px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-strong: 0 12px 24px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
 }
 
 #root {
