@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add('js-enabled');
     
     // === 1. XỬ LÝ THEME ===
@@ -55,11 +55,11 @@
             devSupport: "Hỗ Trợ Nhanh",
             guaranteeTitle: "Dữ liệu lưu cục bộ trên thiết bị",
             guaranteeDesc: "KAT Budget không yêu cầu tài khoản và không vận hành máy chủ đồng bộ dữ liệu. Số dư, giao dịch, ngân sách và khoản vay được lưu trong bộ nhớ ứng dụng trên thiết bị; dữ liệu chỉ rời thiết bị khi bạn chủ động xuất, sao lưu hoặc chia sẻ file.",
-            releaseKicker: "Phiên bản 3.0.0",
+            releaseKicker: "Phiên bản 1.0.0",
             releaseTitle: "Cập nhật mới có gì?",
-            releaseDesc: "Bản cập nhật này tập trung cải thiện UI/UX và bổ sung widget xem nhanh.",
-            releaseItem1: "Cải thiện UI/UX để giao diện gọn và dễ thao tác hơn.",
-            releaseItem2: "Thêm widget xem nhanh thông tin ngay từ màn hình chính.",
+            releaseDesc: "Bản cập nhật này tập trung cải tiến giao diện và sửa những lỗi từ bản beta.",
+            releaseItem1: "UI/UX hiện đại hơn.",
+            releaseItem2: "Sửa lỗi từ bản thử nghiệm.",
             archiveKicker: "Lưu trữ APK",
             archiveTitle: "Các phiên bản cũ",
             archiveDesc: "Bạn nên dùng bản mới nhất để nhận đầy đủ bản sửa lỗi và cải thiện giao diện. Các phiên bản cũ được lưu lại để đối chiếu hoặc cài lại khi thật sự cần.",
@@ -164,11 +164,11 @@
             devSupport: "Quick Support",
             guaranteeTitle: "Data stays locally on your device",
             guaranteeDesc: "KAT Budget does not require an account and does not operate a data-sync server. Balances, transactions, budgets, and loans are stored in the app storage on your device; data only leaves the device when you choose to export, back up, or share a file.",
-            releaseKicker: "Version 3.0.0",
+            releaseKicker: "Version 1.0.0",
             releaseTitle: "What's new?",
-            releaseDesc: "This update focuses on UI/UX improvements and a quick-view widget.",
-            releaseItem1: "Improved UI/UX for a cleaner, easier interface.",
-            releaseItem2: "Added a quick-view widget for the home screen.",
+            releaseDesc: "This update focuses on interface improvements and bug fixes from the beta version.",
+            releaseItem1: "More modern UI/UX.",
+            releaseItem2: "Fixed bugs from the beta version.",
             archiveKicker: "APK archive",
             archiveTitle: "Older versions",
             archiveDesc: "We recommend using the latest version for fixes and interface improvements. Older versions are kept for reference or reinstalling only when needed.",
