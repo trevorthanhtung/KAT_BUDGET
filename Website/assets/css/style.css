@@ -737,7 +737,7 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
     gap: 8px;
 }
 .mac-style .browser-header { justify-content: flex-start; }
-.win-style .browser-header { justify-content: space-between; flex-direction: row-reverse; }
+.win-style .browser-header { justify-content: flex-end; }
 
 .mac-dots { display: flex; gap: 4px; }
 .mac-dots i { width: 8px; height: 8px; border-radius: 50%; background: #ff5f56; display: inline-block; }
