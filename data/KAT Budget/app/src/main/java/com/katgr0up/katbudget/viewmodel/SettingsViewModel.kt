@@ -10,6 +10,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.katgr0up.katbudget.managers.ExchangeRateManager
 import com.katgr0up.katbudget.managers.PreferencesManager
+import com.katgr0up.katbudget.widget.KatBudgetWidgetProvider
 import com.katgr0up.katbudget.workers.AutoBackupWorker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,6 +65,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun togglePrivacyMode(enabled: Boolean) {
         prefsManager.setPrivacyModeEnabled(enabled)
         _isPrivacyModeEnabled.value = enabled
+        KatBudgetWidgetProvider.refreshAll(getApplication())
     }
 
     fun toggleBiometric(enabled: Boolean) {

@@ -401,17 +401,26 @@ fun DebtTab(
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
     
+    val titleAll = katStringResource(id = R.string.debt_tab_all, isEng = isEng)
     val titleLent = katStringResource(id = R.string.debt_chip_lent, isEng = isEng)
     val titleBorrowed = katStringResource(id = R.string.debt_chip_borrowed, isEng = isEng)
-    val tabTitles = listOf(titleLent, titleBorrowed)
+    val tabTitles = listOf(titleAll, titleLent, titleBorrowed)
 
     val (activeDebts, paidDebts) = debts.partition { !it.isPaid }
 
     val filteredActiveDebts = activeDebts.filter { debt ->
-        if (selectedTab == 0) debt.type == DebtEntity.TYPE_LOAN else debt.type == DebtEntity.TYPE_DEBT
+        when (selectedTab) {
+            1 -> debt.type == DebtEntity.TYPE_LOAN
+            2 -> debt.type == DebtEntity.TYPE_DEBT
+            else -> true
+        }
     }
     val filteredPaidDebts = paidDebts.filter { debt ->
-        if (selectedTab == 0) debt.type == DebtEntity.TYPE_LOAN else debt.type == DebtEntity.TYPE_DEBT
+        when (selectedTab) {
+            1 -> debt.type == DebtEntity.TYPE_LOAN
+            2 -> debt.type == DebtEntity.TYPE_DEBT
+            else -> true
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {

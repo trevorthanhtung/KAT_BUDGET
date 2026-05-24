@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +33,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -63,6 +66,8 @@ fun BudgetTopBar(
     isEng: Boolean,
     colors: BudgetColors,
     showGreeting: Boolean = false,
+    isPrivacyModeEnabled: Boolean = false,
+    onPrivacyToggle: ((Boolean) -> Unit)? = null,
     onLanguageToggle: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
@@ -93,6 +98,23 @@ fun BudgetTopBar(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+        }
+
+        if (onPrivacyToggle != null) {
+            TopBarIconAction(
+                icon = if (isPrivacyModeEnabled) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                contentDescription = katStringResource(
+                    id = if (isPrivacyModeEnabled) R.string.privacy_show_balance else R.string.privacy_hide_balance,
+                    isEng = isEng
+                ),
+                colors = colors,
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onPrivacyToggle(!isPrivacyModeEnabled)
+                }
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
         }
 
         val interactionSource = remember { MutableInteractionSource() }
@@ -128,6 +150,45 @@ fun BudgetTopBar(
                 fontWeight = FontWeight.SemiBold
             )
         }
+    }
+}
+
+@Composable
+private fun TopBarIconAction(
+    icon: ImageVector,
+    contentDescription: String,
+    colors: BudgetColors,
+    onClick: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.97f else 1f,
+        animationSpec = KatSpringSpec,
+        label = "top_bar_icon_action_spring"
+    )
+    val shape = RoundedCornerShape(20.dp)
+
+    Box(
+        modifier = Modifier
+            .size(42.dp)
+            .scale(scale)
+            .clip(shape)
+            .background(colors.card.copy(alpha = 0.72f))
+            .border(1.dp, colors.border.copy(alpha = 0.55f), shape)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = LocalIndication.current,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            tint = colors.text,
+            modifier = Modifier.size(20.dp)
+        )
     }
 }
 

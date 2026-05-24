@@ -46,14 +46,27 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
             context: Context,
             summary: WidgetSummary
         ): RemoteViews {
-            val quickAddIntent = Intent(context, MainActivity::class.java).apply {
-                putExtra(MainActivity.EXTRA_OPEN_QUICK_ADD, true)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            val openAppIntent = Intent(context, MainActivity::class.java).apply {
+                action = ACTION_OPEN_APP
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
 
-            val pendingIntent = PendingIntent.getActivity(
+            val openAppPendingIntent = PendingIntent.getActivity(
                 context,
-                0,
+                REQUEST_OPEN_APP,
+                openAppIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val quickAddIntent = Intent(context, MainActivity::class.java).apply {
+                action = ACTION_QUICK_ADD
+                putExtra(MainActivity.EXTRA_OPEN_QUICK_ADD, true)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+
+            val quickAddPendingIntent = PendingIntent.getActivity(
+                context,
+                REQUEST_QUICK_ADD,
                 quickAddIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -61,17 +74,18 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
             return RemoteViews(context.packageName, R.layout.widget_layout).apply {
                 setTextViewText(
                     R.id.widget_balance_value,
-                    formatCompactCurrency(summary.balance, summary.currency)
+                    formatWidgetAmount(summary.balance, summary.currency, summary.isPrivacyModeEnabled)
                 )
                 setTextViewText(
                     R.id.widget_income_value,
-                    formatCompactCurrency(summary.monthIncome, summary.currency)
+                    formatWidgetAmount(summary.monthIncome, summary.currency, summary.isPrivacyModeEnabled)
                 )
                 setTextViewText(
                     R.id.widget_expense_value,
-                    formatCompactCurrency(summary.monthExpense, summary.currency)
+                    formatWidgetAmount(summary.monthExpense, summary.currency, summary.isPrivacyModeEnabled)
                 )
-                setOnClickPendingIntent(R.id.widget_btn_add, pendingIntent)
+                setOnClickPendingIntent(R.id.widget_root, openAppPendingIntent)
+                setOnClickPendingIntent(R.id.widget_btn_add, quickAddPendingIntent)
             }
         }
 
@@ -81,7 +95,9 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
                     val dao = AppDatabase.getDatabase(context).transactionDao()
                     val transactions = dao.getAllTransactions().first()
                     val sources = dao.getAllSources().first()
-                    val defaultCurrency = normalizeCurrency(PreferencesManager(context).getDefaultCurrency())
+                    val preferences = PreferencesManager(context)
+                    val defaultCurrency = normalizeCurrency(preferences.getDefaultCurrency())
+                    val isPrivacyModeEnabled = preferences.isPrivacyModeEnabled()
                     val rates = ExchangeRateManager.getRates()
                     val includedSources = sources
                         .filter { it.includeInTotal }
@@ -115,12 +131,25 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
                         balance = balance,
                         monthIncome = monthIncome,
                         monthExpense = monthExpense,
-                        currency = defaultCurrency
+                        currency = defaultCurrency,
+                        isPrivacyModeEnabled = isPrivacyModeEnabled
                     )
                 }.getOrElse {
-                    WidgetSummary(currency = normalizeCurrency(PreferencesManager(context).getDefaultCurrency()))
+                    val preferences = PreferencesManager(context)
+                    WidgetSummary(
+                        currency = normalizeCurrency(preferences.getDefaultCurrency()),
+                        isPrivacyModeEnabled = preferences.isPrivacyModeEnabled()
+                    )
                 }
             }
+        }
+
+        private fun formatWidgetAmount(
+            amount: Double,
+            currency: String,
+            isPrivacyModeEnabled: Boolean
+        ): String {
+            return if (isPrivacyModeEnabled) "***" else formatCompactCurrency(amount, currency)
         }
 
         private fun convertToDefault(
@@ -157,5 +186,11 @@ private data class WidgetSummary(
     val balance: Double = 0.0,
     val monthIncome: Double = 0.0,
     val monthExpense: Double = 0.0,
-    val currency: String = "VND"
+    val currency: String = "VND",
+    val isPrivacyModeEnabled: Boolean = false
 )
+
+private const val ACTION_OPEN_APP = "com.katgr0up.katbudget.widget.OPEN_APP"
+private const val ACTION_QUICK_ADD = "com.katgr0up.katbudget.widget.QUICK_ADD"
+private const val REQUEST_OPEN_APP = 1000
+private const val REQUEST_QUICK_ADD = 1001

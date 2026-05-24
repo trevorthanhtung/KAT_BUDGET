@@ -25,7 +25,7 @@
     <string name="fallback_other">Other</string>
     <string name="fallback_other_income">Other Income</string>
     <string name="fallback_transfer">Transfer</string>
-    <string name="fallback_version_new">1.0.0</string>
+    <string name="fallback_version_new">1.0.1</string>
     <string name="fallback_opening_balance">Opening Balance</string>
     <string name="category_food">Food</string>
     <string name="category_transport">Transport</string>
@@ -220,6 +220,8 @@
     <string name="widget_month_income">Income this month</string>
     <string name="widget_month_expense">Expense this month</string>
     <string name="widget_empty_amount">0 VND</string>
+    <string name="privacy_hide_balance">Hide balances</string>
+    <string name="privacy_show_balance">Show balances</string>
     <string name="dialog_create_account_required_title">No account yet</string>
     <string name="dialog_create_account_required_msg">Create at least one account before adding transactions.</string>
     <string name="dialog_create_account_required_action">Create Account</string>
@@ -276,6 +278,8 @@
     <string name="settings_item_biometric_sub">Use fingerprint or face unlock</string>
     <string name="settings_item_biometric_sub_need_pin">Set a PIN before enabling biometrics</string>
     <string name="settings_item_biometric_sub_unavailable">Biometrics are unavailable or not enrolled on this device</string>
+    <string name="settings_item_privacy_title">Hide balances</string>
+    <string name="settings_item_privacy_sub">Mask money amounts in the app and widget</string>
     <string name="settings_item_theme_title">Dark Theme</string>
     <string name="settings_item_theme_sub">Switch the app display mode</string>
 

@@ -225,9 +225,11 @@ fun ReportsTab(
         }
 
         item {
-            val options = (if (chartType == "EXPENSE") expenseOptions else incomeOptions)
+            val categoryOptions = (if (chartType == "EXPENSE") expenseOptions else incomeOptions)
                 .map { option -> if (isAllTag(option)) fallbackAll else localizeCategory(option) }
                 .distinct()
+                .filterNot { isAllTag(it) }
+            val options = listOf(fallbackAll) + categoryOptions
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

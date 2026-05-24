@@ -111,6 +111,14 @@ fun DashboardScreen(
     val transactions by viewModel.allTransactions.collectAsState(initial = emptyList())
 
     val fallbackAll = katStringResource(id = R.string.fallback_all, isEng = isEng)
+    var selectedSourceFilter by remember { mutableStateOf("") }
+    LaunchedEffect(fallbackAll) {
+        if (selectedSourceFilter.isBlank()) {
+            selectedSourceFilter = fallbackAll
+        }
+    }
+    val activeSourceFilter = selectedSourceFilter.ifBlank { fallbackAll }
+
     val openingBalanceStr = katStringResource(id = R.string.fallback_opening_balance, isEng = isEng)
     val displayTransactions = transactions.filter {
         it.category != "Số dư ban đầu" && it.category != "Opening Balance" && it.category != openingBalanceStr
@@ -435,6 +443,8 @@ fun DashboardScreen(
                             isEng = isEng,
                             colors = colors,
                             showGreeting = selectedTab == 0,
+                            isPrivacyModeEnabled = isPrivacyModeEnabled,
+                            onPrivacyToggle = { settingsViewModel.togglePrivacyMode(it) },
                             onLanguageToggle = { settingsViewModel.setLanguage(!isEng) }
                         )
                     }
@@ -475,6 +485,8 @@ fun DashboardScreen(
                                 colors = colors,
                                 showTransactionDialog = false,
                                 onTransactionDialogDismiss = { },
+                                selectedSourceFilter = activeSourceFilter,
+                                onSourceFilterChanged = { selectedSourceFilter = it },
                                 createSourceRequest = createSourceRequest,
                                 onCreateSourceRequestConsumed = { createSourceRequest = 0 }
                             )
@@ -583,7 +595,7 @@ fun DashboardScreen(
         if (showTransactionDialog) {
             TransactionDialog(
                 transactionToEdit = null,
-                initialSourceName = fallbackAll,
+                initialSourceName = activeSourceFilter,
                 isEng = isEng,
                 sources = sources,
                 expenseOptions = expenseOptions,

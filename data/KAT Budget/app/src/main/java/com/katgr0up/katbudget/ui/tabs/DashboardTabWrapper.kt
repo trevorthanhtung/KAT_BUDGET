@@ -17,6 +17,8 @@ fun DashboardTabWrapper(
     colors: BudgetColors,
     showTransactionDialog: Boolean,
     onTransactionDialogDismiss: () -> Unit,
+    selectedSourceFilter: String,
+    onSourceFilterChanged: (String) -> Unit,
     createSourceRequest: Int = 0,
     onCreateSourceRequestConsumed: () -> Unit = {}
 ) {
@@ -43,7 +45,6 @@ fun DashboardTabWrapper(
         it != "Số dư ban đầu" && it != "Opening Balance" && it != openingBalanceStr
     }
 
-    var selectedSourceFilter by remember { mutableStateOf(fallbackAll) }
     var searchQuery by remember { mutableStateOf("") }
     var showAllTransactions by remember { mutableStateOf(false) }
 
@@ -82,7 +83,7 @@ fun DashboardTabWrapper(
         searchQuery = searchQuery,
         colors = colors,
         exchangeRates = exchangeRates,
-        onSourceFilterChanged = { selectedSourceFilter = it },
+        onSourceFilterChanged = onSourceFilterChanged,
         onSearchChanged = { searchQuery = it },
         onCreateSource = { sourceToEdit = null; showSourceDialog = true },
         onEditSource = { sourceToEdit = it; showSourceDialog = true },
@@ -127,7 +128,7 @@ fun DashboardTabWrapper(
 
         ConfirmDeleteDialog(isEng, colors, title, message, { sourceToDelete = null }) {
             viewModel.deleteSource(it)
-            if (selectedSourceFilter == it.name) selectedSourceFilter = fallbackAll
+            if (selectedSourceFilter == it.name) onSourceFilterChanged(fallbackAll)
             sourceToDelete = null
         }
     }

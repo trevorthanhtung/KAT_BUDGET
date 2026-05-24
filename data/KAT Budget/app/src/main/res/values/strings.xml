@@ -21,7 +21,7 @@
     <string name="fallback_other">Khác</string>
     <string name="fallback_other_income">Thu nhập khác</string>
     <string name="fallback_transfer">Chuyển tiền</string>
-    <string name="fallback_version_new">1.0.0</string>
+    <string name="fallback_version_new">1.0.1</string>
     <string name="fallback_opening_balance">Số dư ban đầu</string>
     <string name="category_food">Thực phẩm</string>
     <string name="category_transport">Di chuyển</string>
@@ -216,6 +216,8 @@
     <string name="widget_month_income">Thu tháng này</string>
     <string name="widget_month_expense">Chi tháng này</string>
     <string name="widget_empty_amount">0 VND</string>
+    <string name="privacy_hide_balance">Ẩn số dư</string>
+    <string name="privacy_show_balance">Hiện số dư</string>
     <string name="dialog_create_account_required_title">Chưa có tài khoản</string>
     <string name="dialog_create_account_required_msg">Bạn cần tạo ít nhất một tài khoản trước khi thêm giao dịch.</string>
     <string name="dialog_create_account_required_action">Tạo tài khoản</string>
@@ -272,6 +274,8 @@
     <string name="settings_item_biometric_sub">Dùng vân tay hoặc khuôn mặt để mở khóa</string>
     <string name="settings_item_biometric_sub_need_pin">Cài mã PIN trước để bật sinh trắc học</string>
     <string name="settings_item_biometric_sub_unavailable">Thiết bị chưa hỗ trợ hoặc chưa đăng ký sinh trắc học</string>
+    <string name="settings_item_privacy_title">Ẩn số dư</string>
+    <string name="settings_item_privacy_sub">Che số tiền trong app và widget</string>
     <string name="settings_item_theme_title">Giao diện tối</string>
     <string name="settings_item_theme_sub">Chuyển đổi chế độ hiển thị của ứng dụng</string>
 
