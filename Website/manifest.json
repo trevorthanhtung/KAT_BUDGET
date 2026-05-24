@@ -1,0 +1,16 @@
+{
+  "name": "KAT Budget",
+  "short_name": "KAT Budget",
+  "description": "Quản lý tiền cá nhân gọn gàng. Dữ liệu tài chính được lưu cục bộ trên thiết bị.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1121",
+  "theme_color": "#0b1121",
+  "icons": [
+    {
+      "src": "assets/img/logo.webp",
+      "sizes": "192x192 512x512",
+      "type": "image/webp"
+    }
+  ]
+}
