@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://katbudget.vercel.app/sitemap.xml
+Sitemap: https://katbudgetpwa.vercel.app/sitemap.xml
