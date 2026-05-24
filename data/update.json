@@ -1,6 +1,6 @@
 {
   "versionCode": 2,
   "versionName": "1.0.1",
-  "releaseNotes": "- Nhìn số dư ở widget.\\n- Ẩn/hiện số dư trên Dashboard.\\n- Tối ưu hóa và sửa lỗi.",
+  "releaseNotes": "- Tích hợp Widget xem số dư nhanh.\\n- Bổ sung tùy chọn ẩn/hiện số dư trên Dashboard.\\n- Cải thiện độ ổn định và tối ưu hóa hiệu năng.",
   "apkUrl": "https://github.com/trevorthanhtung/KAT_BUDGET/raw/main/apk/KAT%20Budget%201.0.1.apk"
 }
