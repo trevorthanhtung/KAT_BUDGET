@@ -779,14 +779,15 @@ a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); 
     filter: blur(15px);
     opacity: 0.4;
 }
-.browser-body img {
-    position: relative;
-    z-index: 1;
-    height: 90%;
-    width: auto;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
+  .browser-body img {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      box-shadow: none;
+  }
 
 @media (max-width: 900px) {
     .cp-mockups { perspective: none; padding: 20px 0; flex-direction: column; }
