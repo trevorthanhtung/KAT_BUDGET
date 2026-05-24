@@ -1,6 +1,6 @@
 {
-  "versionCode": 1,
-  "versionName": "1.0.0",
-  "releaseNotes": "Cải tiến giao diện và sửa những lỗi từ bản beta.",
-  "apkUrl": "https://github.com/trevorthanhtung/KAT_BUDGET/raw/main/apk/KAT%20Budget%201.0.0.apk"
+  "versionCode": 2,
+  "versionName": "1.0.1",
+  "releaseNotes": "Nhìn số dư ở widget, ẩn/hiện số dư trên Dashboard, tối ưu hóa và sửa lỗi.",
+  "apkUrl": "https://github.com/trevorthanhtung/KAT_BUDGET/raw/main/apk/KAT%20Budget%201.0.1.apk"
 }
