@@ -1,0 +1,169 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter_regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter_medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter_semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus_jakarta_semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/plus_jakarta_bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --text: #111827;
+  --muted: #667085;
+  --bg: #F6F8FA;
+  --bg-tint: #EAFBF2;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --subtle: #FAFCFB;
+  --border: #DDE5E0;
+  --nav-surface: rgba(255, 255, 255, 0.92);
+  
+  --accent: #16A34A;
+  --accent-soft: #DDF7E7;
+  --accent-light: #22C55E;
+  --accent-lime: #86EFAC;
+  
+  --positive: #22C55E;
+  --negative: #EF4444;
+  --warning: #F59E0B;
+  --info: #8B5CF6;
+  --debt: #EAB308;
+  --savings: #0EA5E9;
+  
+  --shadow: 0 8px 22px -16px rgba(17, 24, 39, 0.26);
+  --shadow-strong: 0 18px 44px -24px rgba(17, 24, 39, 0.32);
+  --text-muted: var(--muted);
+  --background: var(--bg);
+  --background-brush: linear-gradient(180deg, var(--bg) 0%, var(--bg-tint) 48%, var(--bg) 100%);
+  --radius-sm: 14px;
+  --radius-md: 18px;
+  --radius-lg: 22px;
+  --radius-xl: 24px;
+  --radius-dialog: 24px;
+
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+
+  font: 16px/1.5 var(--sans);
+  letter-spacing: 0;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--background-brush);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme="dark"] {
+  --text: #F8FAFC;
+  --muted: #9CA3AF;
+  --bg: #0D1117;
+  --bg-tint: #0F2A22;
+  --surface: #161B22;
+  --card: #161B22;
+  --subtle: #1B2420;
+  --border: rgba(255, 255, 255, 0.12);
+  --nav-surface: rgba(22, 27, 34, 0.92);
+  
+  --accent: #4ADE80;
+  --accent-soft: rgba(74, 222, 128, 0.16);
+  --accent-light: #86EFAC;
+  --positive: #22C55E;
+  --negative: #EF4444;
+  --warning: #F59E0B;
+  --info: #8B5CF6;
+  --debt: #FACC15;
+  --savings: #38BDF8;
+  
+  --shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.72);
+  --shadow-strong: 0 20px 52px -26px rgba(0, 0, 0, 0.78);
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  background: var(--background-brush);
+  overflow-x: hidden;
+}
+
+[data-theme="dark"] #root {
+  background: var(--background-brush);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  min-width: 320px;
+  background: var(--background-brush);
+  overflow-x: hidden;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+strong,
+b {
+  color: var(--text);
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 1.08;
+}
+
+h2 {
+  font-size: 21px;
+  line-height: 1.2;
+}

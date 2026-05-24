@@ -1,0 +1,27 @@
+{
+  "app_name": "KAT Budget",
+  "tabs": {
+    "dashboard": "Tổng quan",
+    "reports": "Báo cáo",
+    "debts": "Sổ nợ",
+    "settings": "Cài đặt"
+  },
+  "dashboard": {
+    "total_balance": "TỔNG SỐ DƯ",
+    "income": "Thu nhập",
+    "expense": "Chi tiêu",
+    "net_worth": "Tổng tài sản quy đổi",
+    "recent_transactions": "Giao dịch gần đây",
+    "view_more": "Xem thêm",
+    "no_transactions": "Chưa có giao dịch nào.",
+    "add_transaction": "Thêm giao dịch",
+    "sources": "Tài khoản"
+  },
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "add": "Thêm"
+  }
+}
