@@ -206,7 +206,7 @@ a.link-author { display: inline-block; color: var(--text-title); transition: var
 a.link-author:hover { color: var(--accent-primary); transform: translateX(6px); }
 
 .dev-contacts { display: flex; gap: 10px; }
-.contact-pill { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 16px; border-radius: 999px; font-size: 0.9rem; color: var(--text-title); font-weight: 500; display: flex; align-items: center; gap: 8px; transition: var(--transition-spring); min-height: 44px; }
+.contact-pill { background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 16px; border-radius: 999px; font-size: 0.9rem; color: var(--text-title); font-weight: 500; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: var(--transition-spring); min-height: 44px; }
 .contact-pill:hover { background: var(--text-title); color: var(--bg-base); }
 
 /* SLIDER DRAG */
