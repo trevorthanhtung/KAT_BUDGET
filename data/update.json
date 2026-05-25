@@ -2,5 +2,5 @@
   "versionCode": 4,
   "versionName": "1.0.3",
   "releaseNotes": "- Thêm số dư ban đầu đa tiền tệ khi tạo tài khoản, có thể thêm nhiều nguồn tiền cùng lúc.\n- Nâng cấp widget: xem số dư, dòng tiền tháng và giao dịch gần nhất rõ hơn.\n- Thêm nút nhanh Thu/Chi trên widget, mở đúng loại giao dịch ngay trong app.\n- Thêm bản thử nghiệm tiếng Nhật, có thể chuyển VI/EN/JA ngay trên thanh trên cùng.",
-  "apkUrl": "https://github.com/trevorthanhtung/KAT_BUDGET/raw/main/apk/KAT%20Budget%201.0.3.apk"
+  "apkUrl": "https://raw.githubusercontent.com/trevorthanhtung/KAT_BUDGET/main/apk/KAT%20Budget%201.0.3.apk"
 }
