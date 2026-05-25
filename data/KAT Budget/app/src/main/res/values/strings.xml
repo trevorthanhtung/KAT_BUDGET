@@ -39,6 +39,7 @@
     <string name="error_unable_to_load_image">Không thể tải ảnh.</string>
     <string name="dialog_no_transactions">Không tìm thấy giao dịch nào.</string>
     <string name="dialog_no_note">Không có ghi chú</string>
+    <string name="category_details_count">%1$d giao dịch • %2$s</string>
 
     <string name="budget_dialog_title">Thiết lập ngân sách</string>
     <string name="budget_label_limit">Hạn mức</string>
@@ -151,6 +152,7 @@
     <string name="settings_rates_title">Tỷ giá ngoại tệ</string>
     <string name="settings_rates_description">Tỷ giá tham chiếu quy đổi sang VND.</string>
     <string name="settings_rates_updating">Đang cập nhật…</string>
+    <string name="settings_rates_source">* Nguồn dữ liệu: Ngân hàng Vietcombank</string>
     <string name="settings_update_checking">Đang kiểm tra cập nhật…</string>
     <string name="settings_update_available_title">Có bản cập nhật mới</string>
     <string name="settings_update_btn_action">Cập nhật</string>

@@ -7,6 +7,7 @@ import java.util.Locale
 
 @Composable
 fun rememberCategoryNameLocalizer(isEng: Boolean): (String) -> String {
+    val languageCode = LocalAppLanguageCode.current
     val fallbackOther = katStringResource(id = R.string.fallback_other, isEng = isEng)
     val fallbackOtherIncome = katStringResource(id = R.string.fallback_other_income, isEng = isEng)
     val fallbackTransfer = katStringResource(id = R.string.fallback_transfer, isEng = isEng)
@@ -23,7 +24,7 @@ fun rememberCategoryNameLocalizer(isEng: Boolean): (String) -> String {
     val categoryInvestment = katStringResource(id = R.string.category_investment, isEng = isEng)
     val categoryGifts = katStringResource(id = R.string.category_gifts, isEng = isEng)
 
-    return remember(isEng) {
+    return remember(isEng, languageCode) {
         val labels = mapOf(
             "thực phẩm" to categoryFood,
             "food" to categoryFood,
@@ -55,7 +56,22 @@ fun rememberCategoryNameLocalizer(isEng: Boolean): (String) -> String {
             "chuyển tiền" to fallbackTransfer,
             "transfer" to fallbackTransfer,
             "số dư ban đầu" to fallbackOpeningBalance,
-            "opening balance" to fallbackOpeningBalance
+            "opening balance" to fallbackOpeningBalance,
+            "食費" to categoryFood,
+            "交通" to categoryTransport,
+            "請求" to categoryBills,
+            "買い物" to categoryShopping,
+            "健康" to categoryHealth,
+            "娯楽" to categoryEntertainment,
+            "教育" to categoryEducation,
+            "給与" to categorySalary,
+            "事業" to categoryBusiness,
+            "投資" to categoryInvestment,
+            "ギフト" to categoryGifts,
+            "その他" to fallbackOther,
+            "その他の収入" to fallbackOtherIncome,
+            "振替" to fallbackTransfer,
+            "開始残高" to fallbackOpeningBalance
         )
 
         val localizer: (String) -> String = { rawCategory ->

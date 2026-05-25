@@ -43,6 +43,7 @@
     <string name="error_unable_to_load_image">Unable to load image.</string>
     <string name="dialog_no_transactions">No transactions found.</string>
     <string name="dialog_no_note">No note</string>
+    <string name="category_details_count">%1$d transactions • %2$s</string>
 
     <string name="budget_dialog_title">Set Budget</string>
     <string name="budget_label_limit">Limit Amount</string>
@@ -155,6 +156,7 @@
     <string name="settings_rates_title">Exchange Rates</string>
     <string name="settings_rates_description">Reference rates converted to VND.</string>
     <string name="settings_rates_updating">Updating…</string>
+    <string name="settings_rates_source">* Source: Vietcombank Retail Banking</string>
     <string name="settings_update_checking">Checking for updates…</string>
     <string name="settings_update_available_title">Update Available</string>
     <string name="settings_update_btn_action">Update</string>

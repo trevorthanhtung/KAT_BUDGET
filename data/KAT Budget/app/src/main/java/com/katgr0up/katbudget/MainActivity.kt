@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +26,7 @@ import androidx.work.WorkManager
 import com.katgr0up.katbudget.managers.PreferencesManager
 import com.katgr0up.katbudget.ui.screens.DashboardScreen
 import com.katgr0up.katbudget.ui.theme.KatBudgetTheme
+import com.katgr0up.katbudget.ui.utils.LocalAppLanguageCode
 import com.katgr0up.katbudget.viewmodel.DebtViewModel
 import com.katgr0up.katbudget.viewmodel.GoalViewModel
 import com.katgr0up.katbudget.viewmodel.SettingsViewModel
@@ -78,29 +81,32 @@ class MainActivity : FragmentActivity() {
                 val settingsViewModel: SettingsViewModel = viewModel()
                 val debtViewModel: DebtViewModel = viewModel()
                 val goalViewModel: GoalViewModel = viewModel()
+                val languageCode by settingsViewModel.languageCode.collectAsState()
 
 
-                DashboardScreen(
-                    viewModel = viewModel,
-                    settingsViewModel = settingsViewModel,
-                    debtViewModel = debtViewModel,
-                    goalViewModel = goalViewModel,
-                    isDarkTheme = isDarkTheme,
-                    openQuickAddOnStart = shouldOpenQuickAdd,
-                    quickAddInitialType = quickAddInitialType,
-                    onQuickAddConsumed = {
-                        shouldOpenQuickAdd = false
-                        quickAddInitialType = null
-                    },
-                    onToggleTheme = {
-                        val newTheme = !isDarkTheme
-                        isDarkTheme = newTheme
+                CompositionLocalProvider(LocalAppLanguageCode provides languageCode) {
+                    DashboardScreen(
+                        viewModel = viewModel,
+                        settingsViewModel = settingsViewModel,
+                        debtViewModel = debtViewModel,
+                        goalViewModel = goalViewModel,
+                        isDarkTheme = isDarkTheme,
+                        openQuickAddOnStart = shouldOpenQuickAdd,
+                        quickAddInitialType = quickAddInitialType,
+                        onQuickAddConsumed = {
+                            shouldOpenQuickAdd = false
+                            quickAddInitialType = null
+                        },
+                        onToggleTheme = {
+                            val newTheme = !isDarkTheme
+                            isDarkTheme = newTheme
 
-                        sharedPreferences.edit {
-                            putBoolean("IS_DARK_THEME", newTheme)
+                            sharedPreferences.edit {
+                                putBoolean("IS_DARK_THEME", newTheme)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }

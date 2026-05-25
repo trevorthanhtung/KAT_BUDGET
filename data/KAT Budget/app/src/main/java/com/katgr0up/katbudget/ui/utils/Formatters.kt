@@ -27,6 +27,7 @@ import kotlin.math.abs
 import kotlin.math.min
 
 val LocalPrivacyMode = androidx.compose.runtime.compositionLocalOf { false }
+val LocalAppLanguageCode = androidx.compose.runtime.compositionLocalOf { "vi" }
 
 // ==========================================
 // 1. CONSTANTS & UTILS
@@ -42,15 +43,25 @@ private const val MAX_DECIMAL_DIGITS = 2
 fun katStringResource(id: Int, isEng: Boolean, vararg formatArgs: Any): String {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
+    val languageCode = normalizeAppLanguageCode(
+        LocalAppLanguageCode.current.ifBlank { if (isEng) "en" else "vi" }
+    )
 
-    val localizedContext = remember(context, configuration, isEng) {
+    val localizedContext = remember(context, configuration, languageCode) {
         val newConfig = android.content.res.Configuration(configuration).apply {
-            setLocale(if (isEng) Locale.ENGLISH else Locale.forLanguageTag("vi"))
+            setLocale(Locale.forLanguageTag(languageCode))
         }
         context.createConfigurationContext(newConfig)
     }
 
     return localizedContext.getString(id, *formatArgs)
+}
+
+private fun normalizeAppLanguageCode(languageCode: String): String {
+    return when (languageCode.trim().lowercase(Locale.ROOT)) {
+        "en", "ja", "vi" -> languageCode.trim().lowercase(Locale.ROOT)
+        else -> "vi"
+    }
 }
 
 // ==========================================

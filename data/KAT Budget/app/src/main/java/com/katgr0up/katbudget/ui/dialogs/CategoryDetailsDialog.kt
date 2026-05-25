@@ -77,11 +77,12 @@ fun CategoryDetailsDialog(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = if (isEng) {
-                        "${filteredList.size} transactions • $currency"
-                    } else {
-                        "${filteredList.size} giao dịch • $currency"
-                    },
+                    text = katStringResource(
+                        id = R.string.category_details_count,
+                        isEng = isEng,
+                        filteredList.size,
+                        currency
+                    ),
                     color = colors.subText,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium

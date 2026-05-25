@@ -89,7 +89,8 @@ fun DashboardScreen(
     onQuickAddConsumed: () -> Unit = {},
     onToggleTheme: () -> Unit
 ) {
-    val isEng by settingsViewModel.isEnglish.collectAsState()
+    val languageCode by settingsViewModel.languageCode.collectAsState()
+    val isEng = languageCode != "vi"
     val defaultCurrency by settingsViewModel.defaultCurrency.collectAsState()
     val hasPinSetup by settingsViewModel.hasPin.collectAsState()
     val isAutoBackupEnabled by settingsViewModel.isAutoBackupEnabled.collectAsState()
@@ -449,7 +450,7 @@ fun DashboardScreen(
                             showGreeting = selectedTab == 0,
                             isPrivacyModeEnabled = isPrivacyModeEnabled,
                             onPrivacyToggle = { settingsViewModel.togglePrivacyMode(it) },
-                            onLanguageToggle = { settingsViewModel.setLanguage(!isEng) }
+                            onLanguageToggle = { settingsViewModel.cycleLanguage() }
                         )
                     }
 

@@ -58,7 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.katgr0up.katbudget.R
 import com.katgr0up.katbudget.ui.utils.KatSpringSpec
+import com.katgr0up.katbudget.ui.utils.LocalAppLanguageCode
 import com.katgr0up.katbudget.ui.utils.katStringResource
+import java.util.Locale
 
 @Composable
 fun BudgetTopBar(
@@ -71,6 +73,7 @@ fun BudgetTopBar(
     onLanguageToggle: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
+    val languageCode = LocalAppLanguageCode.current
 
     Row(
         modifier = Modifier
@@ -82,7 +85,7 @@ fun BudgetTopBar(
         Column(modifier = Modifier.weight(1f)) {
             if (showGreeting) {
                 Text(
-                    text = stringResource(id = if (isEng) R.string.greeting_en else R.string.greeting_vi),
+                    text = katStringResource(id = if (isEng) R.string.greeting_en else R.string.greeting_vi, isEng = isEng),
                     color = colors.subText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
@@ -144,7 +147,7 @@ fun BudgetTopBar(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (isEng) "EN" else "VI",
+                text = languageCode.uppercase(Locale.ROOT),
                 color = colors.text,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold

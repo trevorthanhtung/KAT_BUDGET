@@ -23,7 +23,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     private val prefsManager = PreferencesManager(application)
 
-    private val _isEnglish = MutableStateFlow(prefsManager.getLanguageCode() == "en")
+    private val _languageCode = MutableStateFlow(normalizeLanguageCode(prefsManager.getLanguageCode()))
+    val languageCode: StateFlow<String> = _languageCode.asStateFlow()
+
+    private val _isEnglish = MutableStateFlow(_languageCode.value == LANGUAGE_EN)
     val isEnglish: StateFlow<Boolean> = _isEnglish.asStateFlow()
 
     private val _defaultCurrency = MutableStateFlow(normalizeCurrency(prefsManager.getDefaultCurrency()))
@@ -58,8 +61,23 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun setLanguage(isEng: Boolean) {
-        prefsManager.setLanguageCode(if (isEng) "en" else "vi")
-        _isEnglish.value = isEng
+        setLanguageCode(if (isEng) LANGUAGE_EN else LANGUAGE_VI)
+    }
+
+    fun setLanguageCode(languageCode: String) {
+        val safeLanguageCode = normalizeLanguageCode(languageCode)
+        prefsManager.setLanguageCode(safeLanguageCode)
+        _languageCode.value = safeLanguageCode
+        _isEnglish.value = safeLanguageCode == LANGUAGE_EN
+    }
+
+    fun cycleLanguage() {
+        val nextLanguageCode = when (_languageCode.value) {
+            LANGUAGE_VI -> LANGUAGE_EN
+            LANGUAGE_EN -> LANGUAGE_JA
+            else -> LANGUAGE_VI
+        }
+        setLanguageCode(nextLanguageCode)
     }
 
     fun togglePrivacyMode(enabled: Boolean) {
@@ -147,5 +165,15 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         private const val AUTO_BACKUP_WORK_NAME = "KatBudgetAutoBackup"
         // Keep only to cancel auto-backup jobs scheduled by old test builds.
         private const val LEGACY_AUTO_BACKUP_WORK_NAME = "KatWalletAutoBackup"
+        private const val LANGUAGE_VI = "vi"
+        private const val LANGUAGE_EN = "en"
+        private const val LANGUAGE_JA = "ja"
+    }
+
+    private fun normalizeLanguageCode(languageCode: String): String {
+        return when (languageCode.trim().lowercase(Locale.ROOT)) {
+            LANGUAGE_VI, LANGUAGE_EN, LANGUAGE_JA -> languageCode.trim().lowercase(Locale.ROOT)
+            else -> LANGUAGE_VI
+        }
     }
 }

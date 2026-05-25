@@ -84,11 +84,7 @@ fun ExchangeRateDialog(
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = if (isEng) {
-                        "* Source: Vietcombank Retail Banking"
-                    } else {
-                        "* Nguồn dữ liệu: Ngân hàng Vietcombank"
-                    },
+                    text = katStringResource(id = R.string.settings_rates_source, isEng = isEng),
                     color = colors.subText.copy(alpha = 0.7f),
                     fontSize = 11.sp,
                     fontStyle = FontStyle.Italic,
