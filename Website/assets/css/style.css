@@ -173,7 +173,7 @@ header { padding-left: max(5%, env(safe-area-inset-left)); padding-right: max(5%
 .cta-area { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; width: 100%; max-width: 480px; }
 .cta-buttons { display: grid; grid-template-columns: repeat(2, 1fr); align-items: center; gap: 10px; width: 100%; }
 .cta-buttons .cta-button { width: 100%; }
-.cta-button { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: var(--accent-btn-bg); color: var(--accent-btn-text) !important; padding: 18px 36px; border-radius: 999px; font-size: 1.1rem; font-weight: 600; border: none; cursor: pointer; width: fit-content; min-height: 54px; transition: var(--transition-spring); }
+.cta-button { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: var(--accent-btn-bg); color: var(--accent-btn-text) !important; padding: 18px 36px; border-radius: 999px; font-size: 1.1rem; font-weight: 600; border: none; cursor: pointer; width: fit-content; min-height: 54px; white-space: nowrap; transition: var(--transition-spring); }
 .cta-button-muted,
 .cta-button-outline { color: var(--text-title) !important; background: rgba(var(--bg-base-rgb), 0.5); border: 1px solid var(--card-border); }
 .cta-button-secondary { color: var(--text-title) !important; background: rgba(var(--accent-primary-rgb), 0.08); border: 1px solid rgba(var(--accent-primary-rgb), 0.25); }
