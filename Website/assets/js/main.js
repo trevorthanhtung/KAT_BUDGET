@@ -293,7 +293,131 @@ document.addEventListener("DOMContentLoaded", () => {
             installNoteText: "Do not uninstall the old app before backing up. Export the .kat file, keep it somewhere safe, and check the APK on VirusTotal before installing if needed.",
             installBackButton: "Back to homepage",
             installDownloadButton: "Download Android version"
+        },
+        ja: {
+            metaDesc: "KAT Budgetは支出の記録、予算の計画、キャッシュフローレポートの確認をサポートします。財務データはデバイスのローカルに保存されます。",
+            pageTitle: "KAT Budget - 個人のお金管理 | KAT GR0UP",
+            privacyPageTitle: "プライバシーポリシー - KAT Budget | KAT GR0UP",
+            privacyMetaDesc: "KAT Budgetはログイン不要で、財務データをローカルに保存し、必要な時だけネットワークを使用して為替レートを更新します。",
+            installPageTitle: "インストールガイド - KAT Budget | KAT GR0UP",
+            installMetaDesc: "AndroidおよびiOS向けのKAT Budgetインストールガイド。",
+            heroBadge: "キャッシュフローをよりスマートに管理",
+            heroTitle1: "お金の流れを理解する。",
+            heroTitle2: "より賢く管理する。",
+            heroDesc: "支出の記録、予算の計画、キャッシュフローの確認を、シンプルで分かりやすい体験で実現します。",
+            btnDownload: "アプリをダウンロード",
+            btnDownloadAndroid: "今すぐダウンロード",
+            btnWebApp: "Webアプリ",
+            btnInstallGuide: "インストールガイド",
+            btnShare: "共有",
+            webAppModalTitle: "注意事項＆iOSガイド",
+            webAppModalDesc: "クロスプラットフォームのWebアプリは現在開発中のため、100%完全ではない場合があります。",
+            webAppModalGuideTitle: "iOSのホーム画面にインストール：",
+            webAppModalGuide1: "<strong>Safari</strong>ブラウザでリンクを開きます。",
+            webAppModalGuide2: "下部の<strong>共有</strong>アイコンをタップします。",
+            webAppModalGuide3: "<strong>ホーム画面に追加</strong>を選択します。",
+            webAppModalBtn: "今すぐWebアプリを開く",
+            btnSubtext: "VirusTotalでAPKを確認",
+            btnVersion: "バージョン 1.0.2",
+            downloadVersionLabel: "バージョン",
+            downloadSizeLabel: "サイズ",
+            downloadPlatformLabel: "プラットフォーム",
+            downloadPlatformValue: "Android 11+ · Webアプリ（クロスプラットフォーム）",
+            downloadUpdatedLabel: "更新日",
+            webAppComingSoonText: "クロスプラットフォームのWebアプリは現在開発中です。もうしばらくお待ちください！",
+            devBy: "開発者",
+            devSupport: "サポート",
+            guaranteeTitle: "データはデバイスのローカルに保存されます",
+            guaranteeDesc: "KAT Budgetはアカウント不要で、データ同期サーバーを運用していません。残高、取引、予算、ローンはデバイス上のアプリのストレージに保存されます。データはエクスポート、バックアップ、共有を自ら行った場合にのみデバイスから離れます。",
+            releaseKicker: "バージョン 1.0.2",
+            releaseTitle: "新着情報",
+            releaseDesc: "このアップデートでは、アカウントデータとキャッシュフロー合計の修正に重点を置いています。",
+            releaseItem1: "意図しないウォレットの統合を防ぐため、アカウント名の重複を防止します。",
+            releaseItem2: "アカウントを削除すると、開始残高および関連する取引が合計からクリアされるようになりました。",
+            releaseItem3: "孤立した取引が依然として純資産に影響を与えていた問題を修正しました。",
+            archiveKicker: "APKアーカイブ",
+            archiveTitle: "古いバージョン",
+            archiveDesc: "修正やUIの改善を得るために、最新バージョンを使用することをお勧めします。古いバージョンは参照用、または本当に必要な場合の再インストール用に保持されています。",
+            archiveButton: "古いバージョンのフォルダを開く",
+            featHeader: "主な機能",
+            feat1Title: "素早い記録",
+            feat1Desc: "収入、支出、アカウント間の送金を、金額、メモ、日付、アカウント、通貨の詳細とともに記録します。",
+            feat2Title: "視覚的なレポート",
+            feat2Desc: "期間、通貨、カテゴリー別にキャッシュフローを読みやすいグラフで確認し、重要なポイントを把握できます。",
+            feat3Title: "スマートな予算管理",
+            feat3Desc: "カテゴリーの制限と貯金目標を追跡し、計画を超える前に支出を調整できます。",
+            feat4Title: "明確なローン追跡",
+            feat4Desc: "貸し借りを分け、金額、関連する人、期日、回収または返済のステータスを管理します。",
+            feat5Title: "バックアップとデータのエクスポート",
+            feat5Desc: "スマートフォンの機種変更やアプリの再インストール時にデータを復元できるよう、.katバックアップファイルを作成します。確認用に、期間、アカウント、または取引の種類別にCSVレポートをエクスポートすることもできます。",
+            ratesKicker: "自動為替レート",
+            ratesTitle: "為替レートの自動更新",
+            ratesDesc: "オンライン時、KAT BudgetはVietcombankから参照レートを取得し、VNDに換算します。財務データはデバイスに残ります。",
+            ratesBaseLabel: "換算の基準",
+            ratesNoteBefore: "データソース：",
+            ratesNoteAfter: "レートはアプリ内での参考用であり、リアルタイムの取引価格ではありません。",
+            cpKicker: "クロスプラットフォームWebアプリ",
+            cpTitle: "すべてのデバイスで体験",
+            cpDesc: "KAT Budgetはフル機能のWebアプリです。インストール不要で、macOS、Windows、Linuxのどのブラウザでもスムーズに使用できます。",
+            previewHeader: "アプリ内のワークフロー",
+            previewKicker: "よく使う操作",
+            previewTitle: "視覚的なグラフ、必要に応じてCSVエクスポート",
+            previewDesc: "KAT Budgetは読みやすいグラフを通じてキャッシュフローを提示し、個人的な保存や確認のためのCSVエクスポートをサポートします。",
+            previewPoint1: "キャッシュフローグラフ",
+            previewPoint2: "CSVをエクスポート",
+            previewPoint3: "データの自己保存",
+            faqHeader: "よくある質問",
+            faq1Q: "インストール前にAPKを確認できますか？",
+            faq1A: "はい。このウェブサイトからダウンロードしたAPKには、",
+            faq1B: "リンクが含まれており、インストール前にスキャン結果を確認できます。財務データはローカルに保存されます。アプリはアカウントを必要とせず、データ同期サーバーも運用していません。",
+            faq2Q: "AndroidにAPKをインストールするにはどうすればよいですか？",
+            faq2A: "「アプリをダウンロード」ボタンをタップし、ダウンロードが完了したらAPKを開き、画面の指示に従います。現在のソースからインストールする許可をAndroidから求められた場合は、使用しているブラウザまたはGoogle Driveアプリに許可を与え、インストールを続行します。",
+            faq3Q: "アプリを更新するとデータは消えますか？",
+            faq3A: "いいえ、同じKAT Budgetアプリに新しいバージョンを上書きインストールする限り消えません。ローカルに保存されたデータはそのまま保持されます。データをバックアップしていない限り、更新前にアプリをアンインストールしないでください。",
+            faq4Q: "機種変更やデータのバックアップはどうすればよいですか？",
+            faq4A: "アプリ内で「設定」>「データのバックアップ」に進み、.katファイルをエクスポートして安全な場所に保管します。機種変更やアプリの再インストール時は、KAT Budgetをインストールし、「設定」>「データの復元」を選択してその.katファイルをインポートします。アプリはバックアップファイルをサーバーにアップロードしません。",
+            donateKicker: "KAT Budget",
+            donateTitle: "作者をサポート",
+            donateText: "KAT Budgetがお役に立った場合、このサポートは作者がテスト、ホスティング、今後の更新を維持するのに役立ちます。",
+            donateBtn: "寄付の詳細",
+            modalTitle: "作者をサポート",
+            modalDesc: "KAT Budgetに関心をお寄せいただき、サポートしていただきありがとうございます。",
+            footerText1: `© ${new Date().getFullYear()} KAT GR0UP. 開発：`,
+            footerThanks: "作者は、KAT Budgetのアイデア出し、コンテンツのレビュー、完成をサポートしてくれたCodex (OpenAI)とAntigravityに心から感謝します。",
+            privacyLink: "プライバシーポリシー",
+            backHome: "ホーム",
+            exitPolicy: "閉じる",
+            privacyBadge: "プライバシー",
+            privacyTitle: "プライバシーポリシー",
+            privacyIntro: "KAT Budgetはサインインを必要とせず、個人の財務データを収集しません。アカウント、取引、予算、ローン、貯金目標は、デバイス上のアプリ内にローカルに保存されます。",
+            privacyUpdated: "発効日：2026年5月25日",
+            privacySection1Title: "1. KAT Budgetが収集しないデータは？",
+            privacySection1Text: "KAT Budgetはアカウントを必要とせず、名前、メールアドレス、電話番号、連絡先、位置情報を収集しません。残高、取引、予算、ローン、貯金目標などの財務データは、KAT GR0UPのシステムには送信されません。",
+            privacySection2Title: "2. データが保存される場所",
+            privacySection2Text: "データはデバイス上のKAT Budgetのローカルアプリストレージに保存されます。アプリは財務データをサーバーに同期しません。為替レートを更新する際、Vietcombankに参照レートデータを要求するだけであり、残高、アカウント、取引履歴を送信することはありません。",
+            privacySection3Title: "3. バックアップとデバイスの移行",
+            privacySection3Text: "デバイスを変更する際、アプリの「データのバックアップ」を使用して.katバックアップファイルをエクスポートできます。このファイルは自分で保持・移行し、新しいデバイスで復元します。KAT Budgetは.katファイルをサーバーに自動的にアップロードしません。ファイルをGoogle Drive、iCloud、または他のクラウドサービスに保存した場合、そのデータは該当サービスのポリシーの対象となります。",
+            privacySection4Title: "4. デバイスの権限",
+            privacyPermission1: "通知：アプリ内で有効にしたリマインダーやアラートを表示するために使用されます。KAT Budgetは、この権限を使用してデバイスから個人データを読み取ることはありません。",
+            privacyPermission2: "ネットワークアクセス：Vietcombankからの参照為替レートを更新するために使用されます。個人の財務データがこのリクエストと共に送信されることはありません。",
+            privacySection5Title: "5. 連絡先",
+            privacyContactText: "プライバシーに関する質問やサポートのリクエストについては、以下にご連絡ください：",
+            installBadge: "インストール",
+            installTitle: "インストールガイド",
+            installIntro: "KAT BudgetはAndroidのAPK経由でインストールするか、iOS（iPhone/iPad）およびデスクトップ（Windows/macOS/Linux）向けのクロスプラットフォームWebアプリを使用できます。",
+            installUpdated: "ガイド更新日：2026年5月25日",
+            installAndroidTitle: "Android 11+",
+            installAndroidText: "ホームページからAPKをダウンロードし、ダウンロードが完了したら開いて、インストールの手順に従います。現在のソースからインストールする許可をAndroidから求められた場合は、使用しているブラウザまたはGoogle Driveアプリに許可を与えてください。",
+            installIosTitle: "すべてのiOSバージョン",
+            installIosText: "Safariを使用してWebアプリのリンクを開き、画面下部の「共有」を選択して「ホーム画面に追加」をタップします。アプリはスタンドアロンアプリのようにスムーズに動作します。",
+            installDesktopTitle: "Windows、macOS、Linux",
+            installDesktopText: "任意のブラウザ（Chrome、Edge、Safariなど）を使用してWebアプリのリンクにアクセスし、直接使用します。インストールは不要で、すべてのデータはコンピューターに安全に保存されます。",
+            installNoteTitle: "更新する前に",
+            installNoteText: "バックアップする前に古いアプリをアンインストールしないでください。.katファイルをエクスポートして安全な場所に保管し、必要に応じてインストール前にVirusTotalでAPKを確認してください。",
+            installBackButton: "ホームページに戻る",
+            installDownloadButton: "Android版をダウンロード"
         }
+
     };
 
     const langBtn = document.getElementById('lang-btn');
@@ -303,7 +427,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const applyLanguage = (lang) => {
         if (!dictionary[lang]) lang = 'vi';
-        if (langBtn) langBtn.textContent = lang === 'vi' ? 'EN' : 'VI';
+        
+        const langMap = { vi: 'EN', en: 'JA', ja: 'VI' };
+        if (langBtn) langBtn.textContent = langMap[lang] || 'EN';
         document.documentElement.lang = lang;
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -331,7 +457,9 @@ document.addEventListener("DOMContentLoaded", () => {
     applyLanguage(currentLang);
     if (langBtn) {
         langBtn.addEventListener('click', () => {
-            currentLang = currentLang === 'vi' ? 'en' : 'vi';
+            
+            const nextLang = { vi: 'en', en: 'ja', ja: 'vi' };
+            currentLang = nextLang[currentLang] || 'vi';
             applyLanguage(currentLang);
             localStorage.setItem('lang', currentLang);
             haptic();
