@@ -428,8 +428,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const applyLanguage = (lang) => {
         if (!dictionary[lang]) lang = 'vi';
         
-        const langMap = { vi: 'EN', en: 'JA', ja: 'VI' };
-        if (langBtn) langBtn.textContent = langMap[lang] || 'EN';
+        const langMap = { vi: 'VI', en: 'EN', ja: 'JA' };
+        if (langBtn) langBtn.textContent = langMap[lang] || 'VI';
         document.documentElement.lang = lang;
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
