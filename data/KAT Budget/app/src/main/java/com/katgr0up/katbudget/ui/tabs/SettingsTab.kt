@@ -219,16 +219,6 @@ fun SettingsTab(
                 SettingsDivider(colors)
 
                 SettingsSwitchRow(
-                    title = katStringResource(id = R.string.settings_item_privacy_title, isEng = isEng),
-                    subtitle = katStringResource(id = R.string.settings_item_privacy_sub, isEng = isEng),
-                    checked = isPrivacyModeEnabled,
-                    colors = colors,
-                    onRowClick = null,
-                    onCheckedChange = onPrivacyToggle
-                )
-                SettingsDivider(colors)
-
-                SettingsSwitchRow(
                     title = katStringResource(id = R.string.settings_item_theme_title, isEng = isEng),
                     subtitle = katStringResource(id = R.string.settings_item_theme_sub, isEng = isEng),
                     checked = isDarkTheme,

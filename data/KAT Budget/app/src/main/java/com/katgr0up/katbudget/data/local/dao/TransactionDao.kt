@@ -50,6 +50,22 @@ interface TransactionDao {
 
     @Query(
         """
+        DELETE FROM transactions
+        WHERE TRIM(source_name) = TRIM(:sourceName)
+        OR project_tag IN (
+            SELECT project_tag FROM transactions
+            WHERE TRIM(source_name) = TRIM(:sourceName)
+            AND project_tag LIKE :transferTagPattern
+        )
+        """
+    )
+    suspend fun deleteTransactionsBySourceName(
+        sourceName: String,
+        transferTagPattern: String
+    )
+
+    @Query(
+        """
         SELECT COUNT(*) FROM transactions
         WHERE project_tag = :tag
         AND timestamp >= :startMillis

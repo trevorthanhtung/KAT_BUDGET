@@ -1,5 +1,8 @@
 package com.katgr0up.katbudget.ui.dialogs
 
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,15 +11,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -24,10 +33,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,23 +49,35 @@ import com.katgr0up.katbudget.R
 import com.katgr0up.katbudget.data.local.entity.SourceEntity
 import com.katgr0up.katbudget.ui.components.BudgetColors
 import com.katgr0up.katbudget.ui.components.ChoiceChip
+import com.katgr0up.katbudget.ui.components.CurrencyRow
 import com.katgr0up.katbudget.ui.components.MoneyInputRow
 import com.katgr0up.katbudget.ui.components.appTextFieldColors
+import com.katgr0up.katbudget.ui.utils.formatSmartCurrency
 import com.katgr0up.katbudget.ui.utils.katStringResource
+import com.katgr0up.katbudget.ui.utils.normalizeCurrency
 import com.katgr0up.katbudget.ui.utils.parseMoney
+
+data class SourceOpeningBalance(
+    val amount: Double,
+    val currency: String
+)
 
 @Composable
 fun SourceDialog(
     sourceToEdit: SourceEntity?,
+    existingSources: List<SourceEntity>,
     isEng: Boolean,
+    defaultCurrency: String,
     colors: BudgetColors,
     onDismiss: () -> Unit,
-    onSave: (String, String, Boolean, Double, String, Double) -> Unit
+    onSave: (String, String, Boolean, Double, String, List<SourceOpeningBalance>) -> Unit
 ) {
+    val context = LocalContext.current
     var name by remember(sourceToEdit) { mutableStateOf(sourceToEdit?.name.orEmpty()) }
     var type by remember(sourceToEdit) { mutableStateOf(sourceToEdit?.type ?: SourceEntity.SourceType.BANK) }
     var includeInTotal by remember(sourceToEdit) { mutableStateOf(sourceToEdit?.includeInTotal ?: true) }
-    var initialBalanceInput by remember { mutableStateOf("") }
+    var showOpeningBalanceDialog by remember { mutableStateOf(false) }
+    val openingBalances = remember(sourceToEdit) { mutableStateListOf<SourceOpeningBalance>() }
 
     var interestRateInput by remember(sourceToEdit) {
         mutableStateOf(sourceToEdit?.interestRate?.takeIf { it > 0.0 }?.toString()?.replace(".", ",") ?: "")
@@ -65,6 +89,7 @@ fun SourceDialog(
 
     val isCreateMode = sourceToEdit == null
     val canSave = name.isNotBlank()
+    val duplicateNameMessage = katStringResource(id = R.string.toast_source_duplicate_name, isEng = isEng)
     val sourceTypeOptions = listOf(
         SourceEntity.SourceType.BANK to katStringResource(id = R.string.source_type_bank, isEng = isEng),
         SourceEntity.SourceType.WALLET to katStringResource(id = R.string.source_type_wallet, isEng = isEng),
@@ -140,11 +165,12 @@ fun SourceDialog(
                 }
 
                 if (isCreateMode) {
-                    MoneyInputRow(
-                        value = initialBalanceInput,
-                        onValueChange = { initialBalanceInput = it },
-                        label = katStringResource(id = R.string.source_label_initial_balance, isEng = isEng),
-                        colors = colors
+                    OpeningBalancesSection(
+                        isEng = isEng,
+                        colors = colors,
+                        balances = openingBalances,
+                        onAddClick = { showOpeningBalanceDialog = true },
+                        onRemove = { balance -> openingBalances.remove(balance) }
                     )
                 }
 
@@ -181,7 +207,17 @@ fun SourceDialog(
                     .fillMaxWidth()
                     .height(48.dp),
                 onClick = {
-                    if (name.isNotBlank()) {
+                    val safeName = name.trim()
+                    if (safeName.isNotBlank()) {
+                        val hasDuplicateName = isCreateMode && existingSources.any { source ->
+                            source.name.trim().equals(safeName, ignoreCase = true)
+                        }
+
+                        if (hasDuplicateName) {
+                            Toast.makeText(context, duplicateNameMessage, Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+
                         val finalInterestPeriod = if (type == SourceEntity.SourceType.SAVINGS) {
                             "TERM_${termMonths.ifBlank { "1" }}"
                         } else {
@@ -193,25 +229,240 @@ fun SourceDialog(
                             .toDoubleOrNull()
                             ?: 0.0
 
-                        val safeInitialBalance = if (initialBalanceInput.isBlank()) {
-                            0.0
-                        } else {
-                            runCatching { parseMoney(initialBalanceInput) }.getOrDefault(0.0)
-                        }
-
                         onSave(
-                            name.trim(),
+                            safeName,
                             type,
                             includeInTotal,
                             safeRate,
                             finalInterestPeriod,
-                            safeInitialBalance
+                            openingBalances
+                                .filter { it.amount > 0.0 }
+                                .map { it.copy(currency = normalizeCurrency(it.currency)) }
                         )
                     }
                 }
             ) {
                 Text(
                     text = katStringResource(id = R.string.btn_save, isEng = isEng),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        dismissButton = {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colors.text.copy(alpha = 0.08f),
+                    contentColor = colors.text
+                ),
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                onClick = onDismiss
+            ) {
+                Text(
+                    text = katStringResource(id = R.string.btn_close, isEng = isEng),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    )
+
+    if (showOpeningBalanceDialog) {
+        AddOpeningBalanceDialog(
+            isEng = isEng,
+            colors = colors,
+            defaultCurrency = defaultCurrency,
+            onDismiss = { showOpeningBalanceDialog = false },
+            onAdd = { balance ->
+                val normalizedCurrency = normalizeCurrency(balance.currency)
+                val existingIndex = openingBalances.indexOfFirst {
+                    normalizeCurrency(it.currency) == normalizedCurrency
+                }
+
+                if (existingIndex >= 0) {
+                    val existing = openingBalances[existingIndex]
+                    openingBalances[existingIndex] = existing.copy(
+                        amount = existing.amount + balance.amount,
+                        currency = normalizedCurrency
+                    )
+                } else {
+                    openingBalances.add(balance.copy(currency = normalizedCurrency))
+                }
+                showOpeningBalanceDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun OpeningBalancesSection(
+    isEng: Boolean,
+    colors: BudgetColors,
+    balances: List<SourceOpeningBalance>,
+    onAddClick: () -> Unit,
+    onRemove: (SourceOpeningBalance) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        DialogSectionLabel(
+            text = katStringResource(id = R.string.source_label_initial_balance, isEng = isEng),
+            colors = colors
+        )
+
+        if (balances.isEmpty()) {
+            Text(
+                text = katStringResource(id = R.string.source_initial_balance_empty, isEng = isEng),
+                color = colors.subText,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium
+            )
+        } else {
+            balances.forEach { balance ->
+                OpeningBalanceRow(
+                    isEng = isEng,
+                    colors = colors,
+                    balance = balance,
+                    onRemove = { onRemove(balance) }
+                )
+            }
+        }
+
+        Button(
+            onClick = onAddClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.accent.copy(alpha = 0.12f),
+                contentColor = colors.accent
+            ),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(46.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = katStringResource(id = R.string.source_initial_balance_add, isEng = isEng),
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun OpeningBalanceRow(
+    isEng: Boolean,
+    colors: BudgetColors,
+    balance: SourceOpeningBalance,
+    onRemove: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(colors.card.copy(alpha = 0.58f))
+            .border(
+                width = 1.dp,
+                color = colors.border.copy(alpha = 0.52f),
+                shape = RoundedCornerShape(18.dp)
+            )
+            .padding(start = 14.dp, end = 6.dp, top = 9.dp, bottom = 9.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = formatSmartCurrency(balance.amount, balance.currency, isEng = isEng),
+            color = colors.text,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+
+        IconButton(onClick = onRemove) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = katStringResource(id = R.string.btn_delete, isEng = isEng),
+                tint = colors.subText,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddOpeningBalanceDialog(
+    isEng: Boolean,
+    colors: BudgetColors,
+    defaultCurrency: String,
+    onDismiss: () -> Unit,
+    onAdd: (SourceOpeningBalance) -> Unit
+) {
+    var amountInput by remember { mutableStateOf("") }
+    var selectedCurrency by remember(defaultCurrency) {
+        mutableStateOf(normalizeCurrency(defaultCurrency))
+    }
+    val amount = remember(amountInput) {
+        runCatching { parseMoney(amountInput) }.getOrDefault(0.0)
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = colors.surface,
+        shape = RoundedCornerShape(28.dp),
+        title = {
+            Text(
+                text = katStringResource(id = R.string.source_initial_balance_add_title, isEng = isEng),
+                color = colors.text,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                CurrencyRow(
+                    selectedCurrency = selectedCurrency,
+                    colors = colors,
+                    onCurrencyChanged = { selectedCurrency = it }
+                )
+
+                MoneyInputRow(
+                    value = amountInput,
+                    onValueChange = { amountInput = it },
+                    label = katStringResource(id = R.string.source_initial_balance_amount, isEng = isEng),
+                    colors = colors
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                enabled = amount > 0.0,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colors.accent,
+                    contentColor = colors.background,
+                    disabledContainerColor = colors.accent.copy(alpha = 0.24f),
+                    disabledContentColor = colors.text.copy(alpha = 0.42f)
+                ),
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                onClick = {
+                    onAdd(
+                        SourceOpeningBalance(
+                            amount = amount,
+                            currency = selectedCurrency
+                        )
+                    )
+                }
+            ) {
+                Text(
+                    text = katStringResource(id = R.string.btn_add, isEng = isEng),
                     fontWeight = FontWeight.Bold
                 )
             }

@@ -35,6 +35,7 @@ private const val TAG = "MainActivity"
 
 class MainActivity : FragmentActivity() {
     private var shouldOpenQuickAdd by mutableStateOf(false)
+    private var quickAddInitialType by mutableStateOf<String?>(null)
 
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -47,6 +48,7 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         shouldOpenQuickAdd = intent?.getBooleanExtra(EXTRA_OPEN_QUICK_ADD, false) == true
+        quickAddInitialType = intent?.getStringExtra(EXTRA_QUICK_ADD_TYPE)?.takeIf { it.isQuickAddType() }
 
         installEmergencyBackupCrashHandler()
 
@@ -85,7 +87,11 @@ class MainActivity : FragmentActivity() {
                     goalViewModel = goalViewModel,
                     isDarkTheme = isDarkTheme,
                     openQuickAddOnStart = shouldOpenQuickAdd,
-                    onQuickAddConsumed = { shouldOpenQuickAdd = false },
+                    quickAddInitialType = quickAddInitialType,
+                    onQuickAddConsumed = {
+                        shouldOpenQuickAdd = false
+                        quickAddInitialType = null
+                    },
                     onToggleTheme = {
                         val newTheme = !isDarkTheme
                         isDarkTheme = newTheme
@@ -104,6 +110,7 @@ class MainActivity : FragmentActivity() {
         setIntent(intent)
         if (intent.getBooleanExtra(EXTRA_OPEN_QUICK_ADD, false)) {
             shouldOpenQuickAdd = true
+            quickAddInitialType = intent.getStringExtra(EXTRA_QUICK_ADD_TYPE)?.takeIf { it.isQuickAddType() }
         }
     }
 
@@ -158,8 +165,11 @@ class MainActivity : FragmentActivity() {
 
     companion object {
         const val EXTRA_OPEN_QUICK_ADD = "OPEN_QUICK_ADD"
+        const val EXTRA_QUICK_ADD_TYPE = "QUICK_ADD_TYPE"
 
         @Volatile
         private var isEmergencyBackupCrashHandlerInstalled = false
     }
 }
+
+private fun String.isQuickAddType(): Boolean = this == "EXPENSE" || this == "INCOME"

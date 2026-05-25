@@ -21,7 +21,7 @@
     <string name="fallback_other">Khác</string>
     <string name="fallback_other_income">Thu nhập khác</string>
     <string name="fallback_transfer">Chuyển tiền</string>
-    <string name="fallback_version_new">1.0.1</string>
+    <string name="fallback_version_new">1.0.3</string>
     <string name="fallback_opening_balance">Số dư ban đầu</string>
     <string name="category_food">Thực phẩm</string>
     <string name="category_transport">Di chuyển</string>
@@ -65,6 +65,9 @@
     <string name="debt_label_name">Tên người liên quan</string>
     <string name="debt_label_amount">Số tiền</string>
     <string name="debt_label_note">Ghi chú</string>
+    <string name="debt_label_account">Tài khoản liên quan</string>
+    <string name="debt_label_include_cash_flow">Tính vào tài sản ròng</string>
+    <string name="debt_hint_include_cash_flow">Tắt nếu chỉ muốn theo dõi khoản vay/nợ, không làm thay đổi tài sản ròng hoặc báo cáo thu chi.</string>
     <string name="debt_label_due_date">Hạn thanh toán:</string>
     <string name="debt_hint_select_due_date">Chọn hạn thanh toán (không bắt buộc)</string>
     <string name="debt_btn_clear_due_date">Bỏ hạn thanh toán</string>
@@ -168,7 +171,12 @@
     <string name="source_type_savings">Tiết kiệm</string>
     <string name="source_label_name">Tên tài khoản</string>
     <string name="source_label_initial_balance">Số dư ban đầu</string>
+    <string name="source_initial_balance_empty">Chưa có số dư ban đầu.</string>
+    <string name="source_initial_balance_add">Thêm số dư ban đầu</string>
+    <string name="source_initial_balance_add_title">Thêm số dư</string>
+    <string name="source_initial_balance_amount">Số tiền</string>
     <string name="source_initial_balance_locked">Không thể thay đổi số dư ban đầu.</string>
+    <string name="toast_source_duplicate_name">Tên tài khoản đã tồn tại.</string>
     <string name="source_savings_rate">Lãi suất</string>
     <string name="source_savings_rate_suffix">%%/năm</string>
     <string name="source_savings_term">Kỳ hạn</string>
@@ -212,9 +220,14 @@
     <string name="accessibility_submit">Xác nhận</string>
     <string name="widget_add_transaction">Thêm giao dịch</string>
     <string name="widget_quick_add">+ Cộng nhanh</string>
+    <string name="widget_quick_income">Thu</string>
+    <string name="widget_quick_expense">Chi</string>
+    <string name="widget_quick_income_desc">Thêm nhanh thu nhập</string>
+    <string name="widget_quick_expense_desc">Thêm nhanh chi tiêu</string>
     <string name="widget_balance_title">Tổng số dư</string>
     <string name="widget_month_income">Thu tháng này</string>
     <string name="widget_month_expense">Chi tháng này</string>
+    <string name="widget_no_recent">Chưa có giao dịch gần đây</string>
     <string name="widget_empty_amount">0 VND</string>
     <string name="privacy_hide_balance">Ẩn số dư</string>
     <string name="privacy_show_balance">Hiện số dư</string>
@@ -352,6 +365,8 @@
 
     <string name="vm_debt_note_paid">Thanh toán một phần khoản vay cho %1$s</string>
     <string name="vm_debt_note_collected">Thu một phần khoản cho vay từ %1$s</string>
+    <string name="vm_debt_note_lent_initial">Cho %1$s vay</string>
+    <string name="vm_debt_note_borrowed_initial">Đi vay từ %1$s</string>
     <string name="vm_debt_cat_default">Vay nợ</string>
     <string name="vm_goal_note_deposit">Tích lũy cho mục tiêu: %1$s</string>
     <string name="vm_goal_cat_default">Tiết kiệm</string>

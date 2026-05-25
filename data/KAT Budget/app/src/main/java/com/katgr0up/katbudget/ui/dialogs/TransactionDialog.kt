@@ -54,6 +54,7 @@ fun TransactionDialog(
     isEng: Boolean,
     sources: List<SourceEntity>,
     expenseOptions: List<String>, incomeOptions: List<String>, colors: BudgetColors, defaultCurrency: String,
+    initialType: String? = null,
     onDismiss: () -> Unit, onSave: (TransactionForm) -> Unit,
     onCreateCategory: (String, String) -> Unit,
     onDeleteCategory: (String, String) -> Unit
@@ -67,8 +68,12 @@ fun TransactionDialog(
     val transferLabel = katStringResource(id = R.string.tx_chip_transfer, isEng = isEng)
     val expenseLabel = katStringResource(id = R.string.tx_chip_expense, isEng = isEng)
     val incomeLabel = katStringResource(id = R.string.tx_chip_income, isEng = isEng)
+    val safeInitialType = when (initialType) {
+        "INCOME", "EXPENSE", "TRANSFER_OUT" -> initialType
+        else -> "EXPENSE"
+    }
 
-    var type by remember(transactionToEdit) { mutableStateOf(transactionToEdit?.type ?: "EXPENSE") }
+    var type by remember(transactionToEdit, safeInitialType) { mutableStateOf(transactionToEdit?.type ?: safeInitialType) }
     var amountInput by remember(transactionToEdit) {
         mutableStateOf(transactionToEdit?.amount?.let { if (it % 1.0 == 0.0) it.toLong().toString() else it.toString() }.orEmpty())
     }
@@ -265,14 +270,29 @@ fun TransactionDialog(
             title = { Text(katStringResource(id = R.string.tx_cat_mgmt_create_title, isEng = isEng), color = colors.text, fontWeight = FontWeight.Bold) },
             text = { OutlinedTextField(value = newCategoryName, onValueChange = { newCategoryName = it }, label = { Text(katStringResource(id = R.string.tx_cat_mgmt_create_name, isEng = isEng), color = colors.subText) }, singleLine = true, colors = appTextFieldColors(colors)) },
             confirmButton = {
-                Button(colors = ButtonDefaults.buttonColors(containerColor = colors.accent), onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    if (newCategoryName.isNotBlank()) {
-                        onCreateCategory(newCategoryName.trim(), type)
-                        category = newCategoryName.trim()
-                        showAddCategoryDialog = false; newCategoryName = ""
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colors.accent,
+                        contentColor = colors.background
+                    ),
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        if (newCategoryName.isNotBlank()) {
+                            onCreateCategory(newCategoryName.trim(), type)
+                            category = newCategoryName.trim()
+                            showAddCategoryDialog = false; newCategoryName = ""
+                        }
                     }
-                }) { Text(katStringResource(id = R.string.btn_save, isEng = isEng), color = colors.background, fontWeight = FontWeight.Bold) }
+                ) {
+                    Text(
+                        text = katStringResource(id = R.string.btn_save, isEng = isEng),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             },
             dismissButton = {
                 Button(

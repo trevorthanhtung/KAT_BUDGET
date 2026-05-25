@@ -224,6 +224,11 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     fun deleteTransaction(transaction: TransactionEntity) {
         viewModelScope.launch(Dispatchers.IO) {
+            if (deleteLinkedDebtOpening(transaction)) {
+                KatBudgetWidgetProvider.refreshAll(context)
+                return@launch
+            }
+
             if (transaction.type == TxType.GOAL_DEPOSIT) rollbackGoalDeposit(transaction)
             if (isDebtLinkedTransaction(transaction)) rollbackDebtPayment(transaction)
 
@@ -256,6 +261,10 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun deleteSource(source: SourceEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteTransactionsBySourceName(
+            sourceName = source.name,
+            transferTagPattern = "${TagPrefix.TRANSFER}%"
+        )
         repository.deleteSource(source)
         KatBudgetWidgetProvider.refreshAll(context)
     }
@@ -415,6 +424,23 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
         repository.adjustDebtPaidAmount(debtId, -transaction.amount)
     }
 
+    private suspend fun deleteLinkedDebtOpening(transaction: TransactionEntity): Boolean {
+        val tag = transaction.projectTag ?: return false
+        if (!tag.startsWith(TagPrefix.DEBT_OPENING)) return false
+
+        val openingTimestamp = tag
+            .removePrefix(TagPrefix.DEBT_OPENING)
+            .toLongOrNull()
+            ?: transaction.timestamp
+
+        repository.allDebts.firstOrNull()
+            ?.firstOrNull { it.timestamp == openingTimestamp }
+            ?.let { repository.deleteDebt(it) }
+
+        repository.deleteTransactionsByTag(tag)
+        return true
+    }
+
     private suspend fun rollbackGoalDeposit(transaction: TransactionEntity) {
         val goalName = linkedGoalName(transaction) ?: return
         repository.adjustGoalCurrentAmountByName(goalName, -goalContributionAmount(goalName, transaction))
@@ -436,6 +462,7 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     private fun shouldKeepProjectTag(existing: TransactionEntity, newType: String): Boolean {
         val tag = existing.projectTag ?: return false
         return when {
+            tag.startsWith(TagPrefix.DEBT_OPENING) -> newType == existing.type
             tag.startsWith(TagPrefix.DEBT_ROLLBACK) -> newType == existing.type
             existing.type == TxType.GOAL_DEPOSIT -> newType == TxType.GOAL_DEPOSIT
             tag.startsWith(TagPrefix.TRANSFER) -> newType == existing.type
@@ -543,10 +570,16 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun buildSourceBalances(transactions: List<TransactionEntity>, sources: List<SourceEntity>): Map<String, Map<String, Double>> {
         val balances = mutableMapOf<String, MutableMap<String, Double>>()
+        val activeSourceNames = sources.map { it.name.trim() }.toSet()
         transactions.forEach { tx ->
             val srcName = tx.sourceName.trim()
+            if (srcName !in activeSourceNames) return@forEach
             val curr = normalizeCurrency(tx.currency)
-            val delta = when (tx.type) { TxType.INCOME, TxType.TRANSFER_IN -> tx.amount; TxType.EXPENSE, TxType.TRANSFER_OUT -> -tx.amount; else -> 0.0 }
+            val delta = when (tx.type) {
+                TxType.INCOME, TxType.TRANSFER_IN -> tx.amount
+                TxType.EXPENSE, TxType.TRANSFER_OUT -> -tx.amount
+                else -> 0.0
+            }
             if (delta != 0.0) balances.getOrPut(srcName) { mutableMapOf() }[curr] = (balances[srcName]?.get(curr) ?: 0.0) + delta
         }
 

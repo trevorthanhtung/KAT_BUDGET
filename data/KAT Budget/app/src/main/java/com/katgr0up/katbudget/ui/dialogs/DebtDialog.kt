@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +22,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -28,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.katgr0up.katbudget.R
 import com.katgr0up.katbudget.data.local.entity.DebtEntity
+import com.katgr0up.katbudget.data.local.entity.SourceEntity
+import com.katgr0up.katbudget.data.local.entity.TransactionEntity
 import com.katgr0up.katbudget.ui.components.ChoiceChip
 import com.katgr0up.katbudget.ui.components.CurrencyRow
 import com.katgr0up.katbudget.ui.components.MoneyInputRow
@@ -45,15 +52,27 @@ import com.katgr0up.katbudget.ui.utils.formatInputNumber
 import com.katgr0up.katbudget.ui.utils.katStringResource
 import com.katgr0up.katbudget.ui.utils.normalizeCurrency
 import com.katgr0up.katbudget.ui.utils.parseMoney
+import com.katgr0up.katbudget.utils.TagPrefix
+import com.katgr0up.katbudget.utils.TxType
 
 @Composable
 fun DebtDialog(
     debtToEdit: DebtEntity?,
+    sources: List<SourceEntity>,
+    transactions: List<TransactionEntity>,
     isEng: Boolean,
     colors: BudgetColors,
     onDismiss: () -> Unit,
-    onSave: (String, Double, String, String, String, Long?) -> Unit
+    onSave: (String, Double, String, String, String, Long?, String, Boolean) -> Unit
 ) {
+    val isCreateMode = debtToEdit == null
+    val openingTransaction = remember(debtToEdit, transactions) {
+        debtToEdit?.let { debt ->
+            transactions.firstOrNull { transaction ->
+                transaction.projectTag == "${TagPrefix.DEBT_OPENING}${debt.timestamp}"
+            }
+        }
+    }
     var personName by remember(debtToEdit) { mutableStateOf(debtToEdit?.personName.orEmpty()) }
     var amountInput by remember(debtToEdit) {
         mutableStateOf(
@@ -71,10 +90,19 @@ fun DebtDialog(
     var note by remember(debtToEdit) { mutableStateOf(debtToEdit?.note.orEmpty()) }
     var dueDate by remember(debtToEdit) { mutableStateOf(debtToEdit?.dueDate) }
     var showDatePicker by remember { mutableStateOf(false) }
+    var sourceName by remember(sources) { mutableStateOf(sources.firstOrNull()?.name.orEmpty()) }
+    var includeInCashFlow by remember(debtToEdit, openingTransaction) {
+        mutableStateOf(
+            openingTransaction?.let { it.type == TxType.INCOME || it.type == TxType.EXPENSE }
+                ?: true
+        )
+    }
 
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = dueDate)
     val parsedAmount = remember(amountInput) { parseMoney(amountInput) }
-    val isFormValid = personName.isNotBlank() && parsedAmount > 0.0
+    val isFormValid = personName.isNotBlank() &&
+            parsedAmount > 0.0 &&
+            (!isCreateMode || sourceName.isNotBlank())
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -82,7 +110,7 @@ fun DebtDialog(
         shape = RoundedCornerShape(28.dp),
         title = {
             Text(
-                text = if (debtToEdit == null) {
+                text = if (isCreateMode) {
                     katStringResource(id = R.string.debt_dialog_title_add, isEng = isEng)
                 } else {
                     katStringResource(id = R.string.debt_dialog_title_edit, isEng = isEng)
@@ -121,6 +149,81 @@ fun DebtDialog(
                     colors = colors,
                     onCurrencyChanged = { currency = it }
                 )
+
+                if (isCreateMode) {
+                    Text(
+                        text = katStringResource(id = R.string.debt_label_account, isEng = isEng),
+                        color = colors.subText,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    if (sources.isEmpty()) {
+                        Text(
+                            text = katStringResource(id = R.string.toast_create_account_first, isEng = isEng),
+                            color = colors.negative,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    } else {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(sources, key = { it.id }) { source ->
+                                ChoiceChip(
+                                    text = source.name,
+                                    selected = sourceName == source.name,
+                                    colors = colors,
+                                    onClick = { sourceName = source.name }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(colors.card.copy(alpha = 0.56f))
+                        .border(
+                            width = 1.dp,
+                            color = colors.border.copy(alpha = 0.58f),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(3.dp)
+                    ) {
+                        Text(
+                            text = katStringResource(id = R.string.debt_label_include_cash_flow, isEng = isEng),
+                            color = colors.text,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = katStringResource(id = R.string.debt_hint_include_cash_flow, isEng = isEng),
+                            color = colors.subText,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp
+                        )
+                    }
+
+                    Switch(
+                        checked = includeInCashFlow,
+                        onCheckedChange = { includeInCashFlow = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = colors.background,
+                            checkedTrackColor = colors.accent,
+                            uncheckedThumbColor = colors.subText,
+                            uncheckedTrackColor = colors.border
+                        )
+                    )
+                }
 
                 OutlinedTextField(
                     value = personName,
@@ -190,7 +293,7 @@ fun DebtDialog(
                     .fillMaxWidth()
                     .height(48.dp),
                 onClick = {
-                    onSave(personName.trim(), parsedAmount, currency, type, note.trim(), dueDate)
+                    onSave(personName.trim(), parsedAmount, currency, type, note.trim(), dueDate, sourceName, includeInCashFlow)
                 }
             ) {
                 Text(

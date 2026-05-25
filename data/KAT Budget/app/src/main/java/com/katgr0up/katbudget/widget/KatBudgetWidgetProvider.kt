@@ -6,6 +6,8 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.view.View
 import android.widget.RemoteViews
 import com.katgr0up.katbudget.MainActivity
 import com.katgr0up.katbudget.R
@@ -14,10 +16,12 @@ import com.katgr0up.katbudget.data.local.entity.TransactionEntity
 import com.katgr0up.katbudget.managers.ExchangeRateManager
 import com.katgr0up.katbudget.managers.PreferencesManager
 import com.katgr0up.katbudget.ui.utils.convertCurrency
+import com.katgr0up.katbudget.ui.utils.formatDate
 import com.katgr0up.katbudget.ui.utils.formatCompactCurrency
 import com.katgr0up.katbudget.ui.utils.normalizeCurrency
 import com.katgr0up.katbudget.utils.TxType
 import java.util.Calendar
+import kotlin.math.abs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -58,17 +62,15 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            val quickAddIntent = Intent(context, MainActivity::class.java).apply {
-                action = ACTION_QUICK_ADD
-                putExtra(MainActivity.EXTRA_OPEN_QUICK_ADD, true)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            }
-
-            val quickAddPendingIntent = PendingIntent.getActivity(
+            val quickExpensePendingIntent = buildQuickAddPendingIntent(
                 context,
-                REQUEST_QUICK_ADD,
-                quickAddIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                TxType.EXPENSE,
+                REQUEST_QUICK_ADD_EXPENSE
+            )
+            val quickIncomePendingIntent = buildQuickAddPendingIntent(
+                context,
+                TxType.INCOME,
+                REQUEST_QUICK_ADD_INCOME
             )
 
             return RemoteViews(context.packageName, R.layout.widget_layout).apply {
@@ -84,9 +86,31 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
                     R.id.widget_expense_value,
                     formatWidgetAmount(summary.monthExpense, summary.currency, summary.isPrivacyModeEnabled)
                 )
+                bindRecentTransaction(context, summary.recentTransaction, summary.isPrivacyModeEnabled)
                 setOnClickPendingIntent(R.id.widget_root, openAppPendingIntent)
-                setOnClickPendingIntent(R.id.widget_btn_add, quickAddPendingIntent)
+                setOnClickPendingIntent(R.id.widget_btn_expense, quickExpensePendingIntent)
+                setOnClickPendingIntent(R.id.widget_btn_income, quickIncomePendingIntent)
             }
+        }
+
+        private fun buildQuickAddPendingIntent(
+            context: Context,
+            type: String,
+            requestCode: Int
+        ): PendingIntent {
+            val quickAddIntent = Intent(context, MainActivity::class.java).apply {
+                action = "$ACTION_QUICK_ADD.$type"
+                putExtra(MainActivity.EXTRA_OPEN_QUICK_ADD, true)
+                putExtra(MainActivity.EXTRA_QUICK_ADD_TYPE, type)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+
+            return PendingIntent.getActivity(
+                context,
+                requestCode,
+                quickAddIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
         }
 
         private fun loadWidgetSummary(context: Context): WidgetSummary {
@@ -109,6 +133,15 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
                     var balance = 0.0
                     var monthIncome = 0.0
                     var monthExpense = 0.0
+                    val openingBalanceLabels = setOf(
+                        context.getString(R.string.fallback_opening_balance),
+                        "Số dư ban đầu",
+                        "Opening Balance"
+                    )
+                    val visibleTransactions = transactions.filter { tx ->
+                        (!hasSourceFilters || tx.sourceName.trim() in includedSources) &&
+                            tx.category !in openingBalanceLabels
+                    }
 
                     transactions.forEach { tx ->
                         if (hasSourceFilters && tx.sourceName.trim() !in includedSources) return@forEach
@@ -131,6 +164,10 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
                         balance = balance,
                         monthIncome = monthIncome,
                         monthExpense = monthExpense,
+                        recentTransaction = visibleTransactions
+                            .filter { it.type.isWidgetRecentType() }
+                            .maxByOrNull { it.timestamp }
+                            ?.toWidgetRecent(),
                         currency = defaultCurrency,
                         isPrivacyModeEnabled = isPrivacyModeEnabled
                     )
@@ -150,6 +187,51 @@ class KatBudgetWidgetProvider : AppWidgetProvider() {
             isPrivacyModeEnabled: Boolean
         ): String {
             return if (isPrivacyModeEnabled) "***" else formatCompactCurrency(amount, currency)
+        }
+
+        private fun RemoteViews.bindRecentTransaction(
+            context: Context,
+            recentTransaction: WidgetRecentTransaction?,
+            isPrivacyModeEnabled: Boolean
+        ) {
+            if (recentTransaction == null) {
+                setTextViewText(R.id.widget_recent_title, context.getString(R.string.widget_no_recent))
+                setTextViewText(R.id.widget_recent_subtitle, "")
+                setTextViewText(R.id.widget_recent_amount, "")
+                setViewVisibility(R.id.widget_recent_subtitle, View.GONE)
+                return
+            }
+
+            setViewVisibility(R.id.widget_recent_subtitle, View.VISIBLE)
+            setTextViewText(R.id.widget_recent_title, recentTransaction.title)
+            setTextViewText(R.id.widget_recent_subtitle, recentTransaction.subtitle)
+            setTextViewText(
+                R.id.widget_recent_amount,
+                if (isPrivacyModeEnabled) "***" else recentTransaction.amount
+            )
+            setTextColor(R.id.widget_recent_amount, recentTransaction.amountColor)
+        }
+
+        private fun TransactionEntity.toWidgetRecent(): WidgetRecentTransaction {
+            val isNegative = type.isNegativeWidgetType()
+            val prefix = if (isNegative) "-" else "+"
+            return WidgetRecentTransaction(
+                title = category,
+                subtitle = "${sourceName.trim()} - ${formatDate(timestamp)}",
+                amount = "$prefix${formatCompactCurrency(abs(amount), currency)}",
+                amountColor = if (isNegative) WIDGET_EXPENSE_COLOR else WIDGET_INCOME_COLOR
+            )
+        }
+
+        private fun String.isWidgetRecentType(): Boolean {
+            return this == TxType.INCOME ||
+                this == TxType.EXPENSE ||
+                this == TxType.TRANSFER_IN ||
+                this == TxType.TRANSFER_OUT
+        }
+
+        private fun String.isNegativeWidgetType(): Boolean {
+            return this == TxType.EXPENSE || this == TxType.TRANSFER_OUT
         }
 
         private fun convertToDefault(
@@ -186,11 +268,22 @@ private data class WidgetSummary(
     val balance: Double = 0.0,
     val monthIncome: Double = 0.0,
     val monthExpense: Double = 0.0,
+    val recentTransaction: WidgetRecentTransaction? = null,
     val currency: String = "VND",
     val isPrivacyModeEnabled: Boolean = false
+)
+
+private data class WidgetRecentTransaction(
+    val title: String,
+    val subtitle: String,
+    val amount: String,
+    val amountColor: Int
 )
 
 private const val ACTION_OPEN_APP = "com.katgr0up.katbudget.widget.OPEN_APP"
 private const val ACTION_QUICK_ADD = "com.katgr0up.katbudget.widget.QUICK_ADD"
 private const val REQUEST_OPEN_APP = 1000
-private const val REQUEST_QUICK_ADD = 1001
+private const val REQUEST_QUICK_ADD_EXPENSE = 1001
+private const val REQUEST_QUICK_ADD_INCOME = 1002
+private val WIDGET_INCOME_COLOR = Color.parseColor("#16A34A")
+private val WIDGET_EXPENSE_COLOR = Color.parseColor("#EF4444")

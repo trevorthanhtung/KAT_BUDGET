@@ -1,6 +1,6 @@
 {
-  "versionCode": 3,
-  "versionName": "1.0.2",
-  "releaseNotes": "- Chặn tạo tài khoản trùng tên để tránh gộp ví ngoài ý muốn.\\n- Khi xóa tài khoản, các giao dịch và số dư ban đầu liên quan sẽ được dọn khỏi tổng dòng tiền.\\n- Thêm chọn ví khi tạo khoản vay/nợ và tự động đồng bộ giao dịch liên quan.\\n- Thêm tùy chọn tính hoặc không tính khoản vay/nợ vào tài sản ròng và báo cáo thu chi.\\n- Xóa khoản vay/nợ hoặc giao dịch liên quan sẽ dọn dữ liệu liên kết đồng bộ hơn.\\n- Phân biệt màu Cho vay và Đi vay rõ hơn.\\n- Chỉnh nút Lưu/Đóng trong dialog tạo danh mục cho đồng bộ giao diện.",
-  "apkUrl": "https://github.com/trevorthanhtung/KAT_BUDGET/raw/main/apk/KAT%20Budget%201.0.2.apk"
+  "versionCode": 4,
+  "versionName": "1.0.3",
+  "releaseNotes": "- Thêm số dư ban đầu đa tiền tệ khi tạo tài khoản, có thể thêm nhiều nguồn tiền cùng lúc.\n- Nâng cấp widget: xem số dư, dòng tiền tháng và giao dịch gần nhất rõ hơn.\n- Thêm nút nhanh Thu/Chi trên widget, mở đúng loại giao dịch ngay trong app.",
+  "apkUrl": "https://github.com/trevorthanhtung/KAT_BUDGET/raw/main/apk/KAT%20Budget%201.0.3.apk"
 }

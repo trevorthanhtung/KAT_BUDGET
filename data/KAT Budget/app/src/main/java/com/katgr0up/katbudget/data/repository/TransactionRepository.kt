@@ -48,6 +48,13 @@ class TransactionRepository(
         transactionDao.deleteTransactionsByTag(tag)
     }
 
+    suspend fun deleteTransactionsBySourceName(
+        sourceName: String,
+        transferTagPattern: String
+    ) {
+        transactionDao.deleteTransactionsBySourceName(sourceName, transferTagPattern)
+    }
+
     suspend fun countTransactionsByProjectTagBetween(
         tag: String,
         startMillis: Long,

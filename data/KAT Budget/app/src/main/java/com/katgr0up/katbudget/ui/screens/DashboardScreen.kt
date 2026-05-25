@@ -85,6 +85,7 @@ fun DashboardScreen(
     goalViewModel: GoalViewModel,
     isDarkTheme: Boolean,
     openQuickAddOnStart: Boolean = false,
+    quickAddInitialType: String? = null,
     onQuickAddConsumed: () -> Unit = {},
     onToggleTheme: () -> Unit
 ) {
@@ -108,6 +109,7 @@ fun DashboardScreen(
     var activeToolScreen by remember { mutableStateOf("NONE") }
 
     var showTransactionDialog by remember { mutableStateOf(false) }
+    var transactionDialogInitialType by remember { mutableStateOf<String?>(null) }
     val transactions by viewModel.allTransactions.collectAsState(initial = emptyList())
 
     val fallbackAll = katStringResource(id = R.string.fallback_all, isEng = isEng)
@@ -338,12 +340,13 @@ fun DashboardScreen(
         }
     }
 
-    LaunchedEffect(openQuickAddOnStart, hasSources, isAppUnlocked, showSplash, showOnboarding) {
+    LaunchedEffect(openQuickAddOnStart, quickAddInitialType, hasSources, isAppUnlocked, showSplash, showOnboarding) {
         if (!openQuickAddOnStart || showSplash || showOnboarding || !isAppUnlocked) return@LaunchedEffect
 
         if (hasSources) {
             selectedTab = 0
             activeToolScreen = "NONE"
+            transactionDialogInitialType = quickAddInitialType
             showTransactionDialog = true
         }
         onQuickAddConsumed()
@@ -419,6 +422,7 @@ fun DashboardScreen(
                         onMissingSources = { showCreateAccountRequiredDialog = true },
                         onAdd = {
                             if (hasSources) {
+                                transactionDialogInitialType = null
                                 showTransactionDialog = true
                             }
                         }
@@ -602,7 +606,11 @@ fun DashboardScreen(
                 incomeOptions = displayIncomeOptions,
                 colors = colors,
                 defaultCurrency = defaultCurrency,
-                onDismiss = { showTransactionDialog = false },
+                initialType = transactionDialogInitialType,
+                onDismiss = {
+                    showTransactionDialog = false
+                    transactionDialogInitialType = null
+                },
                 onSave = { form ->
                     if (form.type == "TRANSFER_OUT") {
                         viewModel.transferMoney(
@@ -627,6 +635,7 @@ fun DashboardScreen(
                         )
                     }
                     showTransactionDialog = false
+                    transactionDialogInitialType = null
                 },
                 onCreateCategory = { name, type -> viewModel.addCategory(name, type) },
                 onDeleteCategory = { name, type -> viewModel.deleteCategory(name, type) }
@@ -777,13 +786,15 @@ fun DashboardScreen(
         if (showDebtDialog) {
             DebtDialog(
                 debtToEdit = debtToEdit,
+                sources = sources,
+                transactions = transactions,
                 isEng = isEng,
                 colors = colors,
                 onDismiss = {
                     showDebtDialog = false
                     debtToEdit = null
                 },
-                onSave = { name, amount, currency, type, note, dueDate ->
+                onSave = { name, amount, currency, type, note, dueDate, sourceName, includeInCashFlow ->
                     debtViewModel.addOrUpdateDebt(
                         debtToEdit?.id ?: 0,
                         name,
@@ -791,7 +802,9 @@ fun DashboardScreen(
                         currency,
                         type,
                         note,
-                        dueDate
+                        dueDate,
+                        sourceName,
+                        includeInCashFlow
                     )
                     showDebtDialog = false
                     debtToEdit = null

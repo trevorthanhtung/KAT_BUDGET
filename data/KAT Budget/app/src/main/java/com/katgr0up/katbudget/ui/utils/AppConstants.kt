@@ -7,10 +7,14 @@ object TxType {
     const val TRANSFER_OUT = "TRANSFER_OUT"
     const val GOAL_DEPOSIT = "GOAL_DEPOSIT"
     const val DEBT_PAYMENT = "DEBT_PAYMENT"
+    const val DEBT_COLLECTION = "DEBT_COLLECTION"
+    const val LENDING = "LENDING"
+    const val BORROWING = "BORROWING"
 }
 
 object TagPrefix {
     const val TRANSFER = "TRF_"
+    const val DEBT_OPENING = "DEBT_OPEN_"
     const val DEBT_ROLLBACK = "DEBT_ROLLBACK_"
     const val RECURRING = "REC_"
     const val TERM = "TERM_"

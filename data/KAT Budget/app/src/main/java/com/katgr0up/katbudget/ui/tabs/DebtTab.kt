@@ -164,8 +164,17 @@ private fun DebtRow(
         }
     )
 
-    val indicatorColor = colors.debt
-    val statusColor = if (debt.isPaid) colors.positive else colors.warning
+    val isBorrowedDebt = debt.type == DebtEntity.TYPE_DEBT
+    val indicatorColor = if (isBorrowedDebt) {
+        colors.warning
+    } else {
+        colors.info
+    }
+    val statusColor = when {
+        debt.isPaid -> colors.positive
+        isBorrowedDebt -> colors.warning
+        else -> colors.info
+    }
     val rowShape = RoundedCornerShape(22.dp)
 
     SwipeToDismissBox(

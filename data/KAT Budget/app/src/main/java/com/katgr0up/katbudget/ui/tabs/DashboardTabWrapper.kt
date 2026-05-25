@@ -95,12 +95,35 @@ fun DashboardTabWrapper(
     )
 
     if (showSourceDialog) {
-        SourceDialog(sourceToEdit, isEng, colors, { showSourceDialog = false; sourceToEdit = null }) { name, type, include, rate, period, initialBalance ->
+        SourceDialog(
+            sourceToEdit = sourceToEdit,
+            existingSources = sources,
+            isEng = isEng,
+            defaultCurrency = defaultCurrency,
+            colors = colors,
+            onDismiss = {
+                showSourceDialog = false
+                sourceToEdit = null
+            }
+        ) { name, type, include, rate, period, openingBalances ->
             viewModel.addOrUpdateSource(sourceToEdit, name, type, include, rate, period)
-            if (sourceToEdit == null && initialBalance > 0.0) {
+            if (sourceToEdit == null && openingBalances.isNotEmpty()) {
                 val catOpening = openingBalanceStr
                 val noteOpening = openingBalanceStr
-                viewModel.addOrUpdateTransaction(0, initialBalance, "INCOME", catOpening, noteOpening, name, defaultCurrency, System.currentTimeMillis(), null)
+                val timestamp = System.currentTimeMillis()
+                openingBalances.forEachIndexed { index, openingBalance ->
+                    viewModel.addOrUpdateTransaction(
+                        id = 0,
+                        amount = openingBalance.amount,
+                        type = "INCOME",
+                        category = catOpening,
+                        note = noteOpening,
+                        sourceName = name,
+                        currency = openingBalance.currency,
+                        timestamp = timestamp + index,
+                        imageUri = null
+                    )
+                }
             }
             showSourceDialog = false
             sourceToEdit = null
